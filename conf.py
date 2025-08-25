@@ -47,24 +47,12 @@ html_logo = 'static/logo.png'
 html_favicon = 'static/favicon.ico'
 html_static_path = ['static']
 html_extra_path = ['extra']
-# html_css_files = ['custom.css']
-# html_js_files = ['custom.js']
-# html_show_sourcelink = False
+html_css_files = ['custom.css']
+html_js_files = ['custom.js']
+html_show_sourcelink = False
 highlight_language = 'python3'
 sitemap_url_scheme = "{link}"
 myst_heading_anchors = 6
-
-# -- ABlog configuration options ---------------------------------------------
-blog_path = "blog"
-blog_authors = {
-    'Flavia': ('Flavia Giammarino', 'https://flaviagiammarino.com'),
-}
-blog_default_author = 'Flavia'
-blog_languages = {
-    'en': ('English', None),
-}
-blog_default_language = 'en'
-blog_baseurl = html_baseurl
 
 # -- Theme configuration options ---------------------------------------------
 html_theme = 'shibuya'
