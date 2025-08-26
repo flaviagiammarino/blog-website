@@ -511,9 +511,9 @@ In both cases, the Lambda function is invoked with a context window of 3 weeks t
     <span style="font-weight:600">Figure 3:</span>
     <span>Last 10 rows of </span>
     <code class="docutils literal notranslate">
-    <span class="pre" style="font-weight:600">forecasts</span>
+    <span class="pre" style="font-weight:600; white-space: collapse">forecasts</span>
     </code>
-    <span> DataFrame.</span>
+    <span>DataFrame.</span>
     </p>
 
     </div>
