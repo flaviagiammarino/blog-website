@@ -10,7 +10,7 @@ project = ''
 author = 'Flavia Giammarino'
 release = '2025-08-25'
 language = 'en'
-copyright = 'Flavia Giammarino'
+copyright = 'Copyright © 2025, Flavia Giammarino'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -36,7 +36,6 @@ templates_path = []
 
 exclude_patterns = ['Thumbs.db', '.DS_Store']
 
-
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
@@ -59,6 +58,21 @@ html_theme = 'shibuya'
 
 html_theme_options = {
     "globaltoc_expand_depth": 10,
+}
+
+# -- ABlog settings ---------------------------------------------------
+html_sidebars = {
+   "**": [
+      # Ablog sidebars
+      "ablog/postcard.html",
+      "ablog/recentposts.html",
+      "ablog/tagcloud.html",
+      "ablog/categories.html",
+      "ablog/archives.html",
+      "ablog/authors.html",
+      "ablog/languages.html",
+      "ablog/locations.html",
+   ]
 }
 
 # -- MyST settings ---------------------------------------------------
