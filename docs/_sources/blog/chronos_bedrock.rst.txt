@@ -20,7 +20,7 @@ Zero-Shot Time Series Forecasting with Chronos using Amazon Bedrock and ClickHou
         style="width:100%"
     >
 
-Overview
+1. Overview
 ***************************************************************************************************************
 
 The emergence of large language models (LLMs) with zero-shot generalization capabilities in sequence modelling
@@ -45,7 +45,7 @@ In the rest of this post, we will walk through a practical example of using Chro
 stored in ClickHouse. We will create a Bedrock endpoint, then build a Lambda function that invokes the Bedrock
 endpoint with context data queried from ClickHouse and returns the forecasts.
 
-Solution
+2. Solution
 ***************************************************************************************************************
 
 In this particular example, we will work with the 15-minute time series of the Italian electricity system's
@@ -67,7 +67,7 @@ doesn't require any domain adaptation, the same solution can be applied to any o
     You will also need to update several variables in the code to reflect your AWS
     configuration - such as your AWS account number, region, service roles, etc. - as will be outlined below.
 
-Create the Bedrock endpoint
+2.1 Create the Bedrock endpoint
 ===============================================================================================================
 
 We start by deploying Chronos-Bolt to a Bedrock endpoint hosted on a CPU EC2 instance.
@@ -105,12 +105,12 @@ or directly from the Bedrock console.
    # Get the Bedrock endpoint ARN
    bedrock_endpoint_arn = response["marketplaceModelEndpoint"]["endpointArn"]
 
-Create the Lambda function for invoking the Bedrock endpoint with ClickHouse data
+2.2 Create the Lambda function for invoking the Bedrock endpoint with ClickHouse data
 ===============================================================================================================
 
 We now build a Lambda function for invoking the Bedrock endpoint with time series data stored in ClickHouse.
 
-Create the Docker image
+2.2.1 Create the Docker image
 ---------------------------------------------------------------------------------------------------------------
 
 In order to create the Lambda function's Docker image in Elastic Container Registry (ECR), we need the following files:
@@ -120,7 +120,7 @@ In order to create the Lambda function's Docker image in Elastic Container Regis
 - ``Dockerfile``: The file containing the instructions to build the Docker image.
 
 .. raw:: html
-
+    <p>2.2.1.1</p>
     <p>
     <code class="docutils literal notranslate">
     <span class="pre" style="font-weight:600">app.py</span>
