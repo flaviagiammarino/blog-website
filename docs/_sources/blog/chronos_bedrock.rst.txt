@@ -59,7 +59,7 @@ doesn't require any domain adaptation, the same solution can be applied to any o
 
     <img
         src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/time_series_data.png"
-        style="width:40%"
+        style="width:60%"
     >
 
 .. note::
