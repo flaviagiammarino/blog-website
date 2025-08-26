@@ -55,6 +55,8 @@ doesn't require any domain adaptation, the same solution can be applied to any o
 
 .. raw:: html
 
+    <div>
+
     <img
         src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/total_load_data.png"
         style="width:40%"
@@ -62,12 +64,14 @@ doesn't require any domain adaptation, the same solution can be applied to any o
 
     <p>
     <span style="font-weight:600">Figure 1:</span>
-    <span>Last 10 row of </span>
+    <span>Last 10 rows of </span>
     <code class="docutils literal notranslate">
     <span class="pre" style="font-weight:600">total_load_data</span>
     </code>
     <span>ClickHouse table.</span>
     </p>
+
+    </div>
 
 .. note::
     To be able to run the code provided in the rest of this section, you will need to have Boto3 and the AWS-CLI installed on your machine.
