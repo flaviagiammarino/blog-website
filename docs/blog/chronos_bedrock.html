@@ -1,58 +1,55 @@
 <!DOCTYPE html>
-<html lang="en" data-accent-color="violet" data-content_root="../">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Zero-Shot Time Series Forecasting with Chronos using Amazon Bedrock and ClickHouse - flaviagiammarino.com</title><link rel="shortcut icon" href="../_static/favicon.ico"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="prev" title="&lt;no title&gt;" href="../index.html" />
-      <link rel="canonical" href="https://flaviagiammarino.com/blog/chronos_bedrock.html" /><script>
-    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
-    setColorMode(localStorage._theme||"auto");
-  </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=397bb51e" />
-    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=d48c410d" />
-    <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
+
+<html lang="en" data-content_root="../">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/architecture_diagram.png" name="thumbnail" />
+<meta content="Zero-Shot Time Series Forecasting with Chronos using Amazon Bedrock and ClickHouse" name="description" />
+<meta content="Time Series, LLM, Forecasting, Amazon Bedrock, Amazon Chronos" name="keywords" />
+
+    <meta property="article:modified_time" content="2025-08-25T20:00:57+02:00" />
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-LPMJ6R8T4C"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'G-LPMJ6R8T4C');
+    </script>
+    
+    <title>Zero-Shot Time Series Forecasting with Chronos using Amazon Bedrock and ClickHouse &#8212; flaviagiammarino.com</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=5ecbeea2" />
+    <link rel="stylesheet" type="text/css" href="../_static/basic.css?v=b08954a9" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css?v=27fed22d" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-:root {
-  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
-  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
-}
-</style>
-        </head>
-<body><div class="sy-head">
-  <div class="sy-head-blur"></div>
-  <div class="sy-head-inner sy-container mx-auto">
-    <a class="sy-head-brand" href="../index.html">
-      <img class="light-logo" src="../_static/logo.png" alt="" height="28" loading="lazy" />
-      <img class="dark-logo" src="../_static/logo.png" alt="" height="28" loading="lazy" />
-      <strong></strong>
-    </a>
-    <div class="sy-head-nav" id="head-nav">
-      <nav class="sy-head-links"></nav>
-      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../search.html" method="get">
-  <input type="text" name="q" placeholder="Search" />
-  <kbd>/</kbd>
-</form><div class="sy-head-socials"></div></div>
-    </div>
-    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
-data-aria-auto="Switch to light color mode"
-data-aria-light="Switch to dark color mode"
-data-aria-dark="Switch to auto color mode">
-<i class="i-lucide theme-icon"></i>
-</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
-        <div class="hamburger">
-          <span class="hamburger_1"></span>
-          <span class="hamburger_2 -translate-x-2"></span>
-          <span class="hamburger_3 -translate-x-1"></span>
-        </div>
-      </button>
-    </div>
-  </div>
-</div><div class="sy-container mx-auto body">
-    <main class="sy-content mx-auto pt-12 px-6 xl:px-12 break-words">
-      <article class="yue" role="main">
-         <section id="zero-shot-time-series-forecasting-with-chronos-using-amazon-bedrock-and-clickhouse">
+    <script src="../_static/documentation_options.js?v=73411916"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/custom.js"></script>
+    <link rel="canonical" href="https://flaviagiammarino.com/blog/chronos_bedrock.html" />
+    <link rel="icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="../index.html" /> 
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+
+  
+  
+   
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+             <section id="zero-shot-time-series-forecasting-with-chronos-using-amazon-bedrock-and-clickhouse">
 <h1>Zero-Shot Time Series Forecasting with Chronos using Amazon Bedrock and ClickHouse<a class="headerlink" href="#zero-shot-time-series-forecasting-with-chronos-using-amazon-bedrock-and-clickhouse" title="Link to this heading">¶</a></h1>
 <img
     src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/architecture_diagram.png"
@@ -107,28 +104,28 @@ or directly from the Bedrock console.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;&lt;bedrock-execution-role&gt;&quot;</span></code>: The Bedrock execution role ARN.</p></li>
 </ul>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
-</span><span data-line="2">
-</span><span data-line="3"><span class="c1"># Create the Bedrock client</span>
-</span><span data-line="4"><span class="n">bedrock_client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;bedrock&quot;</span><span class="p">)</span>
-</span><span data-line="5">
-</span><span data-line="6"><span class="c1"># Create the Bedrock endpoint</span>
-</span><span data-line="7"><span class="n">response</span> <span class="o">=</span> <span class="n">bedrock_client</span><span class="o">.</span><span class="n">create_marketplace_model_endpoint</span><span class="p">(</span>
-</span><span data-line="8">    <span class="n">modelSourceIdentifier</span><span class="o">=</span><span class="s2">&quot;&lt;bedrock-marketplace-arn&gt;&quot;</span><span class="p">,</span>
-</span><span data-line="9">    <span class="n">endpointConfig</span><span class="o">=</span><span class="p">{</span>
-</span><span data-line="10">        <span class="s2">&quot;sageMaker&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span data-line="11">            <span class="s2">&quot;initialInstanceCount&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-</span><span data-line="12">            <span class="s2">&quot;instanceType&quot;</span><span class="p">:</span> <span class="s2">&quot;ml.m5.4xlarge&quot;</span><span class="p">,</span>
-</span><span data-line="13">            <span class="s2">&quot;executionRole&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;bedrock-execution-role&gt;&quot;</span>
-</span><span data-line="14">        <span class="p">}</span>
-</span><span data-line="15">    <span class="p">},</span>
-</span><span data-line="16">    <span class="n">endpointName</span><span class="o">=</span><span class="s2">&quot;chronos-bedrock-endpoint&quot;</span><span class="p">,</span>
-</span><span data-line="17">    <span class="n">acceptEula</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-</span><span data-line="18"><span class="p">)</span>
-</span><span data-line="19">
-</span><span data-line="20"><span class="c1"># Get the Bedrock endpoint ARN</span>
-</span><span data-line="21"><span class="n">bedrock_endpoint_arn</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;marketplaceModelEndpoint&quot;</span><span class="p">][</span><span class="s2">&quot;endpointArn&quot;</span><span class="p">]</span>
-</span></pre></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
+
+<span class="c1"># Create the Bedrock client</span>
+<span class="n">bedrock_client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;bedrock&quot;</span><span class="p">)</span>
+
+<span class="c1"># Create the Bedrock endpoint</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">bedrock_client</span><span class="o">.</span><span class="n">create_marketplace_model_endpoint</span><span class="p">(</span>
+    <span class="n">modelSourceIdentifier</span><span class="o">=</span><span class="s2">&quot;&lt;bedrock-marketplace-arn&gt;&quot;</span><span class="p">,</span>
+    <span class="n">endpointConfig</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;sageMaker&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;initialInstanceCount&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+            <span class="s2">&quot;instanceType&quot;</span><span class="p">:</span> <span class="s2">&quot;ml.m5.4xlarge&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;executionRole&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;bedrock-execution-role&gt;&quot;</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+    <span class="n">endpointName</span><span class="o">=</span><span class="s2">&quot;chronos-bedrock-endpoint&quot;</span><span class="p">,</span>
+    <span class="n">acceptEula</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Get the Bedrock endpoint ARN</span>
+<span class="n">bedrock_endpoint_arn</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;marketplaceModelEndpoint&quot;</span><span class="p">][</span><span class="s2">&quot;endpointArn&quot;</span><span class="p">]</span>
+</pre></div>
 </div>
 </section>
 <section id="create-the-lambda-function-for-invoking-the-bedrock-endpoint-with-clickhouse-data">
@@ -169,126 +166,126 @@ together with the corresponding timestamps.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;&lt;bedrock-endpoint-arn&gt;&quot;</span></code>: The Bedrock endpoint ARN.</p></li>
 </ul>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
-</span><span data-line="2"><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
-</span><span data-line="3"><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-</span><span data-line="4"><span class="kn">import</span><span class="w"> </span><span class="nn">clickhouse_connect</span>
-</span><span data-line="5">
-</span><span data-line="6"><span class="k">def</span><span class="w"> </span><span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-</span><span data-line="7"><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span data-line="8"><span class="sd">    Generate zero-shot forecasts with Chronos-Bolt (Base) Amazon Bedrock endpoint using data stored in ClickHouse.</span>
-</span><span data-line="9">
-</span><span data-line="10"><span class="sd">    Parameters:</span>
-</span><span data-line="11"><span class="sd">    ========================================================================================================</span>
-</span><span data-line="12"><span class="sd">    event: dict.</span>
-</span><span data-line="13"><span class="sd">        A dictionary with the following keys:</span>
-</span><span data-line="14">
-</span><span data-line="15"><span class="sd">        initialization_timestamp: str.</span>
-</span><span data-line="16"><span class="sd">            The initialization timestamp of the forecasts, in ISO format (YYYY-MM-DD HH:mm:ss).</span>
-</span><span data-line="17">
-</span><span data-line="18"><span class="sd">        frequency: int.</span>
-</span><span data-line="19"><span class="sd">            The frequency of the time series, in minutes.</span>
-</span><span data-line="20">
-</span><span data-line="21"><span class="sd">        context_length: int.</span>
-</span><span data-line="22"><span class="sd">            The number of past time steps to use as context.</span>
-</span><span data-line="23">
-</span><span data-line="24"><span class="sd">        prediction_length: int.</span>
-</span><span data-line="25"><span class="sd">            The number of future time steps to predict.</span>
-</span><span data-line="26">
-</span><span data-line="27"><span class="sd">        quantile_levels: list of float.</span>
-</span><span data-line="28"><span class="sd">            The quantiles to be predicted at each future time step.</span>
-</span><span data-line="29">
-</span><span data-line="30"><span class="sd">    context: AWS Lambda context object, see https://docs.aws.amazon.com/lambda/latest/dg/python-context.html.</span>
-</span><span data-line="31"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span data-line="32">    <span class="c1"># Create the ClickHouse client</span>
-</span><span data-line="33">    <span class="n">clickhouse_client</span> <span class="o">=</span> <span class="n">clickhouse_connect</span><span class="o">.</span><span class="n">get_client</span><span class="p">(</span>
-</span><span data-line="34">        <span class="n">host</span><span class="o">=</span><span class="s2">&quot;&lt;clickhouse-host&gt;&quot;</span><span class="p">,</span>
-</span><span data-line="35">        <span class="n">user</span><span class="o">=</span><span class="s2">&quot;&lt;clickhouse-user&gt;&quot;</span><span class="p">,</span>
-</span><span data-line="36">        <span class="n">password</span><span class="o">=</span><span class="s2">&quot;&lt;clickhouse-password&gt;&quot;</span><span class="p">,</span>
-</span><span data-line="37">        <span class="n">secure</span><span class="o">=</span><span class="kc">True</span>
-</span><span data-line="38">    <span class="p">)</span>
-</span><span data-line="39">
-</span><span data-line="40">    <span class="c1"># Load the input data from ClickHouse</span>
-</span><span data-line="41">    <span class="n">df</span> <span class="o">=</span> <span class="n">clickhouse_client</span><span class="o">.</span><span class="n">query_df</span><span class="p">(</span>
-</span><span data-line="42">        <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
-</span><span data-line="43"><span class="s2">            select</span>
-</span><span data-line="44"><span class="s2">                timestamp,</span>
-</span><span data-line="45"><span class="s2">                total_load</span>
-</span><span data-line="46"><span class="s2">            from</span>
-</span><span data-line="47"><span class="s2">                total_load_data</span>
-</span><span data-line="48"><span class="s2">            where</span>
-</span><span data-line="49"><span class="s2">                timestamp &lt; toDateTime(&#39;</span><span class="si">{</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;initialization_timestamp&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;)</span>
-</span><span data-line="50"><span class="s2">            and</span>
-</span><span data-line="51"><span class="s2">                timestamp &gt;= toDateTime(&#39;</span><span class="si">{</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;initialization_timestamp&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;) - INTERVAL </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">])</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;context_length&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2"> MINUTES</span>
-</span><span data-line="52"><span class="s2">            order by</span>
-</span><span data-line="53"><span class="s2">                timestamp asc</span>
-</span><span data-line="54"><span class="s2">        &quot;&quot;&quot;</span>
-</span><span data-line="55">    <span class="p">)</span>
-</span><span data-line="56">
-</span><span data-line="57">    <span class="c1"># Create the Bedrock client</span>
-</span><span data-line="58">    <span class="n">bedrock_runtime_client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span>
-</span><span data-line="59">        <span class="n">service_name</span><span class="o">=</span><span class="s2">&quot;bedrock-runtime&quot;</span>
-</span><span data-line="60">    <span class="p">)</span>
-</span><span data-line="61">
-</span><span data-line="62">    <span class="c1"># Invoke the Bedrock endpoint with the ClickHouse data</span>
-</span><span data-line="63">    <span class="n">response</span> <span class="o">=</span> <span class="n">bedrock_runtime_client</span><span class="o">.</span><span class="n">invoke_model</span><span class="p">(</span>
-</span><span data-line="64">        <span class="n">modelId</span><span class="o">=</span><span class="s2">&quot;&lt;bedrock-endpoint-arn&gt;&quot;</span><span class="p">,</span>
-</span><span data-line="65">        <span class="n">body</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
-</span><span data-line="66">            <span class="s2">&quot;inputs&quot;</span><span class="p">:</span> <span class="p">[{</span>
-</span><span data-line="67">                <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;total_load&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
-</span><span data-line="68">            <span class="p">}],</span>
-</span><span data-line="69">            <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span data-line="70">                <span class="s2">&quot;prediction_length&quot;</span><span class="p">:</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;prediction_length&quot;</span><span class="p">],</span>
-</span><span data-line="71">                <span class="s2">&quot;quantile_levels&quot;</span><span class="p">:</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;quantile_levels&quot;</span><span class="p">],</span>
-</span><span data-line="72">            <span class="p">}</span>
-</span><span data-line="73">        <span class="p">})</span>
-</span><span data-line="74">    <span class="p">)</span>
-</span><span data-line="75">
-</span><span data-line="76">    <span class="c1"># Extract the forecasts</span>
-</span><span data-line="77">    <span class="n">predictions</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;body&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">read</span><span class="p">())</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;predictions&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-</span><span data-line="78">
-</span><span data-line="79">    <span class="c1"># Add the timestamps to the forecasts</span>
-</span><span data-line="80">    <span class="n">predictions</span> <span class="o">=</span> <span class="p">{</span>
-</span><span data-line="81">        <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="p">[</span>
-</span><span data-line="82">            <span class="n">x</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span>
-</span><span data-line="83">            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span>
-</span><span data-line="84">                <span class="n">start</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s2">&quot;initialization_timestamp&quot;</span><span class="p">],</span>
-</span><span data-line="85">                <span class="n">periods</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s2">&quot;prediction_length&quot;</span><span class="p">],</span>
-</span><span data-line="86">                <span class="n">freq</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">min&quot;</span><span class="p">,</span>
-</span><span data-line="87">            <span class="p">)</span>
-</span><span data-line="88">        <span class="p">]</span>
-</span><span data-line="89">    <span class="p">}</span> <span class="o">|</span> <span class="n">predictions</span>
-</span><span data-line="90">
-</span><span data-line="91">    <span class="c1"># Return the forecasts</span>
-</span><span data-line="92">    <span class="k">return</span> <span class="p">{</span>
-</span><span data-line="93">        <span class="s2">&quot;statusCode&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
-</span><span data-line="94">        <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
-</span><span data-line="95">    <span class="p">}</span>
-</span></pre></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">clickhouse_connect</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generate zero-shot forecasts with Chronos-Bolt (Base) Amazon Bedrock endpoint using data stored in ClickHouse.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    ========================================================================================================</span>
+<span class="sd">    event: dict.</span>
+<span class="sd">        A dictionary with the following keys:</span>
+
+<span class="sd">        initialization_timestamp: str.</span>
+<span class="sd">            The initialization timestamp of the forecasts, in ISO format (YYYY-MM-DD HH:mm:ss).</span>
+
+<span class="sd">        frequency: int.</span>
+<span class="sd">            The frequency of the time series, in minutes.</span>
+
+<span class="sd">        context_length: int.</span>
+<span class="sd">            The number of past time steps to use as context.</span>
+
+<span class="sd">        prediction_length: int.</span>
+<span class="sd">            The number of future time steps to predict.</span>
+
+<span class="sd">        quantile_levels: list of float.</span>
+<span class="sd">            The quantiles to be predicted at each future time step.</span>
+
+<span class="sd">    context: AWS Lambda context object, see https://docs.aws.amazon.com/lambda/latest/dg/python-context.html.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Create the ClickHouse client</span>
+    <span class="n">clickhouse_client</span> <span class="o">=</span> <span class="n">clickhouse_connect</span><span class="o">.</span><span class="n">get_client</span><span class="p">(</span>
+        <span class="n">host</span><span class="o">=</span><span class="s2">&quot;&lt;clickhouse-host&gt;&quot;</span><span class="p">,</span>
+        <span class="n">user</span><span class="o">=</span><span class="s2">&quot;&lt;clickhouse-user&gt;&quot;</span><span class="p">,</span>
+        <span class="n">password</span><span class="o">=</span><span class="s2">&quot;&lt;clickhouse-password&gt;&quot;</span><span class="p">,</span>
+        <span class="n">secure</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Load the input data from ClickHouse</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">clickhouse_client</span><span class="o">.</span><span class="n">query_df</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            select</span>
+<span class="s2">                timestamp,</span>
+<span class="s2">                total_load</span>
+<span class="s2">            from</span>
+<span class="s2">                total_load_data</span>
+<span class="s2">            where</span>
+<span class="s2">                timestamp &lt; toDateTime(&#39;</span><span class="si">{</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;initialization_timestamp&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;)</span>
+<span class="s2">            and</span>
+<span class="s2">                timestamp &gt;= toDateTime(&#39;</span><span class="si">{</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;initialization_timestamp&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;) - INTERVAL </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">])</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;context_length&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2"> MINUTES</span>
+<span class="s2">            order by</span>
+<span class="s2">                timestamp asc</span>
+<span class="s2">        &quot;&quot;&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Create the Bedrock client</span>
+    <span class="n">bedrock_runtime_client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span>
+        <span class="n">service_name</span><span class="o">=</span><span class="s2">&quot;bedrock-runtime&quot;</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Invoke the Bedrock endpoint with the ClickHouse data</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">bedrock_runtime_client</span><span class="o">.</span><span class="n">invoke_model</span><span class="p">(</span>
+        <span class="n">modelId</span><span class="o">=</span><span class="s2">&quot;&lt;bedrock-endpoint-arn&gt;&quot;</span><span class="p">,</span>
+        <span class="n">body</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
+            <span class="s2">&quot;inputs&quot;</span><span class="p">:</span> <span class="p">[{</span>
+                <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;total_load&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+            <span class="p">}],</span>
+            <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s2">&quot;prediction_length&quot;</span><span class="p">:</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;prediction_length&quot;</span><span class="p">],</span>
+                <span class="s2">&quot;quantile_levels&quot;</span><span class="p">:</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;quantile_levels&quot;</span><span class="p">],</span>
+            <span class="p">}</span>
+        <span class="p">})</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Extract the forecasts</span>
+    <span class="n">predictions</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;body&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">read</span><span class="p">())</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;predictions&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="c1"># Add the timestamps to the forecasts</span>
+    <span class="n">predictions</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span>
+                <span class="n">start</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s2">&quot;initialization_timestamp&quot;</span><span class="p">],</span>
+                <span class="n">periods</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s2">&quot;prediction_length&quot;</span><span class="p">],</span>
+                <span class="n">freq</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">min&quot;</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">]</span>
+    <span class="p">}</span> <span class="o">|</span> <span class="n">predictions</span>
+
+    <span class="c1"># Return the forecasts</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;statusCode&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+        <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
+    <span class="p">}</span>
+</pre></div>
 </div>
 </section>
 <section id="requirements-txt">
 <h5><code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code><a class="headerlink" href="#requirements-txt" title="Link to this heading">¶</a></h5>
 <p>The <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> file with the list of dependencies is reported below.</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">boto3</span><span class="o">==</span><span class="mf">1.34.84</span>
-</span><span data-line="2"><span class="n">clickhouse_connect</span><span class="o">==</span><span class="mf">0.8.18</span>
-</span><span data-line="3"><span class="n">pandas</span><span class="o">==</span><span class="mf">2.3.1</span>
-</span></pre></div>
+<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span class="n">boto3</span><span class="o">==</span><span class="mf">1.34.84</span>
+<span class="n">clickhouse_connect</span><span class="o">==</span><span class="mf">0.8.18</span>
+<span class="n">pandas</span><span class="o">==</span><span class="mf">2.3.1</span>
+</pre></div>
 </div>
 </section>
 <section id="dockerfile">
 <h5><code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code><a class="headerlink" href="#dockerfile" title="Link to this heading">¶</a></h5>
 <p>The standard <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> using the Python 3.12 AWS base image for Lambda is also reported below.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">FROM<span class="w"> </span>amazon/aws-lambda-python:3.12
-</span><span data-line="2">
-</span><span data-line="3">COPY<span class="w"> </span>requirements.txt<span class="w">  </span>.
-</span><span data-line="4">
-</span><span data-line="5">RUN<span class="w"> </span>pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt<span class="w"> </span>--target<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">LAMBDA_TASK_ROOT</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span data-line="6">
-</span><span data-line="7">COPY<span class="w"> </span>app.py<span class="w"> </span><span class="si">${</span><span class="nv">LAMBDA_TASK_ROOT</span><span class="si">}</span>
-</span><span data-line="8">
-</span><span data-line="9">CMD<span class="w"> </span><span class="o">[</span><span class="s2">&quot;app.handler&quot;</span><span class="o">]</span>
-</span></pre></div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>FROM<span class="w"> </span>amazon/aws-lambda-python:3.12
+
+COPY<span class="w"> </span>requirements.txt<span class="w">  </span>.
+
+RUN<span class="w"> </span>pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt<span class="w"> </span>--target<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">LAMBDA_TASK_ROOT</span><span class="si">}</span><span class="s2">&quot;</span>
+
+COPY<span class="w"> </span>app.py<span class="w"> </span><span class="si">${</span><span class="nv">LAMBDA_TASK_ROOT</span><span class="si">}</span>
+
+CMD<span class="w"> </span><span class="o">[</span><span class="s2">&quot;app.handler&quot;</span><span class="o">]</span>
+</pre></div>
 </div>
 </section>
 </section>
@@ -305,20 +302,20 @@ with the AWS-CLI as shown in the <code class="docutils literal notranslate"><spa
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;&lt;ecr-repository-name&gt;&quot;</span></code>: The name of the ECR repository.</p></li>
 </ul>
 </div>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="nv">aws_account_id</span><span class="o">=</span><span class="s2">&quot;&lt;aws-account-id&gt;&quot;</span>
-</span><span data-line="2"><span class="nv">region</span><span class="o">=</span><span class="s2">&quot;&lt;ecr-repository-region&gt;&quot;</span>
-</span><span data-line="3"><span class="nv">algorithm_name</span><span class="o">=</span><span class="s2">&quot;&lt;ecr-repository-name&gt;&quot;</span>
-</span><span data-line="4">
-</span><span data-line="5">aws<span class="w"> </span>ecr<span class="w"> </span>get-login-password<span class="w"> </span>--region<span class="w"> </span><span class="nv">$region</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>docker<span class="w"> </span>login<span class="w"> </span>--username<span class="w"> </span>AWS<span class="w"> </span>--password-stdin<span class="w"> </span><span class="nv">$aws_account_id</span>.dkr.ecr.<span class="nv">$region</span>.amazonaws.com
-</span><span data-line="6">
-</span><span data-line="7">aws<span class="w"> </span>ecr<span class="w"> </span>describe-repositories<span class="w"> </span>--repository-names<span class="w"> </span><span class="si">${</span><span class="nv">algorithm_name</span><span class="si">}</span><span class="w"> </span><span class="o">||</span><span class="w"> </span>aws<span class="w"> </span>ecr<span class="w"> </span>create-repository<span class="w"> </span>--repository-name<span class="w"> </span><span class="si">${</span><span class="nv">algorithm_name</span><span class="si">}</span>
-</span><span data-line="8">
-</span><span data-line="9">docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span><span class="nv">$algorithm_name</span><span class="w"> </span>.
-</span><span data-line="10">
-</span><span data-line="11">docker<span class="w"> </span>tag<span class="w"> </span><span class="nv">$algorithm_name</span>:latest<span class="w"> </span><span class="nv">$aws_account_id</span>.dkr.ecr.<span class="nv">$region</span>.amazonaws.com/<span class="nv">$algorithm_name</span>:latest
-</span><span data-line="12">
-</span><span data-line="13">docker<span class="w"> </span>push<span class="w"> </span><span class="nv">$aws_account_id</span>.dkr.ecr.<span class="nv">$region</span>.amazonaws.com/<span class="nv">$algorithm_name</span>:latest
-</span></pre></div>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nv">aws_account_id</span><span class="o">=</span><span class="s2">&quot;&lt;aws-account-id&gt;&quot;</span>
+<span class="nv">region</span><span class="o">=</span><span class="s2">&quot;&lt;ecr-repository-region&gt;&quot;</span>
+<span class="nv">algorithm_name</span><span class="o">=</span><span class="s2">&quot;&lt;ecr-repository-name&gt;&quot;</span>
+
+aws<span class="w"> </span>ecr<span class="w"> </span>get-login-password<span class="w"> </span>--region<span class="w"> </span><span class="nv">$region</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>docker<span class="w"> </span>login<span class="w"> </span>--username<span class="w"> </span>AWS<span class="w"> </span>--password-stdin<span class="w"> </span><span class="nv">$aws_account_id</span>.dkr.ecr.<span class="nv">$region</span>.amazonaws.com
+
+aws<span class="w"> </span>ecr<span class="w"> </span>describe-repositories<span class="w"> </span>--repository-names<span class="w"> </span><span class="si">${</span><span class="nv">algorithm_name</span><span class="si">}</span><span class="w"> </span><span class="o">||</span><span class="w"> </span>aws<span class="w"> </span>ecr<span class="w"> </span>create-repository<span class="w"> </span>--repository-name<span class="w"> </span><span class="si">${</span><span class="nv">algorithm_name</span><span class="si">}</span>
+
+docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span><span class="nv">$algorithm_name</span><span class="w"> </span>.
+
+docker<span class="w"> </span>tag<span class="w"> </span><span class="nv">$algorithm_name</span>:latest<span class="w"> </span><span class="nv">$aws_account_id</span>.dkr.ecr.<span class="nv">$region</span>.amazonaws.com/<span class="nv">$algorithm_name</span>:latest
+
+docker<span class="w"> </span>push<span class="w"> </span><span class="nv">$aws_account_id</span>.dkr.ecr.<span class="nv">$region</span>.amazonaws.com/<span class="nv">$algorithm_name</span>:latest
+</pre></div>
 </div>
 </section>
 <section id="create-the-lambda-function-from-the-docker-image-in-ecr">
@@ -334,24 +331,24 @@ or directly from the Lambda console.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;&lt;lambda-execution-role&gt;&quot;</span></code>: The Lambda execution role ARN.</p></li>
 </ul>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
-</span><span data-line="2">
-</span><span data-line="3"><span class="c1"># Create the Lambda client</span>
-</span><span data-line="4"><span class="n">lambda_client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;lambda&quot;</span><span class="p">)</span>
-</span><span data-line="5">
-</span><span data-line="6"><span class="c1"># Create the Lambda function</span>
-</span><span data-line="7"><span class="n">response</span> <span class="o">=</span> <span class="n">lambda_client</span><span class="o">.</span><span class="n">create_function</span><span class="p">(</span>
-</span><span data-line="8">    <span class="n">FunctionName</span><span class="o">=</span><span class="s2">&quot;chronos-lambda-function&quot;</span><span class="p">,</span>
-</span><span data-line="9">    <span class="n">PackageType</span><span class="o">=</span><span class="s2">&quot;Image&quot;</span><span class="p">,</span>
-</span><span data-line="10">    <span class="n">Code</span><span class="o">=</span><span class="p">{</span>
-</span><span data-line="11">        <span class="s2">&quot;ImageUri&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;ecr-image-uri&gt;&quot;</span>
-</span><span data-line="12">    <span class="p">},</span>
-</span><span data-line="13">    <span class="n">Role</span><span class="o">=</span><span class="s2">&quot;&lt;lambda-execution-role&gt;&quot;</span><span class="p">,</span>
-</span><span data-line="14">    <span class="n">Timeout</span><span class="o">=</span><span class="mi">900</span><span class="p">,</span>
-</span><span data-line="15">    <span class="n">MemorySize</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>
-</span><span data-line="16">    <span class="n">Publish</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-</span><span data-line="17"><span class="p">)</span>
-</span></pre></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
+
+<span class="c1"># Create the Lambda client</span>
+<span class="n">lambda_client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;lambda&quot;</span><span class="p">)</span>
+
+<span class="c1"># Create the Lambda function</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">lambda_client</span><span class="o">.</span><span class="n">create_function</span><span class="p">(</span>
+    <span class="n">FunctionName</span><span class="o">=</span><span class="s2">&quot;chronos-lambda-function&quot;</span><span class="p">,</span>
+    <span class="n">PackageType</span><span class="o">=</span><span class="s2">&quot;Image&quot;</span><span class="p">,</span>
+    <span class="n">Code</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;ImageUri&quot;</span><span class="p">:</span> <span class="s2">&quot;&lt;ecr-image-uri&gt;&quot;</span>
+    <span class="p">},</span>
+    <span class="n">Role</span><span class="o">=</span><span class="s2">&quot;&lt;lambda-execution-role&gt;&quot;</span><span class="p">,</span>
+    <span class="n">Timeout</span><span class="o">=</span><span class="mi">900</span><span class="p">,</span>
+    <span class="n">MemorySize</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>
+    <span class="n">Publish</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
 </div>
 </section>
 </section>
@@ -365,91 +362,91 @@ past time window for which historical data is already available, which allows us
 close the forecasts are to the actual data, while the second time it requests the forecasts
 over a future time window for which the data is not yet available.</p>
 <p>In both cases, the Lambda function is invoked with a context window of 3 weeks to generate 1-day-ahead forecasts.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
-</span><span data-line="2"><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
-</span><span data-line="3"><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
-</span><span data-line="4"><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-</span><span data-line="5">
-</span><span data-line="6"><span class="k">def</span><span class="w"> </span><span class="nf">invoke_lambda_function</span><span class="p">(</span>
-</span><span data-line="7">    <span class="n">initialization_timestamp</span><span class="p">,</span>
-</span><span data-line="8">    <span class="n">frequency</span><span class="p">,</span>
-</span><span data-line="9">    <span class="n">context_length</span><span class="p">,</span>
-</span><span data-line="10">    <span class="n">prediction_length</span><span class="p">,</span>
-</span><span data-line="11">    <span class="n">quantile_levels</span><span class="p">,</span>
-</span><span data-line="12">    <span class="n">function_name</span>
-</span><span data-line="13"><span class="p">):</span>
-</span><span data-line="14"><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span data-line="15"><span class="sd">    Invoke the Lambda function that generates zero-shot forecasts with Chronos-Bolt (Base)</span>
-</span><span data-line="16"><span class="sd">    Amazon Bedrock endpoint using data stored in ClickHouse.</span>
-</span><span data-line="17">
-</span><span data-line="18"><span class="sd">    Parameters:</span>
-</span><span data-line="19"><span class="sd">    ========================================================================================================</span>
-</span><span data-line="20"><span class="sd">    initialization_timestamp: str.</span>
-</span><span data-line="21"><span class="sd">        The initialization timestamp of the forecasts, in ISO format (YYYY-MM-DD HH:mm:ss).</span>
-</span><span data-line="22">
-</span><span data-line="23"><span class="sd">    frequency: int.</span>
-</span><span data-line="24"><span class="sd">        The frequency of the time series, in minutes.</span>
-</span><span data-line="25">
-</span><span data-line="26"><span class="sd">    context_length: int.</span>
-</span><span data-line="27"><span class="sd">        The number of past time steps to use as context.</span>
-</span><span data-line="28">
-</span><span data-line="29"><span class="sd">    prediction_length: int.</span>
-</span><span data-line="30"><span class="sd">        The number of future time steps to predict.</span>
-</span><span data-line="31">
-</span><span data-line="32"><span class="sd">    quantile_levels: list of float.</span>
-</span><span data-line="33"><span class="sd">        The quantiles to be predicted at each future time step.</span>
-</span><span data-line="34">
-</span><span data-line="35"><span class="sd">    function_name: str.</span>
-</span><span data-line="36"><span class="sd">        The name of the Lambda function.</span>
-</span><span data-line="37"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span data-line="38">    <span class="c1"># Create the Lambda client</span>
-</span><span data-line="39">    <span class="n">lambda_client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;lambda&quot;</span><span class="p">)</span>
-</span><span data-line="40">
-</span><span data-line="41">    <span class="c1"># Invoke the Lambda function</span>
-</span><span data-line="42">    <span class="n">response</span> <span class="o">=</span> <span class="n">lambda_client</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
-</span><span data-line="43">        <span class="n">FunctionName</span><span class="o">=</span><span class="n">function_name</span><span class="p">,</span>
-</span><span data-line="44">        <span class="n">Payload</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
-</span><span data-line="45">            <span class="s2">&quot;initialization_timestamp&quot;</span><span class="p">:</span> <span class="n">initialization_timestamp</span><span class="p">,</span>
-</span><span data-line="46">            <span class="s2">&quot;frequency&quot;</span><span class="p">:</span> <span class="n">frequency</span><span class="p">,</span>
-</span><span data-line="47">            <span class="s2">&quot;prediction_length&quot;</span><span class="p">:</span> <span class="n">prediction_length</span><span class="p">,</span>
-</span><span data-line="48">            <span class="s2">&quot;context_length&quot;</span><span class="p">:</span> <span class="n">context_length</span><span class="p">,</span>
-</span><span data-line="49">            <span class="s2">&quot;quantile_levels&quot;</span><span class="p">:</span> <span class="n">quantile_levels</span>
-</span><span data-line="50">        <span class="p">})</span>
-</span><span data-line="51">    <span class="p">)</span>
-</span><span data-line="52">
-</span><span data-line="53">    <span class="c1"># Extract the forecasts in a data frame</span>
-</span><span data-line="54">    <span class="n">predictions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;Payload&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">read</span><span class="p">())[</span><span class="s2">&quot;body&quot;</span><span class="p">]))</span>
-</span><span data-line="55">
-</span><span data-line="56">    <span class="c1"># Return the forecasts</span>
-</span><span data-line="57">    <span class="k">return</span> <span class="n">predictions</span>
-</span><span data-line="58">
-</span><span data-line="59"><span class="c1"># Define the Lambda function name and input parameters</span>
-</span><span data-line="60"><span class="n">frequency</span> <span class="o">=</span> <span class="mi">15</span>
-</span><span data-line="61"><span class="n">context_length</span> <span class="o">=</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">*</span> <span class="mi">7</span> <span class="o">*</span> <span class="mi">3</span>
-</span><span data-line="62"><span class="n">prediction_length</span> <span class="o">=</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">4</span>
-</span><span data-line="63"><span class="n">quantile_levels</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">]</span>
-</span><span data-line="64"><span class="n">function_name</span> <span class="o">=</span> <span class="s2">&quot;chronos-lambda-function&quot;</span>
-</span><span data-line="65">
-</span><span data-line="66"><span class="c1"># Generate the forecasts over a past time window</span>
-</span><span data-line="67"><span class="n">predictions</span> <span class="o">=</span> <span class="n">invoke_lambda_function</span><span class="p">(</span>
-</span><span data-line="68">    <span class="n">initialization_timestamp</span><span class="o">=</span><span class="s2">&quot;2025-08-17 00:00:00&quot;</span><span class="p">,</span>
-</span><span data-line="69">    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
-</span><span data-line="70">    <span class="n">context_length</span><span class="o">=</span><span class="n">context_length</span><span class="p">,</span>
-</span><span data-line="71">    <span class="n">prediction_length</span><span class="o">=</span><span class="n">prediction_length</span><span class="p">,</span>
-</span><span data-line="72">    <span class="n">quantile_levels</span><span class="o">=</span><span class="n">quantile_levels</span><span class="p">,</span>
-</span><span data-line="73">    <span class="n">function_name</span><span class="o">=</span><span class="n">function_name</span>
-</span><span data-line="74"><span class="p">)</span>
-</span><span data-line="75">
-</span><span data-line="76"><span class="c1"># Generate the forecasts over a future time window</span>
-</span><span data-line="77"><span class="n">forecasts</span> <span class="o">=</span> <span class="n">invoke_lambda_function</span><span class="p">(</span>
-</span><span data-line="78">    <span class="n">initialization_timestamp</span><span class="o">=</span><span class="s2">&quot;2025-08-18 00:00:00&quot;</span><span class="p">,</span>
-</span><span data-line="79">    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
-</span><span data-line="80">    <span class="n">context_length</span><span class="o">=</span><span class="n">context_length</span><span class="p">,</span>
-</span><span data-line="81">    <span class="n">prediction_length</span><span class="o">=</span><span class="n">prediction_length</span><span class="p">,</span>
-</span><span data-line="82">    <span class="n">quantile_levels</span><span class="o">=</span><span class="n">quantile_levels</span><span class="p">,</span>
-</span><span data-line="83">    <span class="n">function_name</span><span class="o">=</span><span class="n">function_name</span>
-</span><span data-line="84"><span class="p">)</span>
-</span></pre></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">invoke_lambda_function</span><span class="p">(</span>
+    <span class="n">initialization_timestamp</span><span class="p">,</span>
+    <span class="n">frequency</span><span class="p">,</span>
+    <span class="n">context_length</span><span class="p">,</span>
+    <span class="n">prediction_length</span><span class="p">,</span>
+    <span class="n">quantile_levels</span><span class="p">,</span>
+    <span class="n">function_name</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Invoke the Lambda function that generates zero-shot forecasts with Chronos-Bolt (Base)</span>
+<span class="sd">    Amazon Bedrock endpoint using data stored in ClickHouse.</span>
+
+<span class="sd">    Parameters:</span>
+<span class="sd">    ========================================================================================================</span>
+<span class="sd">    initialization_timestamp: str.</span>
+<span class="sd">        The initialization timestamp of the forecasts, in ISO format (YYYY-MM-DD HH:mm:ss).</span>
+
+<span class="sd">    frequency: int.</span>
+<span class="sd">        The frequency of the time series, in minutes.</span>
+
+<span class="sd">    context_length: int.</span>
+<span class="sd">        The number of past time steps to use as context.</span>
+
+<span class="sd">    prediction_length: int.</span>
+<span class="sd">        The number of future time steps to predict.</span>
+
+<span class="sd">    quantile_levels: list of float.</span>
+<span class="sd">        The quantiles to be predicted at each future time step.</span>
+
+<span class="sd">    function_name: str.</span>
+<span class="sd">        The name of the Lambda function.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Create the Lambda client</span>
+    <span class="n">lambda_client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;lambda&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Invoke the Lambda function</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">lambda_client</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
+        <span class="n">FunctionName</span><span class="o">=</span><span class="n">function_name</span><span class="p">,</span>
+        <span class="n">Payload</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
+            <span class="s2">&quot;initialization_timestamp&quot;</span><span class="p">:</span> <span class="n">initialization_timestamp</span><span class="p">,</span>
+            <span class="s2">&quot;frequency&quot;</span><span class="p">:</span> <span class="n">frequency</span><span class="p">,</span>
+            <span class="s2">&quot;prediction_length&quot;</span><span class="p">:</span> <span class="n">prediction_length</span><span class="p">,</span>
+            <span class="s2">&quot;context_length&quot;</span><span class="p">:</span> <span class="n">context_length</span><span class="p">,</span>
+            <span class="s2">&quot;quantile_levels&quot;</span><span class="p">:</span> <span class="n">quantile_levels</span>
+        <span class="p">})</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Extract the forecasts in a data frame</span>
+    <span class="n">predictions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;Payload&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">read</span><span class="p">())[</span><span class="s2">&quot;body&quot;</span><span class="p">]))</span>
+
+    <span class="c1"># Return the forecasts</span>
+    <span class="k">return</span> <span class="n">predictions</span>
+
+<span class="c1"># Define the Lambda function name and input parameters</span>
+<span class="n">frequency</span> <span class="o">=</span> <span class="mi">15</span>
+<span class="n">context_length</span> <span class="o">=</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">*</span> <span class="mi">7</span> <span class="o">*</span> <span class="mi">3</span>
+<span class="n">prediction_length</span> <span class="o">=</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">4</span>
+<span class="n">quantile_levels</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">]</span>
+<span class="n">function_name</span> <span class="o">=</span> <span class="s2">&quot;chronos-lambda-function&quot;</span>
+
+<span class="c1"># Generate the forecasts over a past time window</span>
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">invoke_lambda_function</span><span class="p">(</span>
+    <span class="n">initialization_timestamp</span><span class="o">=</span><span class="s2">&quot;2025-08-17 00:00:00&quot;</span><span class="p">,</span>
+    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
+    <span class="n">context_length</span><span class="o">=</span><span class="n">context_length</span><span class="p">,</span>
+    <span class="n">prediction_length</span><span class="o">=</span><span class="n">prediction_length</span><span class="p">,</span>
+    <span class="n">quantile_levels</span><span class="o">=</span><span class="n">quantile_levels</span><span class="p">,</span>
+    <span class="n">function_name</span><span class="o">=</span><span class="n">function_name</span>
+<span class="p">)</span>
+
+<span class="c1"># Generate the forecasts over a future time window</span>
+<span class="n">forecasts</span> <span class="o">=</span> <span class="n">invoke_lambda_function</span><span class="p">(</span>
+    <span class="n">initialization_timestamp</span><span class="o">=</span><span class="s2">&quot;2025-08-18 00:00:00&quot;</span><span class="p">,</span>
+    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
+    <span class="n">context_length</span><span class="o">=</span><span class="n">context_length</span><span class="p">,</span>
+    <span class="n">prediction_length</span><span class="o">=</span><span class="n">prediction_length</span><span class="p">,</span>
+    <span class="n">quantile_levels</span><span class="o">=</span><span class="n">quantile_levels</span><span class="p">,</span>
+    <span class="n">function_name</span><span class="o">=</span><span class="n">function_name</span>
+<span class="p">)</span>
+</pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">predictions</span></code></p>
 <img
@@ -464,39 +461,39 @@ over a future time window for which the data is not yet available.</p>
 <h3>Compare the forecasts to the historical data stored in ClickHouse<a class="headerlink" href="#compare-the-forecasts-to-the-historical-data-stored-in-clickhouse" title="Link to this heading">¶</a></h3>
 <p>Now that the forecasts have been generated, we can compare them to the historical data stored in ClickHouse.
 We again use ClickHouse Connect to query the database and retrieve the results directly into a Pandas DataFrame.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">clickhouse_connect</span>
-</span><span data-line="2">
-</span><span data-line="3"><span class="c1"># Create the ClickHouse client</span>
-</span><span data-line="4"><span class="n">clickhouse_client</span> <span class="o">=</span> <span class="n">clickhouse_connect</span><span class="o">.</span><span class="n">get_client</span><span class="p">(</span>
-</span><span data-line="5">    <span class="n">host</span><span class="o">=</span><span class="s2">&quot;&lt;clickhouse-host&gt;&quot;</span><span class="p">,</span>
-</span><span data-line="6">    <span class="n">user</span><span class="o">=</span><span class="s2">&quot;&lt;clickhouse-user&gt;&quot;</span><span class="p">,</span>
-</span><span data-line="7">    <span class="n">password</span><span class="o">=</span><span class="s2">&quot;&lt;clickhouse-password&gt;&quot;</span><span class="p">,</span>
-</span><span data-line="8">    <span class="n">secure</span><span class="o">=</span><span class="kc">True</span>
-</span><span data-line="9"><span class="p">)</span>
-</span><span data-line="10">
-</span><span data-line="11"><span class="c1"># Load the historical data from ClickHouse</span>
-</span><span data-line="12"><span class="n">df</span> <span class="o">=</span> <span class="n">clickhouse_client</span><span class="o">.</span><span class="n">query_df</span><span class="p">(</span>
-</span><span data-line="13"><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span data-line="14"><span class="sd">    select</span>
-</span><span data-line="15"><span class="sd">        timestamp,</span>
-</span><span data-line="16"><span class="sd">        total_load</span>
-</span><span data-line="17"><span class="sd">    from</span>
-</span><span data-line="18"><span class="sd">        total_load_data</span>
-</span><span data-line="19"><span class="sd">    where</span>
-</span><span data-line="20"><span class="sd">        timestamp &gt;= toDateTime(&#39;2025-08-18 23:45:00&#39;) - INTERVAL 14 DAYS</span>
-</span><span data-line="21"><span class="sd">    order by</span>
-</span><span data-line="22"><span class="sd">        timestamp asc</span>
-</span><span data-line="23"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span data-line="24"><span class="p">)</span>
-</span><span data-line="25">
-</span><span data-line="26"><span class="c1"># Outer join the historical data with the model outputs</span>
-</span><span data-line="27"><span class="n">output</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
-</span><span data-line="28">    <span class="n">left</span><span class="o">=</span><span class="n">df</span><span class="p">,</span>
-</span><span data-line="29">    <span class="n">right</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">predictions</span><span class="p">,</span> <span class="n">forecasts</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
-</span><span data-line="30">    <span class="n">on</span><span class="o">=</span><span class="s2">&quot;timestamp&quot;</span><span class="p">,</span>
-</span><span data-line="31">    <span class="n">how</span><span class="o">=</span><span class="s2">&quot;outer&quot;</span>
-</span><span data-line="32"><span class="p">)</span>
-</span></pre></div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">clickhouse_connect</span>
+
+<span class="c1"># Create the ClickHouse client</span>
+<span class="n">clickhouse_client</span> <span class="o">=</span> <span class="n">clickhouse_connect</span><span class="o">.</span><span class="n">get_client</span><span class="p">(</span>
+    <span class="n">host</span><span class="o">=</span><span class="s2">&quot;&lt;clickhouse-host&gt;&quot;</span><span class="p">,</span>
+    <span class="n">user</span><span class="o">=</span><span class="s2">&quot;&lt;clickhouse-user&gt;&quot;</span><span class="p">,</span>
+    <span class="n">password</span><span class="o">=</span><span class="s2">&quot;&lt;clickhouse-password&gt;&quot;</span><span class="p">,</span>
+    <span class="n">secure</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
+<span class="c1"># Load the historical data from ClickHouse</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">clickhouse_client</span><span class="o">.</span><span class="n">query_df</span><span class="p">(</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    select</span>
+<span class="sd">        timestamp,</span>
+<span class="sd">        total_load</span>
+<span class="sd">    from</span>
+<span class="sd">        total_load_data</span>
+<span class="sd">    where</span>
+<span class="sd">        timestamp &gt;= toDateTime(&#39;2025-08-18 23:45:00&#39;) - INTERVAL 14 DAYS</span>
+<span class="sd">    order by</span>
+<span class="sd">        timestamp asc</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># Outer join the historical data with the model outputs</span>
+<span class="n">output</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+    <span class="n">left</span><span class="o">=</span><span class="n">df</span><span class="p">,</span>
+    <span class="n">right</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">predictions</span><span class="p">,</span> <span class="n">forecasts</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+    <span class="n">on</span><span class="o">=</span><span class="s2">&quot;timestamp&quot;</span><span class="p">,</span>
+    <span class="n">how</span><span class="o">=</span><span class="s2">&quot;outer&quot;</span>
+<span class="p">)</span>
+</pre></div>
 </div>
 <p>The results show that the forecasts are closely aligned with the actual data,
 demonstrating the model’s ability to generalize effectively in a zero-shot setting.
@@ -515,29 +512,30 @@ highlighting its strength in capturing complex temporal patterns.</p>
    
 </div>
 
-      </article>
-      
-    </main>
-  </div><footer class="sy-foot">
-  <div class="sy-foot-inner sy-container mx-auto">
-    <div class="sy-foot-reserved md:flex justify-between items-center">
-      <div class="sy-foot-copyright"><p>Copyright © 2025, Flavia Giammarino</p>
-  
-  <p>
-    Made with
-    
-    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
-    
-    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
-  </p>
-</div>
-      <div class="sy-foot-socials"></div>
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../index.html">
+              <img class="logo" src="../_static/logo.png" alt="Logo of "/>
+            </a></p>
+        </div>
+      </div>
+      <div class="clearer"></div>
     </div>
-  </div>
-</footer>
-      <script src="../_static/documentation_options.js?v=73411916"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script src="../_static/shibuya.js?v=e730760c"></script>
-      <script src="../_static/custom.js"></script></body>
+    <div class="footer">
+      &#169;Copyright © 2025, Flavia Giammarino.
+      
+      |
+      Powered by <a href="https://www.sphinx-doc.org/">Sphinx 8.2.3</a>
+      &amp; <a href="https://alabaster.readthedocs.io">Alabaster 1.0.0</a>
+      
+    </div>
+
+    
+
+    
+  </body>
 </html>

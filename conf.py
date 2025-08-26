@@ -54,7 +54,7 @@ sitemap_url_scheme = "{link}"
 myst_heading_anchors = 6
 
 # -- Theme configuration options ---------------------------------------------
-html_theme = 'shibuya'
+# html_theme = 'shibuya'
 
 html_theme_options = {
     "globaltoc_expand_depth": 10,
