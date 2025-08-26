@@ -53,14 +53,21 @@ total demand, which we downloaded from `Terna's data portal <https://dati.terna.
 and stored in a table in ClickHouse which we called ``total_load_data``. However, given that Chronos-Bolt
 doesn't require any domain adaptation, the same solution can be applied to any other time series.
 
-``total_load_data``
-
 .. raw:: html
 
     <img
         src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/total_load_data.png"
         style="width:40%"
     >
+
+    <p>
+    <span style="font-weight:600">Figure 1:</span>
+    <span>Last 10 row of </span>
+    <code class="docutils literal notranslate">
+    <span class="pre" style="font-weight:600">total_load_data</span>
+    </code>
+    <span>ClickHouse table.</span>
+    </p>
 
 .. note::
     To be able to run the code provided in the rest of this section, you will need to have Boto3 and the AWS-CLI installed on your machine.
