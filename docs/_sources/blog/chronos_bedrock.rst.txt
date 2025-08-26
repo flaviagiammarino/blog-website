@@ -285,7 +285,7 @@ The ``requirements.txt`` file with the list of dependencies is as follows:
     </p>
 
 
-The standard ``Dockerfile`` using the Python 3.12 AWS base image for Lambda is provided here for reference:
+The standard ``Dockerfile`` using the Python 3.12 AWS base image for Lambda is also provided for reference:
 
 .. code:: bash
 
