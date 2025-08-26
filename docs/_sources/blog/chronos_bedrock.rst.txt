@@ -121,7 +121,9 @@ In order to create the Lambda function's Docker image in Elastic Container Regis
 
 .. raw:: html
 
-    <code class="docutils literal notranslate">app.py</code>
+    <code class="docutils literal notranslate">
+    <span class="pre">app.py</span>
+    </code>
 
 
 
