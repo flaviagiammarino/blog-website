@@ -260,6 +260,7 @@ together with the corresponding timestamps.
 .. raw:: html
 
     <p>
+    <span style="font-weight:600">2.2.1.2</span>
     <code class="docutils literal notranslate">
     <span class="pre" style="font-weight:600">requirements.txt</span>
     </code>
@@ -277,6 +278,7 @@ The ``requirements.txt`` file with the list of dependencies is as follows:
 .. raw:: html
 
     <p>
+    <span style="font-weight:600">2.2.1.3</span>
     <code class="docutils literal notranslate">
     <span class="pre" style="font-weight:600">Dockerfile</span>
     </code>
@@ -297,7 +299,7 @@ The standard ``Dockerfile`` using the Python 3.12 AWS base image for Lambda is p
 
    CMD ["app.handler"]
 
-Build the Docker image and push it to ECR
+2.2.2 Build the Docker image and push it to ECR
 ---------------------------------------------------------------------------------------------------------------
 
 When all the files are ready, we can build the Docker image and push it to ECR

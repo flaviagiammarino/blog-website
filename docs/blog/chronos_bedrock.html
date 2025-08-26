@@ -76,7 +76,7 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#create-the-bedrock-endpoint">2.1 Create the Bedrock endpoint</a></li>
 <li><a class="reference internal" href="#create-the-lambda-function-for-invoking-the-bedrock-endpoint-with-clickhouse-data">2.2 Create the Lambda function for invoking the Bedrock endpoint with ClickHouse data</a><ul>
 <li><a class="reference internal" href="#create-the-docker-image">2.2.1 Create the Docker image</a></li>
-<li><a class="reference internal" href="#build-the-docker-image-and-push-it-to-ecr">Build the Docker image and push it to ECR</a></li>
+<li><a class="reference internal" href="#build-the-docker-image-and-push-it-to-ecr">2.2.2 Build the Docker image and push it to ECR</a></li>
 <li><a class="reference internal" href="#create-the-lambda-function-from-the-docker-image-in-ecr">Create the Lambda function from the Docker image in ECR</a></li>
 </ul>
 </li>
@@ -339,6 +339,7 @@ together with the corresponding timestamps.</p>
 </span></pre></div>
 </div>
 <p>
+<span style="font-weight:600">2.2.1.2</span>
 <code class="docutils literal notranslate">
 <span class="pre" style="font-weight:600">requirements.txt</span>
 </code>
@@ -349,6 +350,7 @@ together with the corresponding timestamps.</p>
 </span></pre></div>
 </div>
 <p>
+<span style="font-weight:600">2.2.1.3</span>
 <code class="docutils literal notranslate">
 <span class="pre" style="font-weight:600">Dockerfile</span>
 </code>
@@ -366,7 +368,7 @@ together with the corresponding timestamps.</p>
 </div>
 </section>
 <section id="build-the-docker-image-and-push-it-to-ecr">
-<h4>Build the Docker image and push it to ECR<a class="headerlink" href="#build-the-docker-image-and-push-it-to-ecr" title="Link to this heading">¶</a></h4>
+<h4>2.2.2 Build the Docker image and push it to ECR<a class="headerlink" href="#build-the-docker-image-and-push-it-to-ecr" title="Link to this heading">¶</a></h4>
 <p>When all the files are ready, we can build the Docker image and push it to ECR
 with the AWS-CLI as shown in the <code class="docutils literal notranslate"><span class="pre">build_and_push.sh</span></code> script below.</p>
 <div class="admonition note">
