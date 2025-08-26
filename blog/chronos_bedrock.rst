@@ -123,7 +123,7 @@ In order to create the Lambda function's Docker image in Elastic Container Regis
 
     <p>
     <code class="docutils literal notranslate">
-    <span class="pre">app.py</span>
+    <span class="pre" style="font-weight:600">app.py</span>
     </code>
     </p>
 
