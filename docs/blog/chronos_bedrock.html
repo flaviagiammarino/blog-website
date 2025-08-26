@@ -19,13 +19,17 @@
   --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
 }
 </style>
-        </head>
+    <meta property="og:type" content="website"/>
+<meta property="og:url" content="https://flaviagiammarino.com/blog/chronos_bedrock.html"/>
+<meta property="og:title" content="Zero-Shot Time Series Forecasting with Chronos using Amazon Bedrock and ClickHouse"/>
+<meta name="twitter:card" content="summary"/>
+  </head>
 <body><div class="sy-head">
   <div class="sy-head-blur"></div>
   <div class="sy-head-inner sy-container mx-auto">
     <a class="sy-head-brand" href="../index.html">
-      <img class="light-logo" src="../_static/logo.png" alt="" height="28" loading="lazy" />
-      <img class="dark-logo" src="../_static/logo.png" alt="" height="28" loading="lazy" />
+      <img class="light-logo" src="../_static/icon-light.png" alt="" height="28" loading="lazy" />
+      <img class="dark-logo" src="../_static/icon-dark.png" alt="" height="28" loading="lazy" />
       <strong></strong>
     </a>
     <div class="sy-head-nav" id="head-nav">
@@ -49,10 +53,68 @@ data-aria-dark="Switch to auto color mode">
       </button>
     </div>
   </div>
-</div><div class="sy-container mx-auto body">
-    <main class="sy-content mx-auto pt-12 px-6 xl:px-12 break-words">
-      <article class="yue" role="main">
-         <section id="zero-shot-time-series-forecasting-with-chronos-using-amazon-bedrock-and-clickhouse">
+</div>
+<div class="sy-page sy-container flex mx-auto">
+  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+    <div class="sy-lside-inner md:sticky">
+      <div class="sy-scrollbar p-6">
+        <div class="globaltoc" data-expand-depth="1"><ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Zero-Shot Time Series Forecasting with Chronos using Amazon Bedrock and ClickHouse</a></li>
+</ul>
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
+  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+<li><a class="reference internal" href="#overview">Overview</a></li>
+<li><a class="reference internal" href="#solution">Solution</a><ul>
+<li><a class="reference internal" href="#create-the-bedrock-endpoint">Create the Bedrock endpoint</a></li>
+<li><a class="reference internal" href="#create-the-lambda-function-for-invoking-the-bedrock-endpoint-with-clickhouse-data">Create the Lambda function for invoking the Bedrock endpoint with ClickHouse data</a><ul>
+<li><a class="reference internal" href="#create-the-docker-image">Create the Docker image</a></li>
+<li><a class="reference internal" href="#build-the-docker-image-and-push-it-to-ecr">Build the Docker image and push it to ECR</a></li>
+<li><a class="reference internal" href="#create-the-lambda-function-from-the-docker-image-in-ecr">Create the Lambda function from the Docker image in ECR</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#invoke-the-lambda-function-and-generate-the-forecasts">Invoke the Lambda function and generate the forecasts</a></li>
+<li><a class="reference internal" href="#compare-the-forecasts-to-the-historical-data-stored-in-clickhouse">Compare the forecasts to the historical data stored in ClickHouse</a></li>
+</ul>
+</li>
+</ul>
+</div></div>
+  </aside>
+  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../index.html"><span itemprop="name"></span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">Zero-Shot Time Series Forecasting with Chronos using Amazon Bedrock and ClickHouse</strong>
+        <meta itemprop="position" content="2" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+        <article class="yue" role="main">
+          <section id="zero-shot-time-series-forecasting-with-chronos-using-amazon-bedrock-and-clickhouse">
 <h1>Zero-Shot Time Series Forecasting with Chronos using Amazon Bedrock and ClickHouse<a class="headerlink" href="#zero-shot-time-series-forecasting-with-chronos-using-amazon-bedrock-and-clickhouse" title="Link to this heading">¶</a></h1>
 <img
     src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/architecture_diagram.png"
@@ -142,9 +204,14 @@ or directly from the Bedrock console.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code>: The list of dependencies that need to be installed in the Docker container.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code>: The file containing the instructions to build the Docker image.</p></li>
 </ul>
-<section id="app-py">
-<h5><code class="docutils literal notranslate"><span class="pre">app.py</span></code><a class="headerlink" href="#app-py" title="Link to this heading">¶</a></h5>
-<p>The Lambda function takes as input the following parameters:</p>
+<p><code class="docutils literal notranslate"><span class="pre">app.py</span></code></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">app.py</span></code> Python script with the entry point of the Lambda function is reported below.
+The <code class="docutils literal notranslate"><span class="pre">handler</span></code> function has two arguments:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">event</span></code>: The input payload with the request parameters.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">context</span></code>: The runtime information about the invocation.</p></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">event</span></code> object is expected to include the following fields:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;initialization_timestamp&quot;</span></code>: The first timestamp for which the forecasts should be generated.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;frequency&quot;</span></code>: The frequency of the time series, in number of minutes.</p></li>
@@ -152,6 +219,7 @@ or directly from the Bedrock console.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;prediction_length&quot;</span></code>: The number of future time series values (on and after <code class="docutils literal notranslate"><span class="pre">initialization_timestamp</span></code>) to predict.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;quantile_levels&quot;</span></code>: The quantiles to be predicted at each future time step.</p></li>
 </ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">context</span></code> object is automatically generated at runtime and does not need to be provided.</p>
 <p>The Lambda function connects to ClickHouse using <a class="reference external" href="https://clickhouse.com/docs/integrations/python">ClickHouse Connect</a>
 and loads the context data using the <code class="docutils literal notranslate"><span class="pre">query_df</span></code> method, which returns the query output in a Pandas Dataframe.
 After that, the Lambda function invokes the Bedrock endpoint with the context data.
@@ -266,18 +334,14 @@ together with the corresponding timestamps.</p>
 </span><span data-line="95">    <span class="p">}</span>
 </span></pre></div>
 </div>
-</section>
-<section id="requirements-txt">
-<h5><code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code><a class="headerlink" href="#requirements-txt" title="Link to this heading">¶</a></h5>
+<p><code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code></p>
 <p>The <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> file with the list of dependencies is reported below.</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">boto3</span><span class="o">==</span><span class="mf">1.34.84</span>
 </span><span data-line="2"><span class="n">clickhouse_connect</span><span class="o">==</span><span class="mf">0.8.18</span>
 </span><span data-line="3"><span class="n">pandas</span><span class="o">==</span><span class="mf">2.3.1</span>
 </span></pre></div>
 </div>
-</section>
-<section id="dockerfile">
-<h5><code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code><a class="headerlink" href="#dockerfile" title="Link to this heading">¶</a></h5>
+<p><code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code></p>
 <p>The standard <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> using the Python 3.12 AWS base image for Lambda is also reported below.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">FROM<span class="w"> </span>amazon/aws-lambda-python:3.12
 </span><span data-line="2">
@@ -290,7 +354,6 @@ together with the corresponding timestamps.</p>
 </span><span data-line="9">CMD<span class="w"> </span><span class="o">[</span><span class="s2">&quot;app.handler&quot;</span><span class="o">]</span>
 </span></pre></div>
 </div>
-</section>
 </section>
 <section id="build-the-docker-image-and-push-it-to-ecr">
 <h4>Build the Docker image and push it to ECR<a class="headerlink" href="#build-the-docker-image-and-push-it-to-ecr" title="Link to this heading">¶</a></h4>
@@ -322,7 +385,7 @@ with the AWS-CLI as shown in the <code class="docutils literal notranslate"><spa
 </div>
 </section>
 <section id="create-the-lambda-function-from-the-docker-image-in-ecr">
-<h4>Create the Lambda function from the Docker Image in ECR<a class="headerlink" href="#create-the-lambda-function-from-the-docker-image-in-ecr" title="Link to this heading">¶</a></h4>
+<h4>Create the Lambda function from the Docker image in ECR<a class="headerlink" href="#create-the-lambda-function-from-the-docker-image-in-ecr" title="Link to this heading">¶</a></h4>
 <p>After the Docker image has been pushed to ECR, we can create the Lambda function using <a class="reference external" href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/lambda/client/create_function.html">Boto3</a>
 as in the code below, with the <a class="reference external" href="https://docs.aws.amazon.com/cli/latest/reference/lambda/create-function.html">AWS-CLI</a>,
 or directly from the Lambda console.</p>
@@ -511,14 +574,22 @@ highlighting its strength in capturing complex temporal patterns.</p>
 </section>
 </section>
 
-<div class="section ablog__blog_comments">
-   
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"><div class="navigation-prev">
+    <a href="../index.html">
+      <i class="i-lucide chevron-left"></i>
+      <div class="page-info">
+        <span>Previous</span><div class="title">Home</div></div>
+    </a>
+  </div></div></div>
+    </div>
+  </main>
 </div>
-
-      </article>
-      
-    </main>
-  </div><footer class="sy-foot">
+<footer class="sy-foot">
   <div class="sy-foot-inner sy-container mx-auto">
     <div class="sy-foot-reserved md:flex justify-between items-center">
       <div class="sy-foot-copyright"><p>Copyright © 2025, Flavia Giammarino</p>

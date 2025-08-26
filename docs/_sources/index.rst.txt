@@ -1,7 +1,6 @@
-:layout: landing
+:layout: default
 
 .. toctree::
-    :caption: Posts
     :glob:
 
     */*
