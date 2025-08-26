@@ -329,7 +329,7 @@ with the AWS-CLI as shown in the ``build_and_push.sh`` script below.
    docker push $aws_account_id.dkr.ecr.$region.amazonaws.com/$algorithm_name:latest
 
 
-Create the Lambda function from the Docker image in ECR
+2.2.3 Create the Lambda function from the Docker image in ECR
 ---------------------------------------------------------------------------------------------------------------
 
 After the Docker image has been pushed to ECR, we can create the Lambda function using `Boto3 <https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/lambda/client/create_function.html>`__
@@ -362,7 +362,7 @@ or directly from the Lambda console.
        Publish=True,
    )
 
-Invoke the Lambda function and generate the forecasts
+2.3 Invoke the Lambda function and generate the forecasts
 ===============================================================================================================
 
 After the Lambda function has been created, we can invoke it to generate the forecasts.
@@ -483,7 +483,7 @@ In both cases, the Lambda function is invoked with a context window of 3 weeks t
         style="width:90%"
     >
 
-Compare the forecasts to the historical data stored in ClickHouse
+2.4 Compare the forecasts to the historical data stored in ClickHouse
 ===============================================================================================================
 
 Now that the forecasts have been generated, we can compare them to the historical data stored in ClickHouse.

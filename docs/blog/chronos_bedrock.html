@@ -77,11 +77,11 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#create-the-lambda-function-for-invoking-the-bedrock-endpoint-with-clickhouse-data">2.2 Create the Lambda function for invoking the Bedrock endpoint with ClickHouse data</a><ul>
 <li><a class="reference internal" href="#create-the-docker-image">2.2.1 Create the Docker image</a></li>
 <li><a class="reference internal" href="#build-the-docker-image-and-push-it-to-ecr">2.2.2 Build the Docker image and push it to ECR</a></li>
-<li><a class="reference internal" href="#create-the-lambda-function-from-the-docker-image-in-ecr">Create the Lambda function from the Docker image in ECR</a></li>
+<li><a class="reference internal" href="#create-the-lambda-function-from-the-docker-image-in-ecr">2.2.3 Create the Lambda function from the Docker image in ECR</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#invoke-the-lambda-function-and-generate-the-forecasts">Invoke the Lambda function and generate the forecasts</a></li>
-<li><a class="reference internal" href="#compare-the-forecasts-to-the-historical-data-stored-in-clickhouse">Compare the forecasts to the historical data stored in ClickHouse</a></li>
+<li><a class="reference internal" href="#invoke-the-lambda-function-and-generate-the-forecasts">2.3 Invoke the Lambda function and generate the forecasts</a></li>
+<li><a class="reference internal" href="#compare-the-forecasts-to-the-historical-data-stored-in-clickhouse">2.4 Compare the forecasts to the historical data stored in ClickHouse</a></li>
 </ul>
 </li>
 </ul>
@@ -397,7 +397,7 @@ with the AWS-CLI as shown in the <code class="docutils literal notranslate"><spa
 </div>
 </section>
 <section id="create-the-lambda-function-from-the-docker-image-in-ecr">
-<h4>Create the Lambda function from the Docker image in ECR<a class="headerlink" href="#create-the-lambda-function-from-the-docker-image-in-ecr" title="Link to this heading">¶</a></h4>
+<h4>2.2.3 Create the Lambda function from the Docker image in ECR<a class="headerlink" href="#create-the-lambda-function-from-the-docker-image-in-ecr" title="Link to this heading">¶</a></h4>
 <p>After the Docker image has been pushed to ECR, we can create the Lambda function using <a class="reference external" href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/lambda/client/create_function.html">Boto3</a>
 as in the code below, with the <a class="reference external" href="https://docs.aws.amazon.com/cli/latest/reference/lambda/create-function.html">AWS-CLI</a>,
 or directly from the Lambda console.</p>
@@ -431,7 +431,7 @@ or directly from the Lambda console.</p>
 </section>
 </section>
 <section id="invoke-the-lambda-function-and-generate-the-forecasts">
-<h3>Invoke the Lambda function and generate the forecasts<a class="headerlink" href="#invoke-the-lambda-function-and-generate-the-forecasts" title="Link to this heading">¶</a></h3>
+<h3>2.3 Invoke the Lambda function and generate the forecasts<a class="headerlink" href="#invoke-the-lambda-function-and-generate-the-forecasts" title="Link to this heading">¶</a></h3>
 <p>After the Lambda function has been created, we can invoke it to generate the forecasts.</p>
 <p>The code below defines a Python function which invokes the Lambda function with the
 inputs discussed in the previous section and casts the Lambda function’s JSON output
@@ -537,7 +537,7 @@ over a future time window for which the data is not yet available.</p>
     style="width:90%"
 ></section>
 <section id="compare-the-forecasts-to-the-historical-data-stored-in-clickhouse">
-<h3>Compare the forecasts to the historical data stored in ClickHouse<a class="headerlink" href="#compare-the-forecasts-to-the-historical-data-stored-in-clickhouse" title="Link to this heading">¶</a></h3>
+<h3>2.4 Compare the forecasts to the historical data stored in ClickHouse<a class="headerlink" href="#compare-the-forecasts-to-the-historical-data-stored-in-clickhouse" title="Link to this heading">¶</a></h3>
 <p>Now that the forecasts have been generated, we can compare them to the historical data stored in ClickHouse.
 We again use ClickHouse Connect to query the database and retrieve the results directly into a Pandas DataFrame.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">clickhouse_connect</span>
