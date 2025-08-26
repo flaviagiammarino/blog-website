@@ -127,7 +127,8 @@ By representing time series as sequences of tokens, TSFMs can leverage LLMs’ c
 patterns from the context data.
 TSFMs eliminate the traditional need for domain-specific model development, allowing organizations to deploy
 accurate time series solutions faster.</p>
-<p>In this post, we will focus on Chronos, a family of TSFMs for time series forecasting developed by Amazon.
+<p>In this post, we will focus on Chronos, a family of TSFMs for probabilistic time series forecasting
+developed by Amazon.
 In contrast to other TSFMs, that rely on LLMs pre-trained on text, Chronos models are trained from scratch
 on a large collection of time series datasets.
 Moreover, unlike other TSFMs, which require fine-tuning on in-domain data, Chronos models generate accurate
@@ -137,7 +138,7 @@ memory-efficient Chronos model that can also be used on CPU. Chronos-Bolt is ava
 Amazon SageMaker JumpStart and Amazon Bedrock.</p>
 <p>In the rest of this post, we will walk through a practical example of using Chronos-Bolt with time series data
 stored in ClickHouse. We will create a Bedrock endpoint, then build a Lambda function that invokes the Bedrock
-endpoint with context data queried from ClickHouse and returns the Chronos-Bolt forecasts.</p>
+endpoint with context data queried from ClickHouse and returns the forecasts.</p>
 </section>
 <section id="solution">
 <h2>Solution<a class="headerlink" href="#solution" title="Link to this heading">¶</a></h2>
@@ -151,7 +152,7 @@ doesn’t require any domain adaptation, the same solution can be applied to any
     style="width:80%"
 ><div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>To be able to run the code below, you will need to have Boto3 and the AWS-CLI installed on your machine.
+<p>To be able to run the code provided in the rest of this section, you will need to have Boto3 and the AWS-CLI installed on your machine.
 You will also need to update several variables in the code to reflect your AWS
 configuration - such as your AWS account number, region, service roles, etc. - as will be outlined below.</p>
 </div>
@@ -211,7 +212,7 @@ The <code class="docutils literal notranslate"><span class="pre">handler</span><
 <li><p><code class="docutils literal notranslate"><span class="pre">event</span></code>: The input payload with the request parameters.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">context</span></code>: The runtime information about the invocation.</p></li>
 </ul>
-<p>The <code class="docutils literal notranslate"><span class="pre">event</span></code> object is expected to include the following fields:</p>
+<p>In this case, the <code class="docutils literal notranslate"><span class="pre">event</span></code> object is expected to include the following fields:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;initialization_timestamp&quot;</span></code>: The first timestamp for which the forecasts should be generated.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;frequency&quot;</span></code>: The frequency of the time series, in number of minutes.</p></li>
@@ -226,7 +227,6 @@ After that, the Lambda function invokes the Bedrock endpoint with the context da
 The Bedrock endpoint response includes the predicted mean and the predicted quantiles of the time series
 at each future time step, which the Lambda function returns to the user in JSON format
 together with the corresponding timestamps.</p>
-<p>The Python code of the Lambda function is reported below.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Before deploying the Lambda function, make sure to replace the following variables:</p>
@@ -335,14 +335,14 @@ together with the corresponding timestamps.</p>
 </span></pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code></p>
-<p>The <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> file with the list of dependencies is reported below.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> file with the list of dependencies is as follows:</p>
 <div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">boto3</span><span class="o">==</span><span class="mf">1.34.84</span>
 </span><span data-line="2"><span class="n">clickhouse_connect</span><span class="o">==</span><span class="mf">0.8.18</span>
 </span><span data-line="3"><span class="n">pandas</span><span class="o">==</span><span class="mf">2.3.1</span>
 </span></pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code></p>
-<p>The standard <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> using the Python 3.12 AWS base image for Lambda is also reported below.</p>
+<p>The standard <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> using the Python 3.12 AWS base image for Lambda is provided here for reference:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">FROM<span class="w"> </span>amazon/aws-lambda-python:3.12
 </span><span data-line="2">
 </span><span data-line="3">COPY<span class="w"> </span>requirements.txt<span class="w">  </span>.
@@ -422,7 +422,8 @@ or directly from the Lambda console.</p>
 <h3>Invoke the Lambda function and generate the forecasts<a class="headerlink" href="#invoke-the-lambda-function-and-generate-the-forecasts" title="Link to this heading">¶</a></h3>
 <p>After the Lambda function has been created, we can invoke it to generate the forecasts.</p>
 <p>The code below defines a Python function which invokes the Lambda function with the
-inputs discussed in the previous section and casts the Lambda function’s JSON output to Pandas Dataframe.</p>
+inputs discussed in the previous section and casts the Lambda function’s JSON output
+to Pandas Dataframe.</p>
 <p>Next, the code makes two invocations: the first time it requests the forecasts over a
 past time window for which historical data is already available, which allows us to assess how
 close the forecasts are to the actual data, while the second time it requests the forecasts

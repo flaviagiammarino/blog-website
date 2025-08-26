@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
   <id>https://flaviagiammarino.com/</id>
   <title> </title>
-  <updated>2025-08-26T09:25:57.402344+00:00</updated>
+  <updated>2025-08-26T10:37:05.458018+00:00</updated>
   <link href="https://flaviagiammarino.com/"/>
   <link href="https://flaviagiammarino.com/blog/atom.xml" rel="self"/>
   <generator uri="https://ablog.readthedocs.io/" version="0.11.12">ABlog</generator>
@@ -28,7 +28,10 @@ By representing time series as sequences of tokens, TSFMs can leverage LLMs’ c
 patterns from the context data.
 TSFMs eliminate the traditional need for domain-specific model development, allowing organizations to deploy
 accurate time series solutions faster.</summary>
-    <category term="AWS" label="AWS"/>
+    <category term="AmazonBedrock" label="Amazon Bedrock"/>
+    <category term="AmazonChronos" label="Amazon Chronos"/>
+    <category term="AmazonWebServices" label="Amazon Web Services"/>
+    <category term="Forecasting" label="Forecasting"/>
     <category term="LLM" label="LLM"/>
     <category term="TimeSeries" label="Time Series"/>
     <published>2025-08-22T00:00:00+02:00</published>

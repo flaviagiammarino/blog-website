@@ -4,7 +4,7 @@
     :keywords: Time Series, LLM, Forecasting, Amazon Bedrock, Amazon Chronos
 
 .. post:: August 22, 2025
-    :tags: Time Series, LLM, AWS
+    :tags: Time Series, LLM, Forecasting, Amazon Web Services, Amazon Bedrock, Amazon Chronos
     :category: Time Series Foundation Models
     :author: Flavia
     :language: en
@@ -30,7 +30,8 @@ patterns from the context data.
 TSFMs eliminate the traditional need for domain-specific model development, allowing organizations to deploy
 accurate time series solutions faster.
 
-In this post, we will focus on Chronos, a family of TSFMs for time series forecasting developed by Amazon.
+In this post, we will focus on Chronos, a family of TSFMs for probabilistic time series forecasting
+developed by Amazon.
 In contrast to other TSFMs, that rely on LLMs pre-trained on text, Chronos models are trained from scratch
 on a large collection of time series datasets.
 Moreover, unlike other TSFMs, which require fine-tuning on in-domain data, Chronos models generate accurate
@@ -42,7 +43,7 @@ Amazon SageMaker JumpStart and Amazon Bedrock.
 
 In the rest of this post, we will walk through a practical example of using Chronos-Bolt with time series data
 stored in ClickHouse. We will create a Bedrock endpoint, then build a Lambda function that invokes the Bedrock
-endpoint with context data queried from ClickHouse and returns the Chronos-Bolt forecasts.
+endpoint with context data queried from ClickHouse and returns the forecasts.
 
 Solution
 ***************************************************************************************************************
@@ -62,7 +63,7 @@ doesn't require any domain adaptation, the same solution can be applied to any o
     >
 
 .. note::
-    To be able to run the code below, you will need to have Boto3 and the AWS-CLI installed on your machine.
+    To be able to run the code provided in the rest of this section, you will need to have Boto3 and the AWS-CLI installed on your machine.
     You will also need to update several variables in the code to reflect your AWS
     configuration - such as your AWS account number, region, service roles, etc. - as will be outlined below.
 
@@ -126,7 +127,7 @@ The ``handler`` function has two arguments:
 - ``event``: The input payload with the request parameters.
 - ``context``: The runtime information about the invocation.
 
-The ``event`` object is expected to include the following fields:
+In this case, the ``event`` object is expected to include the following fields:
 
 - ``"initialization_timestamp"``: The first timestamp for which the forecasts should be generated.
 - ``"frequency"``: The frequency of the time series, in number of minutes.
@@ -142,8 +143,6 @@ After that, the Lambda function invokes the Bedrock endpoint with the context da
 The Bedrock endpoint response includes the predicted mean and the predicted quantiles of the time series
 at each future time step, which the Lambda function returns to the user in JSON format
 together with the corresponding timestamps.
-
-The Python code of the Lambda function is reported below.
 
 .. note::
     Before deploying the Lambda function, make sure to replace the following variables:
@@ -254,7 +253,7 @@ The Python code of the Lambda function is reported below.
 
 ``requirements.txt``
 
-The ``requirements.txt`` file with the list of dependencies is reported below.
+The ``requirements.txt`` file with the list of dependencies is as follows:
 
 ::
 
@@ -264,7 +263,7 @@ The ``requirements.txt`` file with the list of dependencies is reported below.
 
 ``Dockerfile``
 
-The standard ``Dockerfile`` using the Python 3.12 AWS base image for Lambda is also reported below.
+The standard ``Dockerfile`` using the Python 3.12 AWS base image for Lambda is provided here for reference:
 
 .. code:: bash
 
@@ -347,7 +346,8 @@ Invoke the Lambda function and generate the forecasts
 After the Lambda function has been created, we can invoke it to generate the forecasts.
 
 The code below defines a Python function which invokes the Lambda function with the
-inputs discussed in the previous section and casts the Lambda function's JSON output to Pandas Dataframe.
+inputs discussed in the previous section and casts the Lambda function's JSON output
+to Pandas Dataframe.
 
 Next, the code makes two invocations: the first time it requests the forecasts over a
 past time window for which historical data is already available, which allows us to assess how
