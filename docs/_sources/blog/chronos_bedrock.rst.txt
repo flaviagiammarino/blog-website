@@ -55,7 +55,7 @@ doesn't require any domain adaptation, the same solution can be applied to any o
 
 .. raw:: html
 
-    <div style="margin: 10em 0em 10em 0em">
+    <div style="margin: 2em 0em 2em 0em">
 
     <img
         src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/total_load_data.png"
