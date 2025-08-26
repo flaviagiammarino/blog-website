@@ -59,7 +59,7 @@ doesn't require any domain adaptation, the same solution can be applied to any o
 
     <img
         src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/time_series_data.png"
-        style="width:80%"
+        style="width:40%"
     >
 
 .. note::
@@ -471,7 +471,7 @@ In both cases, the Lambda function is invoked with a context window of 3 weeks t
 
     <img
         src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/predictions_table.png"
-        style="width:90%"
+        style="width:100%"
     >
 
 ``forecasts``
@@ -480,7 +480,7 @@ In both cases, the Lambda function is invoked with a context window of 3 weeks t
 
     <img
         src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/forecasts_table.png"
-        style="width:90%"
+        style="width:100%"
     >
 
 2.4 Compare the forecasts to the historical data stored in ClickHouse
