@@ -1,11 +1,7 @@
-:layout: default
+:layout: 404
+:orphan:
 
-.. toctree::
-    :glob:
+404
+===
 
-    */*
-
-
-
-
-
+This page does not exist.

@@ -10,7 +10,7 @@ project = ''
 author = 'Flavia Giammarino'
 release = '2025-08-25'
 language = 'en'
-copyright = 'Copyright © 2025, Flavia Giammarino'
+copyright = 'Copyright © 2025, Flavia Giammarino.'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -23,8 +23,11 @@ extensions = [
     'sphinx.ext.githubpages',
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
+    "sphinx.ext.todo",
+    "sphinx.ext.ifconfig",
     'sphinx.ext.extlinks',
     'sphinx.ext.viewcode',
+    "sphinx_automodapi.automodapi",
     'sphinx_sitemap',
     'myst_parser',
     'sphinx.ext.mathjax',
@@ -34,13 +37,11 @@ extensions = [
 
 templates_path = ['templates']
 
-exclude_patterns = ['Thumbs.db', '.DS_Store']
+exclude_patterns = ['docs', 'Thumbs.db', '.DS_Store']
 
 master_doc = "index"
 highlight_language = 'python3'
 sitemap_url_scheme = "{link}"
-
-fontawesome_link_cdn = "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
@@ -59,18 +60,26 @@ html_domain_indices = False
 
 # -- ABlog settings ---------------------------------------------------
 
-blog_title = " "
-blog_baseurl = html_baseurl
+blog_title = "Blog"
+blog_baseurl = f"{html_baseurl}/blog"
 blog_languages = {
     "en": ("English", None),
 }
 blog_default_language = "en"
-
 blog_authors = {
     "Flavia": ("Flavia Giammarino", "https://flaviagiammarino.com"),
 }
 blog_default_author = "Flavia"
-
+blog_feed_archives = True
+blog_feed_fulltext = True
+blog_feed_templates = {
+    "atom": {
+        "content": "{{ title }}{% for tag in post.tags %} #{{ tag.name|trim()|replace(' ', '') }}{% endfor %}",
+    },
+    "social": {
+        "content": "{{ title }}{% for tag in post.tags %} #{{ tag.name|trim()|replace(' ', '') }}{% endfor %}",
+    },
+}
 skip_injecting_base_ablog_templates = True
 
 # -- Theme configuration options ---------------------------------------------
@@ -86,14 +95,10 @@ html_theme_options = {
 html_sidebars = {
     "**": [
         "sidebars/localtoc.html",
-        # "ablog/postcard.html",
-        # "ablog/recentposts.html",
-        # "ablog/tagcloud.html",
-        # "ablog/categories.html",
-        # "ablog/archives.html",
-        # "ablog/authors.html",
-        # "ablog/languages.html",
-        # "ablog/locations.html",
+        "ablog/categories.html",
+        "ablog/tagcloud.html",
+        "ablog/archives.html",
+        "ablog/authors.html",
     ]
 }
 

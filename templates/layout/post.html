@@ -1,0 +1,60 @@
+{%- extends "base.html" -%}
+
+{%- block extrahead -%}
+  {% include "components/meta-opengraph.html" %}
+  {% include "components/alternate-links.html" %}
+{%- endblock -%}
+
+{%- if meta and meta.dark_code == "true" -%}
+  {% set dark_code = True %}
+{%- elif theme_dark_code -%}
+  {% set dark_code = True %}
+{%- else -%}
+  {% set dark_code = False %}
+{%- endif -%}
+
+{% block body %}
+<div class="sy-page sy-container flex mx-auto">
+
+    <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+        <button class="rside-close js-menu xl:hidden" aria-label="Close left sidebar" type="button" aria-controls="lside" aria-expanded="false">
+            <i class="i-lucide close"></i>
+        </button>
+        <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4">
+          {%- if sidebars -%}
+            {%- for sidebartemplate in sidebars -%}
+              {%- if sidebartemplate != "sidebars/localtoc.html" -%}
+                {%- include sidebartemplate -%}
+              {% endif %}
+            {%- endfor -%}
+          {%- endif -%}
+        </div>
+    </aside>
+
+    <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close right sidebar" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4">
+        {%- if display_toc -%}
+        <div class="localtoc" style="font-size: 90%;"><h3 style="color: var(--sy-c-light);">{{ _('On this page') }}</h3>{{ toc }}</div>
+        {%- endif -%}
+    </div>
+  </aside>
+
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+    {%- include "components/breadcrumbs.html" -%}
+    <div class="flex flex-col break-words justify-between">
+      <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+        <article class="yue{% if dark_code %} dark-code{% endif %}" role="main">
+          {% block content %}{{ body }}{% endblock %}
+        </article>
+        {%- include "components/back-to-top.html" -%}
+        {%- include "components/navigation.html" -%}
+        {%- include "partials/page-bottom.html" -%}
+      </div>
+    </div>
+  </main>
+
+</div>
+{% endblock %}

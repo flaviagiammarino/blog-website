@@ -1,57 +1,124 @@
-{%- extends "page.html" %} {% block body %} {% macro postlink(post) -%} {% if
-post.external_link -%} {{- post.external_link -}} {% else %} {{-
-pathto(post.docname) }}{{ anchor(post) -}} {%- endif %} {%- endmacro %}
-<div class="section ablog__collection">
-  <h1>
-    {% if archive_feed and fa %}
-    <a href="{{ pathto(collection.path, 1) }}/atom.xml">
-      <i class="fa fa-rss fa-rotate-270"></i
-    ></a>
-    {% endif %}
-    <span
-      >{{ header }} {% if collection.href %}
-      <a href="{{ collection.href }}">{{ collection }}</a>
-      {% else %} {{ collection }} {% endif %}
-    </span>
-  </h1>
-  {% if ablog.blog_archive_titles %} {% for post in collection %}
-  <div class="section ablog__collection_meta">
-    <p>
-      {% if post.published %}
-      <span>{{ post.date.strftime(ablog.post_date_format) }}</span>
-      {% else %}
-      <span>Draft</span>
-      {% endif %} -
-      <a href="{{ postlink(post) }}">{{ post.title }}</a>
-    </p>
-  </div>
-  {% endfor %} {% else %} {% for post in collection %}
-  <div class="section ablog-post">
-    <h2 class="ablog-post-title">
-      <a href="{{ postlink(post) }}">{{ post.title }}</a>
-    </h2>
-    <ul class="ablog-archive">
-      <li>
-        {% if post.published %} {% if fa %}
-        <i class="fa fa-calendar"></i>
-        {% endif %}
-        <span>{{ post.date.strftime(ablog.post_date_format) }}</span>
-        {% else %} {% if fa %}
-        <i class="fa fa-pencil"></i>
-        {% endif %} {% if post.date %}
-        <span>{{ post.date.strftime(ablog.post_date_format) }}</span>
-        {% else %}
-        <span>Draft</span>
-        {% endif %} {% endif %}
-      </li>
-      {% include "ablog/postcard2.html" %}
-    </ul>
-    {{ post.to_html(collection.docname) }}
-    <p class="ablog-post-expand">
-      <a href="{{ postlink(post) }}"><em>{{ _("Read more ...") }}</em></a>
-    </p>
-    <hr />
-  </div>
-  {% endfor %} {% endif %}
+{%- extends "base.html" -%}
+
+{%- block extrahead -%}
+  {% include "components/meta-opengraph.html" %}
+  {% include "components/alternate-links.html" %}
+{%- endblock -%}
+
+{%- if meta and meta.dark_code == "true" -%}
+  {% set dark_code = True %}
+{%- elif theme_dark_code -%}
+  {% set dark_code = True %}
+{%- else -%}
+  {% set dark_code = False %}
+{%- endif -%}
+
+{% block body %}
+
+{% macro postlink(post) -%}
+    {% if post.external_link -%}
+        {{- post.external_link -}}
+    {% else %}
+        {{-pathto(post.docname) }}
+        {{ anchor(post) -}}
+    {%- endif %}
+{%- endmacro %}
+
+<div class="sy-page sy-container flex mx-auto">
+
+    <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+        <button class="rside-close js-menu xl:hidden" aria-label="Close left sidebar" type="button" aria-controls="lside" aria-expanded="false">
+            <i class="i-lucide close"></i>
+        </button>
+        <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4">
+          {%- if sidebars -%}
+            {%- for sidebartemplate in sidebars -%}
+              {%- if sidebartemplate != "sidebars/localtoc.html" -%}
+                {%- include sidebartemplate -%}
+              {% endif %}
+            {%- endfor -%}
+          {%- endif -%}
+        </div>
+    </aside>
+
+    <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close right sidebar" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4">
+        {%- if display_toc -%}
+        <div class="localtoc" style="font-size: 90%;"><h3 style="color: var(--sy-c-light);">{{ _('On this page') }}</h3>{{ toc }}</div>
+        {%- endif -%}
+    </div>
+  </aside>
+
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+    {%- include "components/breadcrumbs.html" -%}
+    <div class="flex flex-col break-words justify-between">
+      <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+        <article class="yue{% if dark_code %} dark-code{% endif %}" role="main">
+           <h1>
+            <span>
+                {{ header }}
+                {% if collection.href %}
+                    <a href="{{ collection.href }}">{{ collection }}</a>
+                {% else %}
+                    {{ collection }}
+                {% endif %}
+            </span>
+           </h1>
+
+            {% for post in collection %}
+                <div>
+                <h2>
+                  <a href="{{ postlink(post) }}">{{ post.title }}</a>
+                </h2>
+                    <div style="display:flex;">
+                        <div style="display:inline-block;text-align:top;vertical-align:top;width:45%">
+                            <div style="display:flex;">
+                                <svg style="display:inline-block;vertical-align:middle;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-icon lucide-calendar"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
+                                <div style="display:inline-block;;vertical-align:middle;margin-left:3px;margin-top:-1px;">
+                                    {{ post.date.strftime(ablog.post_date_format) }}
+                                </div>
+                            </div>
+                            <div style="display:flex;">
+                                <svg style="display:inline-block;vertical-align:middle;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
+                                <div style="display:inline-block;;vertical-align:middle;margin-left:3px;margin-top:-1px;">
+                                    {{ post.category[0] }}
+                                </div>
+                            </div>
+                        </div>
+                        <div style="display:inline-block;text-align:top;vertical-align:top;width:55%">
+                            <div style="display:flex;">
+                                <svg style="display:inline-block;vertical-align:middle;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tags-icon lucide-tags"><path d="M13.172 2a2 2 0 0 1 1.414.586l6.71 6.71a2.4 2.4 0 0 1 0 3.408l-4.592 4.592a2.4 2.4 0 0 1-3.408 0l-6.71-6.71A2 2 0 0 1 6 9.172V3a1 1 0 0 1 1-1z"/><path d="M2 7v6.172a2 2 0 0 0 .586 1.414l6.71 6.71a2.4 2.4 0 0 0 3.191.193"/><circle cx="10.5" cy="6.5" r=".5" fill="currentColor"/></svg>
+                                <div style="display:inline-block;;vertical-align:middle;margin-left:3px;margin-top:-1px;">
+                                    {% for tag in post.tags %}
+                                        {% if loop.last %}
+                                            <span>{{ tag }}.</span>
+                                        {%- else -%}
+                                            <span>{{ tag }}, </span>
+                                        {% endif %}
+                                     {% endfor %}
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                {{ post.to_html(collection.docname) }}
+                <p>
+                  <a href="{{ postlink(post) }}"><em>{{ _("Read more ...") }}</em></a>
+                </p>
+                <hr />
+              </div>
+              {% endfor %}
+        </article>
+        {%- include "components/back-to-top.html" -%}
+        {%- include "components/navigation.html" -%}
+        {%- include "partials/page-bottom.html" -%}
+      </div>
+    </div>
+  </main>
+
 </div>
 {% endblock body %}

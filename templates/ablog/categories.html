@@ -1,12 +1,12 @@
 {% if ablog.category %}
 <div class="ablog-sidebar-item ablog__categories">
-  <h3>
+  <h3 style="color: var(--sy-c-light);">
     <a href="{{ pathto(ablog.category.path) }}">{{ gettext('Categories') }}</a>
   </h3>
   <ul>
     {% for coll in ablog.category %} {% if coll %}
     <li>
-      <a href="{{ pathto(coll.docname) }}">{{ coll }} ({{ coll|length }})</a>
+      <a href="{{ pathto(coll.docname) }}" style="font-size: 90%">{{ coll }} ({{ coll|length }})</a>
     </li>
     {% endif %} {% endfor %}
   </ul>

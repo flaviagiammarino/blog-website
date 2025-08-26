@@ -2,12 +2,13 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Zero-Shot Time Series Forecasting with Chronos using Amazon Bedrock and ClickHouse - flaviagiammarino.com</title><link rel="shortcut icon" href="../_static/favicon.ico"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="prev" title="&lt;no title&gt;" href="../index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Zero-shot time series forecasting with Chronos using Amazon Bedrock and ClickHouse - flaviagiammarino.com</title><link rel="shortcut icon" href="../_static/favicon.ico"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
       <link rel="canonical" href="https://flaviagiammarino.com/blog/chronos_bedrock.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=397bb51e" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=d48c410d" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,7 +22,7 @@
 </style>
     <meta property="og:type" content="website"/>
 <meta property="og:url" content="https://flaviagiammarino.com/blog/chronos_bedrock.html"/>
-<meta property="og:title" content="Zero-Shot Time Series Forecasting with Chronos using Amazon Bedrock and ClickHouse"/>
+<meta property="og:title" content="Zero-shot time series forecasting with Chronos using Amazon Bedrock and ClickHouse"/>
 <meta name="twitter:card" content="summary"/>
   </head>
 <body><div class="sy-head">
@@ -55,22 +56,81 @@ data-aria-dark="Switch to auto color mode">
   </div>
 </div>
 <div class="sy-page sy-container flex mx-auto">
-  <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
-    <div class="sy-lside-inner md:sticky">
-      <div class="sy-scrollbar p-6">
-        <div class="globaltoc" data-expand-depth="1"><ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Zero-Shot Time Series Forecasting with Chronos using Amazon Bedrock and ClickHouse</a></li>
-</ul>
-        </div>
-      </div>
-    </div>
-  </aside>
-  <div class="lside-overlay js-menu" role="button" aria-label="Close left sidebar" aria-controls="lside" aria-expanded="false"></div>
-  <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
-    <button class="rside-close js-menu xl:hidden" aria-label="Close Table of Contents" type="button" aria-controls="rside" aria-expanded="false">
+
+    <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+        <button class="rside-close js-menu xl:hidden" aria-label="Close left sidebar" type="button" aria-controls="lside" aria-expanded="false">
+            <i class="i-lucide close"></i>
+        </button>
+        <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4">
+<div class="ablog-sidebar-item ablog__categories">
+  <h3 style="color: var(--sy-c-light);">
+    <a href="category.html">Categories</a>
+  </h3>
+  <ul>
+     
+    <li>
+      <a href="category/time-series-foundation-models.html" style="font-size: 90%">Time Series Foundation Models (1)</a>
+    </li>
+     
+  </ul>
+</div>
+
+<div class="ablog-sidebar-item ablog__tagcloud">
+  <h3 style="color: var(--sy-c-light);"><a href="tag.html">Tags</a></h3>
+  <ul>
+     
+    <li class="ablog-cloud ablog-cloud-3">
+      <a href="tag/amazon-bedrock.html" style="font-size: 90%">Amazon Bedrock</a>
+    </li>
+      
+    <li class="ablog-cloud ablog-cloud-3">
+      <a href="tag/amazon-chronos.html" style="font-size: 90%">Amazon Chronos</a>
+    </li>
+      
+    <li class="ablog-cloud ablog-cloud-3">
+      <a href="tag/large-language-models.html" style="font-size: 90%">Large Language Models</a>
+    </li>
+      
+    <li class="ablog-cloud ablog-cloud-3">
+      <a href="tag/time-series-forecasting.html" style="font-size: 90%">Time Series Forecasting</a>
+    </li>
+     
+  </ul>
+</div>
+
+<div class="ablog-sidebar-item ablog__archives">
+  <h3 style="color: var(--sy-c-light);">
+    <a href="archive.html">Archives</a>
+  </h3>
+  <ul>
+     
+    <li>
+      <a href="2025.html" style="font-size: 90%">2025 (1)</a>
+    </li>
+     
+  </ul>
+</div>
+
+<div class="ablog-sidebar-item ablog__authors">
+  <h3 style="color: var(--sy-c-light);">
+    <a href="author.html">Authors</a>
+  </h3>
+  <ul>
+     
+    <li>
+      <a href="author/flavia-giammarino.html" style="font-size: 90%">Flavia Giammarino (1)</a>
+    </li>
+     
+  </ul>
+</div>
+</div>
+    </aside>
+
+    <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close right sidebar" type="button" aria-controls="rside" aria-expanded="false">
       <i class="i-lucide close"></i>
     </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc"><h3>On this page</h3><ul>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc" style="font-size: 90%;"><h3 style="color: var(--sy-c-light);">On this page</h3><ul>
 <li><a class="reference internal" href="#overview">1. Overview</a></li>
 <li><a class="reference internal" href="#solution">2. Solution</a><ul>
 <li><a class="reference internal" href="#create-the-bedrock-endpoint">2.1 Create the Bedrock endpoint</a></li>
@@ -87,7 +147,7 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </div></div>
   </aside>
-  <div class="rside-overlay js-menu" role="button" aria-label="Close Table of Contents" aria-controls="rside" aria-expanded="false"></div>
+
   <main class="sy-main w-full max-sm:max-w-full print:pt-6">
 <div class="sy-breadcrumbs" role="navigation">
   <div class="sy-breadcrumbs-inner flex items-center">
@@ -101,7 +161,7 @@ data-aria-dark="Switch to auto color mode">
         <span>/</span>
         <meta itemprop="position" content="1" />
       </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <strong itemprop="name">Zero-Shot Time Series Forecasting with Chronos using Amazon Bedrock and ClickHouse</strong>
+        <strong itemprop="name">Zero-shot time series forecasting with Chronos using Amazon Bedrock and ClickHouse</strong>
         <meta itemprop="position" content="2" />
       </li></ol>
     <div class="xl:hidden ml-1">
@@ -115,7 +175,7 @@ data-aria-dark="Switch to auto color mode">
       <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
         <article class="yue" role="main">
           <section id="zero-shot-time-series-forecasting-with-chronos-using-amazon-bedrock-and-clickhouse">
-<h1>Zero-Shot Time Series Forecasting with Chronos using Amazon Bedrock and ClickHouse<a class="headerlink" href="#zero-shot-time-series-forecasting-with-chronos-using-amazon-bedrock-and-clickhouse" title="Link to this heading">¶</a></h1>
+<h1>Zero-shot time series forecasting with Chronos using Amazon Bedrock and ClickHouse<a class="headerlink" href="#zero-shot-time-series-forecasting-with-chronos-using-amazon-bedrock-and-clickhouse" title="Link to this heading">¶</a></h1>
 <img
     src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/architecture_diagram.png"
     style="width:100%"
@@ -637,20 +697,15 @@ highlighting its strength in capturing complex temporal patterns.</p>
     <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
   </svg>
   <span>Back to top</span>
-</button><div class="navigation flex print:hidden"><div class="navigation-prev">
-    <a href="../index.html">
-      <i class="i-lucide chevron-left"></i>
-      <div class="page-info">
-        <span>Previous</span><div class="title">Home</div></div>
-    </a>
-  </div></div></div>
+</button><div class="navigation flex print:hidden"></div></div>
     </div>
   </main>
+
 </div>
 <footer class="sy-foot">
   <div class="sy-foot-inner sy-container mx-auto">
     <div class="sy-foot-reserved md:flex justify-between items-center">
-      <div class="sy-foot-copyright"><p>Copyright © 2025, Flavia Giammarino</p>
+      <div class="sy-foot-copyright"><p>Copyright © 2025, Flavia Giammarino.</p>
   
   <p>
     Made with

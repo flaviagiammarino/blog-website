@@ -8,6 +8,7 @@
     setColorMode(localStorage._theme||"auto");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=397bb51e" />
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=d48c410d" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
     <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -53,20 +54,138 @@ data-aria-dark="Switch to auto color mode">
       </button>
     </div>
   </div>
-</div> 
-<div class="section ablog__collection">
-  <h1>
-    
-    <span
-      >  Drafts 
-    </span>
-  </h1>
-    
+</div>
+
+
+
+<div class="sy-page sy-container flex mx-auto">
+
+    <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
+        <button class="rside-close js-menu xl:hidden" aria-label="Close left sidebar" type="button" aria-controls="lside" aria-expanded="false">
+            <i class="i-lucide close"></i>
+        </button>
+        <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4">
+<div class="ablog-sidebar-item ablog__categories">
+  <h3 style="color: var(--sy-c-light);">
+    <a href="category.html">Categories</a>
+  </h3>
+  <ul>
+     
+    <li>
+      <a href="category/time-series-foundation-models.html" style="font-size: 90%">Time Series Foundation Models (1)</a>
+    </li>
+     
+  </ul>
+</div>
+
+<div class="ablog-sidebar-item ablog__tagcloud">
+  <h3 style="color: var(--sy-c-light);"><a href="tag.html">Tags</a></h3>
+  <ul>
+     
+    <li class="ablog-cloud ablog-cloud-3">
+      <a href="tag/amazon-bedrock.html" style="font-size: 90%">Amazon Bedrock</a>
+    </li>
+      
+    <li class="ablog-cloud ablog-cloud-3">
+      <a href="tag/amazon-chronos.html" style="font-size: 90%">Amazon Chronos</a>
+    </li>
+      
+    <li class="ablog-cloud ablog-cloud-3">
+      <a href="tag/large-language-models.html" style="font-size: 90%">Large Language Models</a>
+    </li>
+      
+    <li class="ablog-cloud ablog-cloud-3">
+      <a href="tag/time-series-forecasting.html" style="font-size: 90%">Time Series Forecasting</a>
+    </li>
+     
+  </ul>
+</div>
+
+<div class="ablog-sidebar-item ablog__archives">
+  <h3 style="color: var(--sy-c-light);">
+    <a href="archive.html">Archives</a>
+  </h3>
+  <ul>
+     
+    <li>
+      <a href="2025.html" style="font-size: 90%">2025 (1)</a>
+    </li>
+     
+  </ul>
+</div>
+
+<div class="ablog-sidebar-item ablog__authors">
+  <h3 style="color: var(--sy-c-light);">
+    <a href="author.html">Authors</a>
+  </h3>
+  <ul>
+     
+    <li>
+      <a href="author/flavia-giammarino.html" style="font-size: 90%">Flavia Giammarino (1)</a>
+    </li>
+     
+  </ul>
+</div>
+</div>
+    </aside>
+
+    <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
+    <button class="rside-close js-menu xl:hidden" aria-label="Close right sidebar" type="button" aria-controls="rside" aria-expanded="false">
+      <i class="i-lucide close"></i>
+    </button>
+    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"></div>
+  </aside>
+
+  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
+<div class="sy-breadcrumbs" role="navigation">
+  <div class="sy-breadcrumbs-inner flex items-center">
+    <div class="md:hidden mr-3">
+      <button class="js-menu" aria-label="Menu" type="button" aria-controls="lside" aria-expanded="false">
+        <i class="i-lucide menu"></i>
+      </button>
+    </div>
+    <ol class="flex-1" itemscope itemtype="https://schema.org/BreadcrumbList"><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="../index.html"><span itemprop="name"></span></a>
+        <span>/</span>
+        <meta itemprop="position" content="1" />
+      </li><li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <strong itemprop="name">Drafts</strong>
+        <meta itemprop="position" content="2" />
+      </li></ol>
+    <div class="xl:hidden ml-1">
+      <button class="js-menu" aria-label="Show table of contents" type="button" aria-controls="rside"
+        aria-expanded="false">
+        <i class="i-lucide outdent"></i>
+      </button>
+    </div>
+  </div>
+</div><div class="flex flex-col break-words justify-between">
+      <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
+        <article class="yue" role="main">
+           <h1>
+            <span>
+                
+                
+                    Drafts
+                
+            </span>
+           </h1>
+
+            
+        </article><button class="back-to-top" type="button">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+  </svg>
+  <span>Back to top</span>
+</button><div class="navigation flex print:hidden"></div></div>
+    </div>
+  </main>
+
 </div>
 <footer class="sy-foot">
   <div class="sy-foot-inner sy-container mx-auto">
     <div class="sy-foot-reserved md:flex justify-between items-center">
-      <div class="sy-foot-copyright"><p>Copyright © 2025, Flavia Giammarino</p>
+      <div class="sy-foot-copyright"><p>Copyright © 2025, Flavia Giammarino.</p>
   
   <p>
     Made with

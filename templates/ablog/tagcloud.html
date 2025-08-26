@@ -1,15 +1,10 @@
 {% if ablog.tags %}
 <div class="ablog-sidebar-item ablog__tagcloud">
-  <link
-    rel="stylesheet"
-    href="{{ pathto('_static/ablog/tagcloud.css', 1) }}"
-    type="text/css"
-  />
-  <h3><a href="{{ pathto(ablog.tags.path) }}">{{ gettext('Tags') }}</a></h3>
-  <ul class="ablog-cloud">
+  <h3 style="color: var(--sy-c-light);"><a href="{{ pathto(ablog.tags.path) }}">{{ gettext('Tags') }}</a></h3>
+  <ul>
     {% for coll in ablog.tags %} {% if coll %}
     <li class="ablog-cloud ablog-cloud-{{ coll.relsize(5, 1) }}">
-      <a href="{{ pathto(coll.docname) }}">{{ coll }}</a>
+      <a href="{{ pathto(coll.docname) }}" style="font-size: 90%">{{ coll }}</a>
     </li>
     {% endif %} {% endfor %}
   </ul>
