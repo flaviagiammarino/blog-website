@@ -119,7 +119,10 @@ In order to create the Lambda function's Docker image in Elastic Container Regis
 - ``requirements.txt``: The list of dependencies that need to be installed in the Docker container.
 - ``Dockerfile``: The file containing the instructions to build the Docker image.
 
-``app.py``
+.. raw:: html
+    <code>app.py</code>
+
+
 
 The ``app.py`` Python script with the entry point of the Lambda function is reported below.
 The ``handler`` function has two arguments:
