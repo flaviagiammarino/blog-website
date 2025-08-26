@@ -476,23 +476,47 @@ In both cases, the Lambda function is invoked with a context window of 3 weeks t
        function_name=function_name
    )
 
-``predictions``
 
 .. raw:: html
+
+    <div style="margin: 2em 0em 2em 0em">
 
     <img
         src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/predictions_table.png"
         style="width:100%"
     >
 
-``forecasts``
+    <p>
+    <span style="font-weight:600">Figure 2:</span>
+    <span>Last 10 rows of </span>
+    <code class="docutils literal notranslate">
+    <span class="pre" style="font-weight:600">predictions</span>
+    </code>
+    <span>DataFrame.</span>
+    </p>
+
+    </div>
+
 
 .. raw:: html
+
+    <div style="margin: 2em 0em 2em 0em">
 
     <img
         src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/forecasts_table.png"
         style="width:100%"
     >
+
+    <p>
+    <span style="font-weight:600">Figure 3:</span>
+    <span>Last 10 rows of </span>
+    <code class="docutils literal notranslate">
+    <span class="pre" style="font-weight:600">forecasts</span>
+    </code>
+    <span>DataFrame.</span>
+    </p>
+
+    </div>
 
 2.4 Compare the forecasts to the historical data stored in ClickHouse
 ===============================================================================================================
@@ -544,7 +568,17 @@ highlighting its strength in capturing complex temporal patterns.
 
 .. raw:: html
 
+    <div style="margin: 2em 0em 2em 0em">
+
     <img
         src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/forecasts_plot.png"
         style="width:100%"
     >
+
+    <p>
+    <span style="font-weight:600">Figure 4:</span>
+    <span>Chronos-Bolt forecasts against historical total load data.</span>
+    </p>
+
+    </div>
+
