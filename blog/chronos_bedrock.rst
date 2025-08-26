@@ -120,10 +120,11 @@ In order to create the Lambda function's Docker image in Elastic Container Regis
 - ``Dockerfile``: The file containing the instructions to build the Docker image.
 
 .. raw:: html
-
+    <p>
     <code class="docutils literal notranslate">
     <span class="pre">app.py</span>
     </code>
+    </p>
 
 
 
