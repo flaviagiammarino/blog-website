@@ -127,8 +127,6 @@ In order to create the Lambda function's Docker image in Elastic Container Regis
     </code>
     </p>
 
-
-
 The ``app.py`` Python script with the entry point of the Lambda function is reported below.
 The ``handler`` function has two arguments:
 
@@ -258,8 +256,14 @@ together with the corresponding timestamps.
            "body": json.dumps(predictions)
        }
 
+.. raw:: html
 
-``requirements.txt``
+    <p>
+    <code class="docutils literal notranslate">
+    <span class="pre" style="font-weight:600">requirements.txt</span>
+    </code>
+    </p>
+
 
 The ``requirements.txt`` file with the list of dependencies is as follows:
 
@@ -269,7 +273,14 @@ The ``requirements.txt`` file with the list of dependencies is as follows:
    clickhouse_connect==0.8.18
    pandas==2.3.1
 
-``Dockerfile``
+.. raw:: html
+
+    <p>
+    <code class="docutils literal notranslate">
+    <span class="pre" style="font-weight:600">Dockerfile</span>
+    </code>
+    </p>
+
 
 The standard ``Dockerfile`` using the Python 3.12 AWS base image for Lambda is provided here for reference:
 
