@@ -62,10 +62,6 @@ html_domain_indices = False
 
 blog_title = "Blog"
 blog_baseurl = f"{html_baseurl}/blog"
-blog_languages = {
-    "en": ("English", None),
-}
-blog_default_language = "en"
 blog_authors = {
     "Flavia": ("Flavia Giammarino", "https://flaviagiammarino.com"),
 }

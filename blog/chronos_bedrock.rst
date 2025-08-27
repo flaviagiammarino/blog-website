@@ -9,8 +9,8 @@
     :tags: Time Series Forecasting, Large Language Models, Amazon Bedrock, Amazon Chronos
     :category: Time Series Foundation Models
     :author: Flavia
-    :language: en
-    :image: 1
+    :location: https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/architecture_diagram.png
+    :language: AWS architecture diagram showing Chronos on Amazon Bedrock integrated with ClickHouse
     :excerpt: 1
 
 ###############################################################################################################
@@ -22,6 +22,7 @@ Zero-shot time series forecasting with Chronos using Amazon Bedrock and ClickHou
     <img
         src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/architecture_diagram.png"
         style="width:100%"
+        alt="AWS architecture diagram showing Chronos on Amazon Bedrock integrated with ClickHouse"
     >
 
 1. Overview

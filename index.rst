@@ -1,8 +1,10 @@
-:layout: 404
-:orphan:
+:layout: home
 
-404
-===
+.. toctree::
+   :hidden:
+   :glob:
 
-This page does not exist.
+   */*
+
+
 
