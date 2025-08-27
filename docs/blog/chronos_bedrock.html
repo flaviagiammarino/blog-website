@@ -313,7 +313,7 @@ The <code class="docutils literal notranslate"><span class="pre">handler</span><
 </ul>
 <p>The <code class="docutils literal notranslate"><span class="pre">context</span></code> object is automatically generated at runtime and does not need to be provided.</p>
 <p>The Lambda function connects to ClickHouse using <a class="reference external" href="https://clickhouse.com/docs/integrations/python">ClickHouse Connect</a>
-and loads the context data using the <code class="docutils literal notranslate"><span class="pre">query_df</span></code> method, which returns the query output in a Pandas Dataframe.
+and loads the context data using the <code class="docutils literal notranslate"><span class="pre">query_df</span></code> method, which returns the query output in a Pandas DataFrame.
 After that, the Lambda function invokes the Bedrock endpoint with the context data.
 The Bedrock endpoint response includes the predicted mean and the predicted quantiles of the time series
 at each future time step, which the Lambda function returns to the user in JSON format
@@ -528,7 +528,7 @@ or directly from the Lambda console.</p>
 <p>After the Lambda function has been created, we can invoke it to generate the forecasts.</p>
 <p>The code below defines a Python function which invokes the Lambda function with the
 inputs discussed in the previous section and casts the Lambda function’s JSON output
-to Pandas Dataframe.</p>
+to Pandas DataFrame.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 </span><span data-line="2"><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 </span><span data-line="3"><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>

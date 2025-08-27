@@ -178,7 +178,7 @@ In this case, the ``event`` object is expected to include the following fields:
 The ``context`` object is automatically generated at runtime and does not need to be provided.
 
 The Lambda function connects to ClickHouse using `ClickHouse Connect <https://clickhouse.com/docs/integrations/python>`__
-and loads the context data using the ``query_df`` method, which returns the query output in a Pandas Dataframe.
+and loads the context data using the ``query_df`` method, which returns the query output in a Pandas DataFrame.
 After that, the Lambda function invokes the Bedrock endpoint with the context data.
 The Bedrock endpoint response includes the predicted mean and the predicted quantiles of the time series
 at each future time step, which the Lambda function returns to the user in JSON format
@@ -406,7 +406,7 @@ After the Lambda function has been created, we can invoke it to generate the for
 
 The code below defines a Python function which invokes the Lambda function with the
 inputs discussed in the previous section and casts the Lambda function's JSON output
-to Pandas Dataframe.
+to Pandas DataFrame.
 
 .. code:: python
 
