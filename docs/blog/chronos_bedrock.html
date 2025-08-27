@@ -327,6 +327,12 @@ together with the corresponding timestamps.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;&lt;bedrock-endpoint-arn&gt;&quot;</span></code>: The Bedrock endpoint ARN.</p></li>
 </ul>
 </div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>For simplicity, in this example we have included the ClickHouse database credentials directly in the code.
+In practice, we recommend using <a class="reference external" href="https://aws.amazon.com/secrets-manager/">AWS Secrets Manager</a>
+to securely store, manage, and retrieve credentials.</p>
+</div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 </span><span data-line="2"><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
 </span><span data-line="3"><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
@@ -522,11 +528,6 @@ or directly from the Lambda console.</p>
 <p>The code below defines a Python function which invokes the Lambda function with the
 inputs discussed in the previous section and casts the Lambda function’s JSON output
 to Pandas Dataframe.</p>
-<p>Next, the code makes two invocations: the first time it requests the forecasts over a
-past time window for which historical data is already available, which allows us to assess how
-close the forecasts are to the actual data, while the second time it requests the forecasts
-over a future time window for which the data is not yet available.</p>
-<p>In both cases, the Lambda function is invoked with a context window of 3 weeks to generate 1-day-ahead forecasts.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 </span><span data-line="2"><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 </span><span data-line="3"><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
@@ -584,33 +585,30 @@ over a future time window for which the data is not yet available.</p>
 </span><span data-line="55">
 </span><span data-line="56">    <span class="c1"># Return the forecasts</span>
 </span><span data-line="57">    <span class="k">return</span> <span class="n">predictions</span>
-</span><span data-line="58">
-</span><span data-line="59"><span class="c1"># Define the Lambda function name and input parameters</span>
-</span><span data-line="60"><span class="n">frequency</span> <span class="o">=</span> <span class="mi">15</span>
-</span><span data-line="61"><span class="n">context_length</span> <span class="o">=</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">*</span> <span class="mi">7</span> <span class="o">*</span> <span class="mi">3</span>
-</span><span data-line="62"><span class="n">prediction_length</span> <span class="o">=</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">4</span>
-</span><span data-line="63"><span class="n">quantile_levels</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">]</span>
-</span><span data-line="64"><span class="n">function_name</span> <span class="o">=</span> <span class="s2">&quot;chronos-lambda-function&quot;</span>
-</span><span data-line="65">
-</span><span data-line="66"><span class="c1"># Generate the forecasts over a past time window</span>
-</span><span data-line="67"><span class="n">predictions</span> <span class="o">=</span> <span class="n">invoke_lambda_function</span><span class="p">(</span>
-</span><span data-line="68">    <span class="n">initialization_timestamp</span><span class="o">=</span><span class="s2">&quot;2025-08-17 00:00:00&quot;</span><span class="p">,</span>
-</span><span data-line="69">    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
-</span><span data-line="70">    <span class="n">context_length</span><span class="o">=</span><span class="n">context_length</span><span class="p">,</span>
-</span><span data-line="71">    <span class="n">prediction_length</span><span class="o">=</span><span class="n">prediction_length</span><span class="p">,</span>
-</span><span data-line="72">    <span class="n">quantile_levels</span><span class="o">=</span><span class="n">quantile_levels</span><span class="p">,</span>
-</span><span data-line="73">    <span class="n">function_name</span><span class="o">=</span><span class="n">function_name</span>
-</span><span data-line="74"><span class="p">)</span>
-</span><span data-line="75">
-</span><span data-line="76"><span class="c1"># Generate the forecasts over a future time window</span>
-</span><span data-line="77"><span class="n">forecasts</span> <span class="o">=</span> <span class="n">invoke_lambda_function</span><span class="p">(</span>
-</span><span data-line="78">    <span class="n">initialization_timestamp</span><span class="o">=</span><span class="s2">&quot;2025-08-18 00:00:00&quot;</span><span class="p">,</span>
-</span><span data-line="79">    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
-</span><span data-line="80">    <span class="n">context_length</span><span class="o">=</span><span class="n">context_length</span><span class="p">,</span>
-</span><span data-line="81">    <span class="n">prediction_length</span><span class="o">=</span><span class="n">prediction_length</span><span class="p">,</span>
-</span><span data-line="82">    <span class="n">quantile_levels</span><span class="o">=</span><span class="n">quantile_levels</span><span class="p">,</span>
-</span><span data-line="83">    <span class="n">function_name</span><span class="o">=</span><span class="n">function_name</span>
-</span><span data-line="84"><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>Next, we make two invocations: the first time we request the forecasts over a
+past time window for which historical data is already available, which allows us to assess how
+close the forecasts are to the actual data, while the second time we request the forecasts
+over a future time window for which the data is not yet available.
+In both cases, we use a 3-week context window to generate 1-day-ahead forecasts.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Define the Lambda function name and input parameters</span>
+</span><span data-line="2"><span class="n">frequency</span> <span class="o">=</span> <span class="mi">15</span>
+</span><span data-line="3"><span class="n">context_length</span> <span class="o">=</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">*</span> <span class="mi">7</span> <span class="o">*</span> <span class="mi">3</span>
+</span><span data-line="4"><span class="n">prediction_length</span> <span class="o">=</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">4</span>
+</span><span data-line="5"><span class="n">quantile_levels</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">]</span>
+</span><span data-line="6"><span class="n">function_name</span> <span class="o">=</span> <span class="s2">&quot;chronos-lambda-function&quot;</span>
+</span></pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Generate the forecasts over a past time window</span>
+</span><span data-line="2"><span class="n">predictions</span> <span class="o">=</span> <span class="n">invoke_lambda_function</span><span class="p">(</span>
+</span><span data-line="3">    <span class="n">initialization_timestamp</span><span class="o">=</span><span class="s2">&quot;2025-08-17 00:00:00&quot;</span><span class="p">,</span>
+</span><span data-line="4">    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
+</span><span data-line="5">    <span class="n">context_length</span><span class="o">=</span><span class="n">context_length</span><span class="p">,</span>
+</span><span data-line="6">    <span class="n">prediction_length</span><span class="o">=</span><span class="n">prediction_length</span><span class="p">,</span>
+</span><span data-line="7">    <span class="n">quantile_levels</span><span class="o">=</span><span class="n">quantile_levels</span><span class="p">,</span>
+</span><span data-line="8">    <span class="n">function_name</span><span class="o">=</span><span class="n">function_name</span>
+</span><span data-line="9"><span class="p">)</span>
 </span></pre></div>
 </div>
 <div style="margin: 2em 0em 2em 0em">
@@ -629,7 +627,18 @@ over a future time window for which the data is not yet available.</p>
 <span>DataFrame.</span>
 </p>
 
-</div><div style="margin: 2em 0em 2em 0em">
+</div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Generate the forecasts over a future time window</span>
+</span><span data-line="2"><span class="n">forecasts</span> <span class="o">=</span> <span class="n">invoke_lambda_function</span><span class="p">(</span>
+</span><span data-line="3">    <span class="n">initialization_timestamp</span><span class="o">=</span><span class="s2">&quot;2025-08-18 00:00:00&quot;</span><span class="p">,</span>
+</span><span data-line="4">    <span class="n">frequency</span><span class="o">=</span><span class="n">frequency</span><span class="p">,</span>
+</span><span data-line="5">    <span class="n">context_length</span><span class="o">=</span><span class="n">context_length</span><span class="p">,</span>
+</span><span data-line="6">    <span class="n">prediction_length</span><span class="o">=</span><span class="n">prediction_length</span><span class="p">,</span>
+</span><span data-line="7">    <span class="n">quantile_levels</span><span class="o">=</span><span class="n">quantile_levels</span><span class="p">,</span>
+</span><span data-line="8">    <span class="n">function_name</span><span class="o">=</span><span class="n">function_name</span>
+</span><span data-line="9"><span class="p">)</span>
+</span></pre></div>
+</div>
+<div style="margin: 2em 0em 2em 0em">
 
 <img
     src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/forecasts_table.png"
@@ -650,6 +659,15 @@ over a future time window for which the data is not yet available.</p>
 <h3>2.4 Compare the forecasts to the historical data stored in ClickHouse<a class="headerlink" href="#compare-the-forecasts-to-the-historical-data-stored-in-clickhouse" title="Link to this heading">¶</a></h3>
 <p>Now that the forecasts have been generated, we can compare them to the historical data stored in ClickHouse.
 We again use ClickHouse Connect to query the database and retrieve the results directly into a Pandas DataFrame.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>As before, make sure to replace the following variables before running the code:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;&lt;clickhouse-host&gt;&quot;</span></code>: The ClickHouse host.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;&lt;clickhouse-user&gt;&quot;</span></code>: The ClickHouse username.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;&lt;clickhouse-password&gt;&quot;</span></code>: The ClickHouse password.</p></li>
+</ul>
+</div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">clickhouse_connect</span>
 </span><span data-line="2">
 </span><span data-line="3"><span class="c1"># Create the ClickHouse client</span>

@@ -12,6 +12,7 @@
     :location: https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/architecture_diagram.png
     :language: AWS architecture diagram showing Chronos on Amazon Bedrock integrated with ClickHouse
     :excerpt: 1
+    :nocomments:
 
 ###############################################################################################################
 Zero-shot time series forecasting with Chronos using Amazon Bedrock and ClickHouse
@@ -79,6 +80,7 @@ doesn't require any domain adaptation, the same solution can be applied to any o
     </div>
 
 .. warning::
+
     To be able to run the code provided in the rest of this section, you will need to have Boto3 and the AWS-CLI installed on your machine.
     You will also need to update several variables in the code to reflect your AWS
     configuration - such as your AWS account number, region, service roles, etc. - as will be outlined below.
@@ -189,6 +191,12 @@ together with the corresponding timestamps.
     -  ``"<clickhouse-password>"``: The ClickHouse password.
     -  ``"<bedrock-endpoint-arn>"``: The Bedrock endpoint ARN.
 
+.. tip::
+
+    For simplicity, in this example we have included the ClickHouse database credentials directly in the code.
+    In practice, we recommend using `AWS Secrets Manager <https://aws.amazon.com/secrets-manager/>`__
+    to securely store, manage, and retrieve credentials.
+
 .. code:: python
 
    import json
@@ -296,7 +304,6 @@ together with the corresponding timestamps.
     </code>
     </p>
 
-
 The ``requirements.txt`` file with the list of dependencies is as follows:
 
 ::
@@ -313,7 +320,6 @@ The ``requirements.txt`` file with the list of dependencies is as follows:
     <span class="pre" style="font-weight:600">Dockerfile</span>
     </code>
     </p>
-
 
 The standard ``Dockerfile`` using the Python 3.12 AWS base image for Lambda is also provided for reference:
 
@@ -401,13 +407,6 @@ The code below defines a Python function which invokes the Lambda function with 
 inputs discussed in the previous section and casts the Lambda function's JSON output
 to Pandas Dataframe.
 
-Next, the code makes two invocations: the first time it requests the forecasts over a
-past time window for which historical data is already available, which allows us to assess how
-close the forecasts are to the actual data, while the second time it requests the forecasts
-over a future time window for which the data is not yet available.
-
-In both cases, the Lambda function is invoked with a context window of 3 weeks to generate 1-day-ahead forecasts.
-
 .. code:: python
 
    import io
@@ -468,12 +467,22 @@ In both cases, the Lambda function is invoked with a context window of 3 weeks t
        # Return the forecasts
        return predictions
 
+Next, we make two invocations: the first time we request the forecasts over a
+past time window for which historical data is already available, which allows us to assess how
+close the forecasts are to the actual data, while the second time we request the forecasts
+over a future time window for which the data is not yet available.
+In both cases, we use a 3-week context window to generate 1-day-ahead forecasts.
+
+.. code:: python
+
    # Define the Lambda function name and input parameters
    frequency = 15
    context_length = 24 * 4 * 7 * 3
    prediction_length = 24 * 4
    quantile_levels = [0.1, 0.5, 0.9]
    function_name = "chronos-lambda-function"
+
+.. code:: python
 
    # Generate the forecasts over a past time window
    predictions = invoke_lambda_function(
@@ -484,17 +493,6 @@ In both cases, the Lambda function is invoked with a context window of 3 weeks t
        quantile_levels=quantile_levels,
        function_name=function_name
    )
-
-   # Generate the forecasts over a future time window
-   forecasts = invoke_lambda_function(
-       initialization_timestamp="2025-08-18 00:00:00",
-       frequency=frequency,
-       context_length=context_length,
-       prediction_length=prediction_length,
-       quantile_levels=quantile_levels,
-       function_name=function_name
-   )
-
 
 .. raw:: html
 
@@ -516,6 +514,17 @@ In both cases, the Lambda function is invoked with a context window of 3 weeks t
 
     </div>
 
+.. code:: python
+
+   # Generate the forecasts over a future time window
+   forecasts = invoke_lambda_function(
+       initialization_timestamp="2025-08-18 00:00:00",
+       frequency=frequency,
+       context_length=context_length,
+       prediction_length=prediction_length,
+       quantile_levels=quantile_levels,
+       function_name=function_name
+   )
 
 .. raw:: html
 
@@ -542,6 +551,13 @@ In both cases, the Lambda function is invoked with a context window of 3 weeks t
 
 Now that the forecasts have been generated, we can compare them to the historical data stored in ClickHouse.
 We again use ClickHouse Connect to query the database and retrieve the results directly into a Pandas DataFrame.
+
+.. important::
+    As before, make sure to replace the following variables before running the code:
+
+    -  ``"<clickhouse-host>"``: The ClickHouse host.
+    -  ``"<clickhouse-user>"``: The ClickHouse username.
+    -  ``"<clickhouse-password>"``: The ClickHouse password.
 
 .. code:: python
 
@@ -600,4 +616,3 @@ highlighting its strength in capturing complex temporal patterns.
     </p>
 
     </div>
-
