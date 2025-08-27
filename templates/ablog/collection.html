@@ -3,6 +3,27 @@
 {%- block extrahead -%}
   {% include "components/meta-opengraph.html" %}
   {% include "components/alternate-links.html" %}
+
+    <style>
+        .blog-info-container{
+            display: flex;
+        }
+        .blog-info{
+            display:inline-block;
+            vertical-align:top;
+            width:50%;
+        }
+        @media (max-width: 768px){
+           .blog-info-container{
+                display: block !important;
+            }
+            .blog-info{
+                display:block !important;
+                width:100% !important;
+            }
+        }
+    </style>
+
 {%- endblock -%}
 
 {%- if meta and meta.dark_code == "true" -%}
@@ -24,20 +45,7 @@
     {%- endif %}
 {%- endmacro %}
 
-<style>
-    .blog-info{
-        display:inline-block;
-        text-align:top;
-        vertical-align:top;
-        width:50%;
-    }
-    @media (max-width: 600px){
-        .blog-info{
-            display:block !important;
-            width:100% !important;
-        }
-    }
-</style>
+
 
 <div class="sy-page sy-container flex mx-auto">
 
@@ -61,14 +69,23 @@
       <i class="i-lucide close"></i>
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4">
-        {%- if display_toc -%}
-        <div class="localtoc" style="font-size: 90%;"><h3 style="color: var(--sy-c-light);">{{ _('On this page') }}</h3>{{ toc }}</div>
-        {%- endif -%}
+        <div class="localtoc" style="font-size: 90%;">
+            <h3 style="color: var(--sy-c-light);">
+                {{ header }} {{ collection }}
+            </h3>
+            <ul>
+            {% for post in collection %}
+                <li>
+                <a class="reference internal" href="{{ postlink(post) }}">{{ post.title }}</a>
+                </li>
+            {% endfor %}
+            </ul>
+        </div>
     </div>
   </aside>
 
   <main class="sy-main w-full max-sm:max-w-full print:pt-6">
-<!--    {%- include "components/breadcrumbs.html" -%}-->
+    {%- include "components/breadcrumbs.html" -%}
     <div class="flex flex-col break-words justify-between">
       <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
         <article class="yue{% if dark_code %} dark-code{% endif %}" role="main">
@@ -89,7 +106,7 @@
                   <a href="{{ postlink(post) }}">{{ post.title }}</a>
                 </h2>
 
-                    <div style="display:flex;">
+                    <div class="blog-info-container">
 
                         <div class="blog-info">
 

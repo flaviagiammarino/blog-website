@@ -36,7 +36,12 @@
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4">
         {%- if display_toc -%}
-        <div class="localtoc" style="font-size: 90%;"><h3 style="color: var(--sy-c-light);">{{ _('On this page') }}</h3>{{ toc }}</div>
+        <div class="localtoc" style="font-size: 90%;">
+            <h3 style="color: var(--sy-c-light);">
+                {{ _('On this page') }}
+            </h3>
+            {{ toc }}
+        </div>
         {%- endif -%}
     </div>
   </aside>
