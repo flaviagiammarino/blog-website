@@ -56,8 +56,7 @@ endpoint with context data queried from ClickHouse and returns the forecasts.
 
 In this particular example, we will work with the 15-minute time series of the Italian electricity system's
 total demand, which we downloaded from `Terna's data portal <https://dati.terna.it/en/download-center#/load/total-load>`__
-and stored in a table in ClickHouse which we called ``total_load_data``.
-
+and stored in a table in ClickHouse which we called ``total_load_data``.<br>
 However, as we are performing zero-shot forecasting without domain-specific tuning,
 this solution can be applied to any other time series.
 
