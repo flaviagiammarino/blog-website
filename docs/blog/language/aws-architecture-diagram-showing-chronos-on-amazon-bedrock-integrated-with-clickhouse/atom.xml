@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
   <id>https://flaviagiammarino.com//blog</id>
   <title>Blog - Posts in AWS architecture diagram showing Chronos on Amazon Bedrock integrated with ClickHouse</title>
-  <updated>2025-08-27T11:36:01.156162+00:00</updated>
+  <updated>2025-08-27T11:36:17.862794+00:00</updated>
   <link href="https://flaviagiammarino.com//blog"/>
   <link href="https://flaviagiammarino.com//blog/blog/language/aws-architecture-diagram-showing-chronos-on-amazon-bedrock-integrated-with-clickhouse/atom.xml" rel="self"/>
   <generator uri="https://ablog.readthedocs.io/" version="0.11.12">ABlog</generator>
