@@ -78,7 +78,7 @@ doesn't require any domain adaptation, the same solution can be applied to any o
 
     </div>
 
-.. note::
+.. warning::
     To be able to run the code provided in the rest of this section, you will need to have Boto3 and the AWS-CLI installed on your machine.
     You will also need to update several variables in the code to reflect your AWS
     configuration - such as your AWS account number, region, service roles, etc. - as will be outlined below.
@@ -91,7 +91,7 @@ This can be done using `Boto3 <https://boto3.amazonaws.com/v1/documentation/api/
 as in the code below, with the `AWS-CLI <https://docs.aws.amazon.com/cli/latest/reference/bedrock/create-marketplace-model-endpoint.html>`__,
 or directly from the Bedrock console.
 
-.. note::
+.. important::
     If using the code below, make sure to replace the following variables:
 
     -  ``"<bedrock-marketplace-arn>"``: The Bedrock marketplace ARN of Chronos-Bolt (Base) model.
@@ -121,10 +121,12 @@ or directly from the Bedrock console.
    # Get the Bedrock endpoint ARN
    bedrock_endpoint_arn = response["marketplaceModelEndpoint"]["endpointArn"]
 
-.. important::
+.. caution::
 
-    When the endpoint is no longer needed, you can delete it with the following code:
-
+    Remember to delete the endpoint when is no longer needed to avoid unexpected charges.
+    This can be done using `Boto3 <https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock/client/delete_marketplace_model_endpoint.html>`__
+    as in the code below, with the `AWS-CLI <https://docs.aws.amazon.com/cli/latest/reference/bedrock/delete-marketplace-model-endpoint.html>`__,
+    or directly from the Bedrock console.
 
     .. code:: python
 
@@ -179,7 +181,7 @@ The Bedrock endpoint response includes the predicted mean and the predicted quan
 at each future time step, which the Lambda function returns to the user in JSON format
 together with the corresponding timestamps.
 
-.. note::
+.. important::
     Before deploying the Lambda function, make sure to replace the following variables:
 
     -  ``"<clickhouse-host>"``: The ClickHouse host.
@@ -333,7 +335,7 @@ The standard ``Dockerfile`` using the Python 3.12 AWS base image for Lambda is a
 When all the files are ready, we can build the Docker image and push it to ECR
 with the AWS-CLI as shown in the ``build_and_push.sh`` script below.
 
-.. note::
+.. important::
     Before running the script, make sure to replace the following variables:
 
     -  ``"aws-account-id>"``: The AWS account number.
@@ -364,7 +366,7 @@ After the Docker image has been pushed to ECR, we can create the Lambda function
 as in the code below, with the `AWS-CLI <https://docs.aws.amazon.com/cli/latest/reference/lambda/create-function.html>`__,
 or directly from the Lambda console.
 
-.. note::
+.. important::
     If using the code below, make sure to replace the following variables:
 
     -  ``"<ecr-image-uri>"``: The URI of the ECR image with the code of the Lambda function.

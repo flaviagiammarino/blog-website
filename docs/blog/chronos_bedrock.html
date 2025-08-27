@@ -214,8 +214,8 @@ doesn’t require any domain adaptation, the same solution can be applied to any
 <span>ClickHouse table.</span>
 </p>
 
-</div><div class="admonition note">
-<p class="admonition-title">Note</p>
+</div><div class="admonition warning">
+<p class="admonition-title">Warning</p>
 <p>To be able to run the code provided in the rest of this section, you will need to have Boto3 and the AWS-CLI installed on your machine.
 You will also need to update several variables in the code to reflect your AWS
 configuration - such as your AWS account number, region, service roles, etc. - as will be outlined below.</p>
@@ -226,8 +226,8 @@ configuration - such as your AWS account number, region, service roles, etc. - a
 This can be done using <a class="reference external" href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock/client/create_marketplace_model_endpoint.html">Boto3</a>
 as in the code below, with the <a class="reference external" href="https://docs.aws.amazon.com/cli/latest/reference/bedrock/create-marketplace-model-endpoint.html">AWS-CLI</a>,
 or directly from the Bedrock console.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
 <p>If using the code below, make sure to replace the following variables:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;&lt;bedrock-marketplace-arn&gt;&quot;</span></code>: The Bedrock marketplace ARN of Chronos-Bolt (Base) model.</p></li>
@@ -257,9 +257,12 @@ or directly from the Bedrock console.</p>
 </span><span data-line="21"><span class="n">bedrock_endpoint_arn</span> <span class="o">=</span> <span class="n">response</span><span class="p">[</span><span class="s2">&quot;marketplaceModelEndpoint&quot;</span><span class="p">][</span><span class="s2">&quot;endpointArn&quot;</span><span class="p">]</span>
 </span></pre></div>
 </div>
-<div class="admonition important">
-<p class="admonition-title">Important</p>
-<p>When the endpoint is no longer needed, you can delete it with the following code:</p>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>Remember to delete the endpoint when is no longer needed to avoid unexpected charges.
+This can be done using <a class="reference external" href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock/client/delete_marketplace_model_endpoint.html">Boto3</a>
+as in the code below, with the <a class="reference external" href="https://docs.aws.amazon.com/cli/latest/reference/bedrock/delete-marketplace-model-endpoint.html">AWS-CLI</a>,
+or directly from the Bedrock console.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Delete the Bedrock endpoint</span>
 </span><span data-line="2"><span class="n">response</span> <span class="o">=</span> <span class="n">bedrock_client</span><span class="o">.</span><span class="n">delete_marketplace_model_endpoint</span><span class="p">(</span>
 </span><span data-line="3">    <span class="n">endpointArn</span><span class="o">=</span><span class="n">bedrock_endpoint_arn</span>
@@ -305,8 +308,8 @@ After that, the Lambda function invokes the Bedrock endpoint with the context da
 The Bedrock endpoint response includes the predicted mean and the predicted quantiles of the time series
 at each future time step, which the Lambda function returns to the user in JSON format
 together with the corresponding timestamps.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
 <p>Before deploying the Lambda function, make sure to replace the following variables:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;&lt;clickhouse-host&gt;&quot;</span></code>: The ClickHouse host.</p></li>
@@ -445,8 +448,8 @@ together with the corresponding timestamps.</p>
 <h4>2.2.2 Build the Docker image and push it to ECR<a class="headerlink" href="#build-the-docker-image-and-push-it-to-ecr" title="Link to this heading">¶</a></h4>
 <p>When all the files are ready, we can build the Docker image and push it to ECR
 with the AWS-CLI as shown in the <code class="docutils literal notranslate"><span class="pre">build_and_push.sh</span></code> script below.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
 <p>Before running the script, make sure to replace the following variables:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;aws-account-id&gt;&quot;</span></code>: The AWS account number.</p></li>
@@ -475,8 +478,8 @@ with the AWS-CLI as shown in the <code class="docutils literal notranslate"><spa
 <p>After the Docker image has been pushed to ECR, we can create the Lambda function using <a class="reference external" href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/lambda/client/create_function.html">Boto3</a>
 as in the code below, with the <a class="reference external" href="https://docs.aws.amazon.com/cli/latest/reference/lambda/create-function.html">AWS-CLI</a>,
 or directly from the Lambda console.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
 <p>If using the code below, make sure to replace the following variables:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;&lt;ecr-image-uri&gt;&quot;</span></code>: The URI of the ECR image with the code of the Lambda function.</p></li>
