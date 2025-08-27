@@ -86,7 +86,6 @@ html_theme_options = {
     "globaltoc_expand_depth": 1,
     "light_logo": "_static/icon-light.png",
     "dark_logo": "_static/icon-dark.png",
-    "github_url": "https://github.com/flaviagiammarino/machine-learning-blog"
 }
 
 html_sidebars = {
