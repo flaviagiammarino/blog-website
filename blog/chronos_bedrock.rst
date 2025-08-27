@@ -163,6 +163,14 @@ You can download the files directly from our `GitHub repository <https://github.
     </code>
     </p>
 
+The Lambda function connects to ClickHouse using `ClickHouse Connect <https://clickhouse.com/docs/integrations/python>`__
+and loads the context data using the ``query_df`` method, which returns the query output in a Pandas DataFrame.
+After that, the Lambda function invokes the Bedrock endpoint with the context data.
+
+The Bedrock endpoint response includes the predicted mean and the predicted quantiles of the time series
+at each future time step, which the Lambda function returns to the user in JSON format
+together with the corresponding timestamps.
+
 The ``app.py`` Python script with the entry point of the Lambda function is reported below.
 
 .. important::
@@ -291,13 +299,6 @@ In this case, the ``event`` object is expected to include the following fields:
 - ``"quantile_levels"``: The quantiles to be predicted at each future time step.
 
 The ``context`` object is automatically generated at runtime and does not need to be provided.
-
-The Lambda function connects to ClickHouse using `ClickHouse Connect <https://clickhouse.com/docs/integrations/python>`__
-and loads the context data using the ``query_df`` method, which returns the query output in a Pandas DataFrame.
-After that, the Lambda function invokes the Bedrock endpoint with the context data.
-The Bedrock endpoint response includes the predicted mean and the predicted quantiles of the time series
-at each future time step, which the Lambda function returns to the user in JSON format
-together with the corresponding timestamps.
 
 .. raw:: html
 
