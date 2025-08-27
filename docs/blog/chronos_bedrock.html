@@ -292,32 +292,13 @@ or directly from the Bedrock console.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code>: The list of dependencies that need to be installed in the Docker container.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code>: The file containing the instructions to build the Docker image.</p></li>
 </ul>
+<p>You can download the files directly from our <a class="reference external" href="https://github.com/flaviagiammarino/machine-learning-blog/tree/main/chronos_bedrock/">GitHub repository</a>.</p>
 <p>
 <span style="font-weight:600">2.2.1.1</span>
 <code class="docutils literal notranslate">
 <span class="pre" style="font-weight:600">app.py</span>
 </code>
-</p><p>The <code class="docutils literal notranslate"><span class="pre">app.py</span></code> Python script with the entry point of the Lambda function is reported below.
-The <code class="docutils literal notranslate"><span class="pre">handler</span></code> function has two arguments:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">event</span></code>: The input payload with the request parameters.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">context</span></code>: The runtime information about the invocation.</p></li>
-</ul>
-<p>In this case, the <code class="docutils literal notranslate"><span class="pre">event</span></code> object is expected to include the following fields:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">&quot;initialization_timestamp&quot;</span></code>: The first timestamp for which the forecasts should be generated.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">&quot;frequency&quot;</span></code>: The frequency of the time series, in number of minutes.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">&quot;context_length&quot;</span></code>: The number past time series values (prior to <code class="docutils literal notranslate"><span class="pre">initialization_timestamp</span></code>) to use as context.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">&quot;prediction_length&quot;</span></code>: The number of future time series values (on and after <code class="docutils literal notranslate"><span class="pre">initialization_timestamp</span></code>) to predict.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">&quot;quantile_levels&quot;</span></code>: The quantiles to be predicted at each future time step.</p></li>
-</ul>
-<p>The <code class="docutils literal notranslate"><span class="pre">context</span></code> object is automatically generated at runtime and does not need to be provided.</p>
-<p>The Lambda function connects to ClickHouse using <a class="reference external" href="https://clickhouse.com/docs/integrations/python">ClickHouse Connect</a>
-and loads the context data using the <code class="docutils literal notranslate"><span class="pre">query_df</span></code> method, which returns the query output in a Pandas DataFrame.
-After that, the Lambda function invokes the Bedrock endpoint with the context data.
-The Bedrock endpoint response includes the predicted mean and the predicted quantiles of the time series
-at each future time step, which the Lambda function returns to the user in JSON format
-together with the corresponding timestamps.</p>
+</p><p>The <code class="docutils literal notranslate"><span class="pre">app.py</span></code> Python script with the entry point of the Lambda function is reported below.</p>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
 <p>Before deploying the Lambda function, make sure to replace the following variables:</p>
@@ -431,6 +412,26 @@ to securely store, manage, and retrieve credentials.</p>
 </span><span data-line="95">    <span class="p">}</span>
 </span></pre></div>
 </div>
+<p>The <code class="docutils literal notranslate"><span class="pre">handler</span></code> function has two arguments:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">event</span></code>: The input payload with the request parameters.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">context</span></code>: The runtime information about the invocation.</p></li>
+</ul>
+<p>In this case, the <code class="docutils literal notranslate"><span class="pre">event</span></code> object is expected to include the following fields:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;initialization_timestamp&quot;</span></code>: The first timestamp for which the forecasts should be generated.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;frequency&quot;</span></code>: The frequency of the time series, in number of minutes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;context_length&quot;</span></code>: The number past time series values (prior to <code class="docutils literal notranslate"><span class="pre">initialization_timestamp</span></code>) to use as context.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;prediction_length&quot;</span></code>: The number of future time series values (on and after <code class="docutils literal notranslate"><span class="pre">initialization_timestamp</span></code>) to predict.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;quantile_levels&quot;</span></code>: The quantiles to be predicted at each future time step.</p></li>
+</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">context</span></code> object is automatically generated at runtime and does not need to be provided.</p>
+<p>The Lambda function connects to ClickHouse using <a class="reference external" href="https://clickhouse.com/docs/integrations/python">ClickHouse Connect</a>
+and loads the context data using the <code class="docutils literal notranslate"><span class="pre">query_df</span></code> method, which returns the query output in a Pandas DataFrame.
+After that, the Lambda function invokes the Bedrock endpoint with the context data.
+The Bedrock endpoint response includes the predicted mean and the predicted quantiles of the time series
+at each future time step, which the Lambda function returns to the user in JSON format
+together with the corresponding timestamps.</p>
 <p>
 <span style="font-weight:600">2.2.1.2</span>
 <code class="docutils literal notranslate">

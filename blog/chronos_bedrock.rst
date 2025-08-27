@@ -152,6 +152,8 @@ In order to create the Lambda function's Docker image in Elastic Container Regis
 - ``requirements.txt``: The list of dependencies that need to be installed in the Docker container.
 - ``Dockerfile``: The file containing the instructions to build the Docker image.
 
+You can download the files directly from our `GitHub repository <https://github.com/flaviagiammarino/machine-learning-blog/tree/main/chronos_bedrock/>`__.
+
 .. raw:: html
 
     <p>
@@ -162,27 +164,6 @@ In order to create the Lambda function's Docker image in Elastic Container Regis
     </p>
 
 The ``app.py`` Python script with the entry point of the Lambda function is reported below.
-The ``handler`` function has two arguments:
-
-- ``event``: The input payload with the request parameters.
-- ``context``: The runtime information about the invocation.
-
-In this case, the ``event`` object is expected to include the following fields:
-
-- ``"initialization_timestamp"``: The first timestamp for which the forecasts should be generated.
-- ``"frequency"``: The frequency of the time series, in number of minutes.
-- ``"context_length"``: The number past time series values (prior to ``initialization_timestamp``) to use as context.
-- ``"prediction_length"``: The number of future time series values (on and after ``initialization_timestamp``) to predict.
-- ``"quantile_levels"``: The quantiles to be predicted at each future time step.
-
-The ``context`` object is automatically generated at runtime and does not need to be provided.
-
-The Lambda function connects to ClickHouse using `ClickHouse Connect <https://clickhouse.com/docs/integrations/python>`__
-and loads the context data using the ``query_df`` method, which returns the query output in a Pandas DataFrame.
-After that, the Lambda function invokes the Bedrock endpoint with the context data.
-The Bedrock endpoint response includes the predicted mean and the predicted quantiles of the time series
-at each future time step, which the Lambda function returns to the user in JSON format
-together with the corresponding timestamps.
 
 .. important::
     Before deploying the Lambda function, make sure to replace the following variables:
@@ -295,6 +276,28 @@ together with the corresponding timestamps.
            "statusCode": 200,
            "body": json.dumps(predictions)
        }
+
+The ``handler`` function has two arguments:
+
+- ``event``: The input payload with the request parameters.
+- ``context``: The runtime information about the invocation.
+
+In this case, the ``event`` object is expected to include the following fields:
+
+- ``"initialization_timestamp"``: The first timestamp for which the forecasts should be generated.
+- ``"frequency"``: The frequency of the time series, in number of minutes.
+- ``"context_length"``: The number past time series values (prior to ``initialization_timestamp``) to use as context.
+- ``"prediction_length"``: The number of future time series values (on and after ``initialization_timestamp``) to predict.
+- ``"quantile_levels"``: The quantiles to be predicted at each future time step.
+
+The ``context`` object is automatically generated at runtime and does not need to be provided.
+
+The Lambda function connects to ClickHouse using `ClickHouse Connect <https://clickhouse.com/docs/integrations/python>`__
+and loads the context data using the ``query_df`` method, which returns the query output in a Pandas DataFrame.
+After that, the Lambda function invokes the Bedrock endpoint with the context data.
+The Bedrock endpoint response includes the predicted mean and the predicted quantiles of the time series
+at each future time step, which the Lambda function returns to the user in JSON format
+together with the corresponding timestamps.
 
 .. raw:: html
 
