@@ -56,8 +56,10 @@ endpoint with context data queried from ClickHouse and returns the forecasts.
 
 In this particular example, we will work with the 15-minute time series of the Italian electricity system's
 total demand, which we downloaded from `Terna's data portal <https://dati.terna.it/en/download-center#/load/total-load>`__
-and stored in a table in ClickHouse which we called ``total_load_data``. However, given that Chronos-Bolt
-doesn't require any domain adaptation, the same solution can be applied to any other time series.
+and stored in a table in ClickHouse which we called ``total_load_data``.
+
+However, as we are performing zero-shot forecasting without domain-specific tuning,
+this solution can be applied to any other time series.
 
 .. raw:: html
 
@@ -178,6 +180,7 @@ The ``context`` object is automatically generated at runtime and does not need t
 
 The Lambda function connects to ClickHouse using `ClickHouse Connect <https://clickhouse.com/docs/integrations/python>`__
 and loads the context data using the ``query_df`` method, which returns the query output in a Pandas Dataframe.
+
 After that, the Lambda function invokes the Bedrock endpoint with the context data.
 The Bedrock endpoint response includes the predicted mean and the predicted quantiles of the time series
 at each future time step, which the Lambda function returns to the user in JSON format

@@ -205,8 +205,9 @@ endpoint with context data queried from ClickHouse and returns the forecasts.</p
 <h2>2. Solution<a class="headerlink" href="#solution" title="Link to this heading">¶</a></h2>
 <p>In this particular example, we will work with the 15-minute time series of the Italian electricity system’s
 total demand, which we downloaded from <a class="reference external" href="https://dati.terna.it/en/download-center#/load/total-load">Terna’s data portal</a>
-and stored in a table in ClickHouse which we called <code class="docutils literal notranslate"><span class="pre">total_load_data</span></code>. However, given that Chronos-Bolt
-doesn’t require any domain adaptation, the same solution can be applied to any other time series.</p>
+and stored in a table in ClickHouse which we called <code class="docutils literal notranslate"><span class="pre">total_load_data</span></code>.</p>
+<p>However, as we are performing zero-shot forecasting without domain-specific tuning,
+this solution can be applied to any other time series.</p>
 <div style="margin: 2em 0em 2em 0em">
 
 <img
@@ -312,8 +313,8 @@ The <code class="docutils literal notranslate"><span class="pre">handler</span><
 </ul>
 <p>The <code class="docutils literal notranslate"><span class="pre">context</span></code> object is automatically generated at runtime and does not need to be provided.</p>
 <p>The Lambda function connects to ClickHouse using <a class="reference external" href="https://clickhouse.com/docs/integrations/python">ClickHouse Connect</a>
-and loads the context data using the <code class="docutils literal notranslate"><span class="pre">query_df</span></code> method, which returns the query output in a Pandas Dataframe.
-After that, the Lambda function invokes the Bedrock endpoint with the context data.
+and loads the context data using the <code class="docutils literal notranslate"><span class="pre">query_df</span></code> method, which returns the query output in a Pandas Dataframe.</p>
+<p>After that, the Lambda function invokes the Bedrock endpoint with the context data.
 The Bedrock endpoint response includes the predicted mean and the predicted quantiles of the time series
 at each future time step, which the Lambda function returns to the user in JSON format
 together with the corresponding timestamps.</p>
