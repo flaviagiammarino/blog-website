@@ -125,12 +125,14 @@ or directly from the Bedrock console.
 
     When the endpoint is no longer needed, you can delete it with the following code:
 
-    .. code:: python
-
+    ```python
     # Delete the Bedrock endpoint
     response = bedrock_client.delete_marketplace_model_endpoint(
         endpointArn=bedrock_endpoint_arn
     )
+    ```
+
+
 
 2.2 Create the Lambda function for invoking the Bedrock endpoint with ClickHouse data
 ===============================================================================================================
