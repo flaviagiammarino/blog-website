@@ -263,12 +263,12 @@ or directly from the Bedrock console.</p>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
 <p>When the endpoint is no longer needed, you can delete it with the following code:</p>
-</div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Delete the Bedrock endpoint</span>
 </span><span data-line="2"><span class="n">response</span> <span class="o">=</span> <span class="n">bedrock_client</span><span class="o">.</span><span class="n">delete_marketplace_model_endpoint</span><span class="p">(</span>
 </span><span data-line="3">    <span class="n">endpointArn</span><span class="o">=</span><span class="n">bedrock_endpoint_arn</span>
 </span><span data-line="4"><span class="p">)</span>
 </span></pre></div>
+</div>
 </div>
 </section>
 <section id="create-the-lambda-function-for-invoking-the-bedrock-endpoint-with-clickhouse-data">
