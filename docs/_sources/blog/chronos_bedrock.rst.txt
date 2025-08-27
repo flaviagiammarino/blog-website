@@ -143,6 +143,14 @@ or directly from the Bedrock console.
 
 We now build a Lambda function for invoking the Bedrock endpoint with time series data stored in ClickHouse.
 
+The Lambda function connects to ClickHouse using `ClickHouse Connect <https://clickhouse.com/docs/integrations/python>`__
+and loads the context data using the ``query_df`` method, which returns the query output in a Pandas DataFrame.
+After that, the Lambda function invokes the Bedrock endpoint with the context data.
+
+The Bedrock endpoint response includes the predicted mean and the predicted quantiles of the time series
+at each future time step, which the Lambda function returns to the user in JSON format
+together with the corresponding timestamps.
+
 2.2.1 Create the Docker image
 ---------------------------------------------------------------------------------------------------------------
 
@@ -162,14 +170,6 @@ You can download the files directly from our `GitHub repository <https://github.
     <span class="pre" style="font-weight:600">app.py</span>
     </code>
     </p>
-
-The Lambda function connects to ClickHouse using `ClickHouse Connect <https://clickhouse.com/docs/integrations/python>`__
-and loads the context data using the ``query_df`` method, which returns the query output in a Pandas DataFrame.
-After that, the Lambda function invokes the Bedrock endpoint with the context data.
-
-The Bedrock endpoint response includes the predicted mean and the predicted quantiles of the time series
-at each future time step, which the Lambda function returns to the user in JSON format
-together with the corresponding timestamps.
 
 The ``app.py`` Python script with the entry point of the Lambda function is reported below.
 
