@@ -1,9 +1,14 @@
 {%- extends "base.html" -%}
 
+{% set post = ablog[pagename] %}
+
 {%- block extrahead -%}
+  <meta name="description" content="{{post.title}}">
+  <meta name="keywords" content="{{ post.tags | join(', ') }}">
+  <meta name="thumbnail" content="{{post.location[0]}}">
   {% include "components/meta-opengraph.html" %}
   {% include "components/alternate-links.html" %}
-  {% include "google_analytics.html" %}
+  {% include "components/google_analytics.html" %}
 {%- endblock -%}
 
 {%- if meta and meta.dark_code == "true" -%}
