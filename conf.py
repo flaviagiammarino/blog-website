@@ -37,7 +37,7 @@ extensions = [
 
 templates_path = ['templates']
 
-exclude_patterns = ['docs', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ['_ablog', 'docs', 'Thumbs.db', '.DS_Store']
 
 master_doc = "index"
 highlight_language = 'python3'
@@ -60,22 +60,20 @@ html_domain_indices = False
 
 # -- ABlog settings ---------------------------------------------------
 
-blog_title = "Blog"
+blog_title = "blog"
+
 blog_baseurl = f"{html_baseurl}/blog"
+
 blog_authors = {
     "Flavia": ("Flavia Giammarino", "https://flaviagiammarino.com"),
 }
 blog_default_author = "Flavia"
-blog_feed_archives = True
-blog_feed_fulltext = True
-blog_feed_templates = {
-    "atom": {
-        "content": "{{ title }}{% for tag in post.tags %} #{{ tag.name|trim()|replace(' ', '') }}{% endfor %}",
-    },
-    "social": {
-        "content": "{{ title }}{% for tag in post.tags %} #{{ tag.name|trim()|replace(' ', '') }}{% endfor %}",
-    },
+
+blog_languages = {
+    'en': ('English', None),
 }
+blog_default_language = "en"
+
 skip_injecting_base_ablog_templates = True
 
 # -- Theme configuration options ---------------------------------------------

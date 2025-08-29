@@ -1,12 +1,10 @@
 {%- extends "base.html" -%}
 
 {%- block extrahead -%}
-  <meta name="keywords" content="Machine Learning, Deep Learning, Time Series Analysis, Python, Amazon Web Services">
-  <meta name="description" content="{{ header }} {{ collection }}">
-  {% include "components/meta-opengraph.html" %}
-  {% include "components/alternate-links.html" %}
-  {% include "components/google_analytics.html" %}
-
+    <meta name="description" content="{{ header }} {{ collection }}">
+    {% include "components/meta-opengraph.html" %}
+    {% include "components/alternate-links.html" %}
+    {% include "components/google_analytics.html" %}
     <style>
         .blog-info-container{
             display: flex;
@@ -26,15 +24,14 @@
             }
         }
     </style>
-
 {%- endblock -%}
 
 {%- if meta and meta.dark_code == "true" -%}
-  {% set dark_code = True %}
+    {% set dark_code = True %}
 {%- elif theme_dark_code -%}
-  {% set dark_code = True %}
+    {% set dark_code = True %}
 {%- else -%}
-  {% set dark_code = False %}
+    {% set dark_code = False %}
 {%- endif -%}
 
 {% block body %}
@@ -47,8 +44,6 @@
         {{ anchor(post) -}}
     {%- endif %}
 {%- endmacro %}
-
-
 
 <div class="sy-page sy-container flex mx-auto">
 
@@ -148,7 +143,7 @@
                         </div>
 
                     </div>
-                    <img src="{{ post.location[0] }}" alt="{{ post.location[1] }}" style="margin: 1em 0em 1em 0em;">
+                    <img src="{{ post.meta_tags[1] }}" alt="{{ post.meta_tags[2] }}" style="margin: 1em 0em 1em 0em;">
                 {{ post.to_html(collection.docname) }}
                 <p>
                   <a href="{{ postlink(post) }}"><em>{{ _("Read more ...") }}</em></a>

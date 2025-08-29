@@ -1,7 +1,6 @@
 {%- extends "base.html" -%}
 
 {%- block extrahead -%}
-  <meta name="keywords" content="Machine Learning, Deep Learning, Time Series Analysis, Python, Amazon Web Services">
   {% include "components/meta-opengraph.html" %}
   {% include "components/alternate-links.html" %}
   {% include "components/google_analytics.html" %}
@@ -136,7 +135,7 @@
                         </div>
 
                     </div>
-                    <img src="{{ post.location[0] }}" alt="{{ post.location[1] }}" style="margin: 1em 0em 1em 0em;">
+                    <img src="{{ post.meta_tags[1] }}" alt="{{ post.meta_tags[2] }}" style="margin: 1em 0em 1em 0em;">
                 {{ post.to_html(post.docname) }}
                 <p>
                   <a href="{{ postlink(post) }}"><em>{{ _("Read more ...") }}</em></a>
