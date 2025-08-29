@@ -624,4 +624,4 @@ Chronos: Learning the language of time series. *arXiv preprint*,
 
 [2] Ansari, A.F., Turkmen, C., Shchur, O., and Stella, L. (2024).
 Fast and accurate zero-shot forecasting with Chronos-Bolt and AutoGluon.
-`AWS Blogs <https://aws.amazon.com/blogs/machine-learning/fast-and-accurate-zero-shot-forecasting-with-chronos-bolt-and-autogluon/>`__.
+`AWS Blogs - Artificial Intelligence <https://aws.amazon.com/blogs/machine-learning/fast-and-accurate-zero-shot-forecasting-with-chronos-bolt-and-autogluon/>`__.

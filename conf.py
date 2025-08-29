@@ -37,7 +37,7 @@ extensions = [
 
 templates_path = ['templates']
 
-exclude_patterns = ['docs', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ['docs', 'Thumbs.db', '.DS_Store', 'blogs/inflation_autopilot.rst']
 
 master_doc = "index"
 highlight_language = 'python3'
