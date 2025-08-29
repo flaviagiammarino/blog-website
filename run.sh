@@ -1,4 +1,4 @@
-python3 -m pip install ./_ablog
+pip3 install https://github.com/flaviagiammarino/ablog.git
 rm -r docs
 make html
 git add --all
