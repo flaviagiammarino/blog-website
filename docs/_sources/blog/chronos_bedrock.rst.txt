@@ -24,27 +24,31 @@ Zero-shot time series forecasting with Chronos using Amazon Bedrock and ClickHou
 1. Overview
 ***************************************************************************************************************
 
-The emergence of large language models (LLMs) with zero-shot generalization capabilities in sequence modelling
-tasks has led to the development of time series foundation models (TSFMs) based on LLM architectures.
-By representing time series as sequences of tokens, TSFMs can leverage LLMs' capability to extrapolate future
-patterns from the context data.
-TSFMs eliminate the traditional need for domain-specific model development, allowing organizations to deploy
-accurate time series solutions faster.
+.. raw:: html
 
-In this post, we will focus on Chronos, a family of TSFMs for probabilistic time series forecasting
-developed by Amazon.
-In contrast to other TSFMs, that rely on LLMs pre-trained on text, Chronos models are trained from scratch
-on a large collection of time series datasets.
-Moreover, unlike other TSFMs, which require fine-tuning on in-domain data, Chronos models generate accurate
-zero-shot forecasts, without any task-specific adjustments.
+    <p>
+    The emergence of large language models (LLMs) with zero-shot generalization capabilities in sequence modelling
+    tasks has led to the development of time series foundation models (TSFMs) based on LLM architectures.
+    By representing time series as sequences of tokens, TSFMs can leverage LLMs' capability to extrapolate future
+    patterns from the context data.
+    TSFMs eliminate the traditional need for domain-specific model development, allowing organizations to deploy
+    accurate time series solutions faster.
 
-Recently, the Chronos family of TSFMs has been extended with Chronos-Bolt, a faster, more accurate, and more
-memory-efficient Chronos model that can also be used on CPU. Chronos-Bolt is available in AutoGluon-TimeSeries,
-Amazon SageMaker JumpStart and Amazon Bedrock.
+    In this post, we will focus on Chronos <a href="#references">[1]</a>, a family of TSFMs for probabilistic
+    time series forecasting developed by Amazon.
+    In contrast to other TSFMs, that rely on LLMs pre-trained on text, Chronos models are trained from scratch
+    on a large collection of time series datasets.
+    Moreover, unlike other TSFMs, which require fine-tuning on in-domain data, Chronos models generate accurate
+    zero-shot forecasts, without any task-specific adjustments.
 
-In the rest of this post, we will walk through a practical example of using Chronos-Bolt with time series data
-stored in ClickHouse. We will create a Bedrock endpoint, then build a Lambda function that invokes the Bedrock
-endpoint with context data queried from ClickHouse and returns the forecasts.
+    Recently, the Chronos family of TSFMs has been extended with Chronos-Bolt <a href="#references">[2]</a>,
+    a faster, more accurate, and more memory-efficient Chronos model that can also be used on CPU.
+    Chronos-Bolt is available in AutoGluon-TimeSeries, Amazon SageMaker JumpStart and Amazon Bedrock.
+
+    In the rest of this post, we will walk through a practical example of using Chronos-Bolt with time series data
+    stored in ClickHouse. We will create a Bedrock endpoint, then build a Lambda function that invokes the Bedrock
+    endpoint with context data queried from ClickHouse and returns the forecasts.
+    </p>
 
 2. Solution
 ***************************************************************************************************************
@@ -614,3 +618,14 @@ highlighting its strength in capturing complex temporal patterns.
     </p>
 
     </div>
+
+References
+***************************************************************************************************************
+
+[1] Ansari, A.F., Stella, L., Turkmen, C., Zhang, X., Mercado, P., Shen, H., Shchur, O., Rangapuram, S.S., Arango, S.P., Kapoor, S. and Zschiegner, J., (2024).
+Chronos: Learning the language of time series. *arXiv preprint*,
+`doi: 10.48550/arXiv.2403.07815 <https://doi.org/10.48550/arXiv.2403.07815>`__.
+
+[2] Ansari, A.F., Turkmen, C., Shchur, O., and Stella, L. (2024).
+Fast and accurate zero-shot forecasting with Chronos-Bolt and AutoGluon.
+`AWS Blogs <https://aws.amazon.com/blogs/machine-learning/fast-and-accurate-zero-shot-forecasting-with-chronos-bolt-and-autogluon/>`__.
