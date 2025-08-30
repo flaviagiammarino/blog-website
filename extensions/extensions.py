@@ -14,5 +14,13 @@ def google_analytics(app, pagename, templatename, context, doctree):
     context['metatags'] = metatags
 
 
+def on_builder_inited(app):
+    if app.builder.name == 'html':
+        app.builder.search = False
+        app.builder.use_index = False
+
+
 def setup(app):
     app.connect('html-page-context', google_analytics)
+    app.connect('builder-inited', on_builder_inited)
+    

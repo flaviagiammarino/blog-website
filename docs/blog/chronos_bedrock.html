@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Zero-shot time series forecasting with Chronos using Amazon Bedrock and ClickHouse - flaviagiammarino.com</title><link rel="shortcut icon" href="../_static/favicon.png"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="prev" title="&lt;no title&gt;" href="../index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Zero-shot time series forecasting with Chronos using Amazon Bedrock and ClickHouse - flaviagiammarino.com</title><link rel="shortcut icon" href="../_static/favicon.png"/><link rel="index" title="Index" href="../genindex.html" /><link rel="prev" title="&lt;no title&gt;" href="../index.html" />
       <link rel="canonical" href="https://flaviagiammarino.com/blog/chronos_bedrock.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
@@ -20,7 +20,7 @@
   --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
 }
 </style>
-    <meta name="description" content="Perform time series forecasting with Chronos using Amazon Bedrock and ClickHouse">
+    <meta name="description" content="Perform time series forecasting with Chronos on Amazon Bedrock using data stored in ClickHouse">
   <meta name="thumbnail" content="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/architecture_diagram.png">
   <meta name="keywords" content="Time Series Forecasting, Large Language Models, Amazon Bedrock, Amazon Chronos, ClickHouse">
   <meta property="og:type" content="website"/>
@@ -98,10 +98,6 @@ data-aria-dark="Switch to auto color mode">
       
     <li class="ablog-cloud ablog-cloud-3">
       <a style="font-size: 90%" href="tag/amazon-chronos.html">Amazon Chronos</a>
-    </li>
-      
-    <li class="ablog-cloud ablog-cloud-3">
-      <a style="font-size: 90%" href="tag/clickhouse.html">ClickHouse</a>
     </li>
       
     <li class="ablog-cloud ablog-cloud-3">
@@ -189,7 +185,7 @@ data-aria-dark="Switch to auto color mode">
 <img
     src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/architecture_diagram.png"
     style="width:100%"
-    alt="AWS architecture diagram showing Chronos on Amazon Bedrock integrated with ClickHouse"
+    alt="Architecture diagram showing Chronos on Amazon Bedrock integrated with ClickHouse in AWS Lambda"
 ><section id="overview">
 <h2>1. Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
 <p>The emergence of large language models (LLMs) with zero-shot generalization capabilities in sequence modelling
@@ -626,6 +622,7 @@ In both cases, we use a 3-week context window to generate 1-day-ahead forecasts.
 <img
     src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/predictions_table.png"
     style="width:100%"
+    alt="Last 10 rows of Pandas DataFrame with Amazon Chronos forecasts of the Italian electricity system's total demand for August 17, 2025"
 >
 
 <p>
@@ -653,6 +650,7 @@ In both cases, we use a 3-week context window to generate 1-day-ahead forecasts.
 <img
     src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/forecasts_table.png"
     style="width:100%"
+    alt="Last 10 rows of Pandas DataFrame with Amazon Chronos forecasts of the Italian electricity system's total demand for August 18, 2025"
 >
 
 <p>
@@ -723,6 +721,7 @@ highlighting its strength in capturing complex temporal patterns.</p>
 <img
     src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/forecasts_plot.png"
     style="width:100%"
+    alt="Visualization of Amazon Chronos zero-shot probabilistic forecasts of the Italian electricity system's total demand for August 17-18, 2025 against historical data"
 >
 
 <p>

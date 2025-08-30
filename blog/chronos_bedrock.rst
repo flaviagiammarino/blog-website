@@ -1,12 +1,13 @@
 :layout: post
 
 .. post:: August 22, 2025
-    :tags: Time Series Forecasting, Large Language Models, Amazon Bedrock, Amazon Chronos, ClickHouse
+    :tags: Time Series Forecasting, Large Language Models, Amazon Bedrock, Amazon Chronos
     :category: Time Series Foundation Models
     :author: Flavia
-    :meta_tags: Perform time series forecasting with Chronos using Amazon Bedrock and ClickHouse,
-               https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/architecture_diagram.png,
-               AWS architecture diagram showing Chronos on Amazon Bedrock integrated with ClickHouse
+    :description: Perform time series forecasting with Chronos on Amazon Bedrock using data stored in ClickHouse
+    :keywords: Time Series Forecasting, Large Language Models, Amazon Bedrock, Amazon Chronos, ClickHouse
+    :image_src: https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/architecture_diagram.png
+    :image_alt: Architecture diagram showing Chronos on Amazon Bedrock integrated with ClickHouse in AWS Lambda
     :excerpt: 1
 
 ###############################################################################################################
@@ -18,7 +19,7 @@ Zero-shot time series forecasting with Chronos using Amazon Bedrock and ClickHou
     <img
         src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/architecture_diagram.png"
         style="width:100%"
-        alt="AWS architecture diagram showing Chronos on Amazon Bedrock integrated with ClickHouse"
+        alt="Architecture diagram showing Chronos on Amazon Bedrock integrated with ClickHouse in AWS Lambda"
     >
 
 1. Overview
@@ -499,6 +500,7 @@ In both cases, we use a 3-week context window to generate 1-day-ahead forecasts.
     <img
         src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/predictions_table.png"
         style="width:100%"
+        alt="Last 10 rows of Pandas DataFrame with Amazon Chronos forecasts of the Italian electricity system's total demand for August 17, 2025"
     >
 
     <p>
@@ -531,6 +533,7 @@ In both cases, we use a 3-week context window to generate 1-day-ahead forecasts.
     <img
         src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/forecasts_table.png"
         style="width:100%"
+        alt="Last 10 rows of Pandas DataFrame with Amazon Chronos forecasts of the Italian electricity system's total demand for August 18, 2025"
     >
 
     <p>
@@ -606,6 +609,7 @@ highlighting its strength in capturing complex temporal patterns.
     <img
         src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/forecasts_plot.png"
         style="width:100%"
+        alt="Visualization of Amazon Chronos zero-shot probabilistic forecasts of the Italian electricity system's total demand for August 17-18, 2025 against historical data"
     >
 
     <p>

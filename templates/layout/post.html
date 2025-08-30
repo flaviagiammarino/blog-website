@@ -3,9 +3,9 @@
 {% set post = ablog[pagename] %}
 
 {%- block extrahead -%}
-  <meta name="description" content="{{post.meta_tags[0]}}">
-  <meta name="thumbnail" content="{{post.meta_tags[1]}}">
-  <meta name="keywords" content="{{ post.tags | join(', ') }}">
+  <meta name="description" content="{{post.description}}">
+  <meta name="thumbnail" content="{{post.image_src}}">
+  <meta name="keywords" content="{{ post.keywords  }}">
   {% include "components/meta-opengraph.html" %}
   {% include "components/alternate-links.html" %}
   {% include "components/google_analytics.html" %}
