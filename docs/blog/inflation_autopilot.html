@@ -148,9 +148,9 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#set-up-the-environment">2.1 Set up the environment</a></li>
 <li><a class="reference internal" href="#define-the-auxiliary-functions-for-working-with-the-fred-md-data">2.2 Define the auxiliary functions for working with the FRED-MD data</a></li>
 <li><a class="reference internal" href="#prepare-the-fred-md-data-and-upload-it-to-s3">2.3 Prepare the FRED-MD data and upload it to S3</a><ul>
-<li><a class="reference internal" href="#training-data-january-1960-december-2022">2.3.1 Training data (January 1960 - December 2022)</a></li>
-<li><a class="reference internal" href="#validation-data-january-2023-december-2023">2.3.2 Validation data (January 2023 - December 2023)</a></li>
-<li><a class="reference internal" href="#test-data-january-2024-december-2024">2.3.3 Test data (January 2024 - December 2024)</a></li>
+<li><a class="reference internal" href="#training-data">2.3.1 Training data</a></li>
+<li><a class="reference internal" href="#validation-data">2.3.2 Validation data</a></li>
+<li><a class="reference internal" href="#test-data">2.3.3 Test data</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#configure-and-run-the-automl-job">2.3 Configure and run the AutoML job</a></li>
@@ -159,17 +159,7 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li><a class="reference internal" href="#references">References</a></li>
-<li><a class="reference internal" href="#id6">Appendix</a><ul>
-<li><a class="reference internal" href="#a-1-output-and-income">A.1 Output and Income</a></li>
-<li><a class="reference internal" href="#a-2-labor-market">A.2 Labor Market</a></li>
-<li><a class="reference internal" href="#a-3-consumption-and-orders">A.3 Consumption and Orders</a></li>
-<li><a class="reference internal" href="#a-4-orders-and-inventories">A.4 Orders and Inventories</a></li>
-<li><a class="reference internal" href="#a-5-money-and-credit">A.5 Money and Credit</a></li>
-<li><a class="reference internal" href="#a-6-interest-rates-and-exchange-rates">A.6 Interest Rates and Exchange Rates</a></li>
-<li><a class="reference internal" href="#a-7-prices">A.7 Prices</a></li>
-<li><a class="reference internal" href="#a-8-stock-market">A.8 Stock Market</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#id6">Appendix</a></li>
 </ul>
 
         </div></div>
@@ -532,8 +522,8 @@ month-on-month (MoM) inflation rate time series.</p>
 </span></pre></div>
 </div>
 <p>This results in 101 time series, including the target time series.</p>
-<section id="training-data-january-1960-december-2022">
-<h4>2.3.1 Training data (January 1960 - December 2022)<a class="headerlink" href="#training-data-january-1960-december-2022" title="Link to this heading">¶</a></h4>
+<section id="training-data">
+<h4>2.3.1 Training data<a class="headerlink" href="#training-data" title="Link to this heading">¶</a></h4>
 <p>For training the candidate models during the AutoML experiment, we use the <em>2023-01</em> vintage,
 which includes the data up to December 2022.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Prepare the training data</span>
@@ -554,8 +544,8 @@ which includes the data up to December 2022.</p>
 </span></pre></div>
 </div>
 </section>
-<section id="validation-data-january-2023-december-2023">
-<h4>2.3.2 Validation data (January 2023 - December 2023)<a class="headerlink" href="#validation-data-january-2023-december-2023" title="Link to this heading">¶</a></h4>
+<section id="validation-data">
+<h4>2.3.2 Validation data<a class="headerlink" href="#validation-data" title="Link to this heading">¶</a></h4>
 <p>For evaluating and ranking the candidate models during the AutoML experiment,
 we use the data from January 2023 to December 2023, where data for each month is
 extracted separately from the corresponding vintage.</p>
@@ -584,8 +574,8 @@ training the model on future data and evaluating it on past data.</p>
 </span></pre></div>
 </div>
 </section>
-<section id="test-data-january-2024-december-2024">
-<h4>2.3.3 Test data (January 2024 - December 2024)<a class="headerlink" href="#test-data-january-2024-december-2024" title="Link to this heading">¶</a></h4>
+<section id="test-data">
+<h4>2.3.3 Test data<a class="headerlink" href="#test-data" title="Link to this heading">¶</a></h4>
 <p>For testing the best candidate model selected by the AutoML experiment,
 we use the data from January 2024 to December 2024, where again the data
 for each month is extracted separately from the corresponding vintage.</p>
@@ -734,8 +724,7 @@ Forecasting inflation in a data-rich environment: the benefits of machine learni
 </section>
 <section id="id6">
 <h2>Appendix<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h2>
-<section id="a-1-output-and-income">
-<h3>A.1 Output and Income<a class="headerlink" href="#a-1-output-and-income" title="Link to this heading">¶</a></h3>
+<p><strong>Group 1: Output and Income.</strong></p>
 <div class="table-wrapper docutils container">
 <table class="docutils align-default">
 <thead>
@@ -795,10 +784,7 @@ Forecasting inflation in a data-rich environment: the benefits of machine learni
 </tbody>
 </table>
 </div>
-<p><em>Group 1: Output and Income.</em></p>
-</section>
-<section id="a-2-labor-market">
-<h3>A.2 Labor Market<a class="headerlink" href="#a-2-labor-market" title="Link to this heading">¶</a></h3>
+<p><strong>Group 2: Labor Market.</strong></p>
 <div class="table-wrapper docutils container">
 <table class="docutils align-default">
 <thead>
@@ -903,10 +889,7 @@ Forecasting inflation in a data-rich environment: the benefits of machine learni
 </tbody>
 </table>
 </div>
-<p><em>Group 2: Labor Market.</em></p>
-</section>
-<section id="a-3-consumption-and-orders">
-<h3>A.3 Consumption and Orders<a class="headerlink" href="#a-3-consumption-and-orders" title="Link to this heading">¶</a></h3>
+<p><strong>Group 3: Consumption and Orders.</strong></p>
 <div class="table-wrapper docutils container">
 <table class="docutils align-default">
 <thead>
@@ -948,10 +931,7 @@ Forecasting inflation in a data-rich environment: the benefits of machine learni
 </tbody>
 </table>
 </div>
-<p><em>Group 3: Consumption and Orders.</em></p>
-</section>
-<section id="a-4-orders-and-inventories">
-<h3>A.4 Orders and Inventories<a class="headerlink" href="#a-4-orders-and-inventories" title="Link to this heading">¶</a></h3>
+<p><strong>Group 4: Orders and Inventories.</strong></p>
 <div class="table-wrapper docutils container">
 <table class="docutils align-default">
 <thead>
@@ -993,10 +973,7 @@ Forecasting inflation in a data-rich environment: the benefits of machine learni
 </tbody>
 </table>
 </div>
-<p><em>Group 4: Orders and Inventories.</em></p>
-</section>
-<section id="a-5-money-and-credit">
-<h3>A.5 Money and Credit<a class="headerlink" href="#a-5-money-and-credit" title="Link to this heading">¶</a></h3>
+<p><strong>Group 5: Money and Credit</strong></p>
 <div class="table-wrapper docutils container">
 <table class="docutils align-default">
 <thead>
@@ -1047,10 +1024,7 @@ Forecasting inflation in a data-rich environment: the benefits of machine learni
 </tbody>
 </table>
 </div>
-<p><em>Group 5: Money and Credit.</em></p>
-</section>
-<section id="a-6-interest-rates-and-exchange-rates">
-<h3>A.6 Interest Rates and Exchange Rates<a class="headerlink" href="#a-6-interest-rates-and-exchange-rates" title="Link to this heading">¶</a></h3>
+<p><strong>Group 6: Interest Rates and Exchange Rates</strong></p>
 <div class="table-wrapper docutils container">
 <table class="docutils align-default">
 <thead>
@@ -1128,10 +1102,7 @@ Forecasting inflation in a data-rich environment: the benefits of machine learni
 </tbody>
 </table>
 </div>
-<p><em>Group 6: Interest Rates and Exchange Rates.</em></p>
-</section>
-<section id="a-7-prices">
-<h3>A.7 Prices<a class="headerlink" href="#a-7-prices" title="Link to this heading">¶</a></h3>
+<p><strong>Group 7: Prices</strong></p>
 <div class="table-wrapper docutils container">
 <table class="docutils align-default">
 <thead>
@@ -1203,10 +1174,7 @@ Forecasting inflation in a data-rich environment: the benefits of machine learni
 </tbody>
 </table>
 </div>
-<p><em>Group 7: Prices.</em></p>
-</section>
-<section id="a-8-stock-market">
-<h3>A.8 Stock Market<a class="headerlink" href="#a-8-stock-market" title="Link to this heading">¶</a></h3>
+<p><strong>Group 8: Stock Market</strong></p>
 <div class="table-wrapper docutils container">
 <table class="docutils align-default">
 <thead>
@@ -1233,8 +1201,6 @@ Forecasting inflation in a data-rich environment: the benefits of machine learni
 </tbody>
 </table>
 </div>
-<p><em>Group 8: Stock Market.</em></p>
-</section>
 </section>
 </section>
 
