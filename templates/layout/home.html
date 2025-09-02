@@ -140,6 +140,9 @@
                 <p>
                   <a href="{{ postlink(post) }}"><em>{{ _("Read more ...") }}</em></a>
                 </p>
+                    {% if not loop.last %}
+                    <hr>
+                    {% endif %}
               </div>
               {% endfor %}
             </div>
