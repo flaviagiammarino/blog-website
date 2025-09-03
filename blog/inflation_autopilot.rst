@@ -164,7 +164,6 @@ The transformation codes are included in the first row of each FRED-MD dataset a
 
 The FRED-MD dataset is updated on a monthly basis. The monthly releases are referred to as *vintages*.
 Different vintages can include different time series, as indicators are occasionally added and removed from the dataset.
-
 To ensure consistent data across training, validation, and testing, we define a function that identifies
 which indicators have complete time series across all consecutive vintages in our analysis period.
 

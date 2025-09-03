@@ -319,8 +319,8 @@ The transformation codes are included in the first row of each FRED-MD dataset a
 <span class="pre" style="font-weight:600">get_common_series</span>
 </code>
 </p><p>The FRED-MD dataset is updated on a monthly basis. The monthly releases are referred to as <em>vintages</em>.
-Different vintages can include different time series, as indicators are occasionally added and removed from the dataset.</p>
-<p>To ensure consistent data across training, validation, and testing, we define a function that identifies
+Different vintages can include different time series, as indicators are occasionally added and removed from the dataset.
+To ensure consistent data across training, validation, and testing, we define a function that identifies
 which indicators have complete time series across all consecutive vintages in our analysis period.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">get_common_series</span><span class="p">(</span>
 </span><span data-line="2">    <span class="n">start_vintage</span><span class="p">,</span>
