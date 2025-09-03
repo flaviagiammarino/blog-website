@@ -206,7 +206,7 @@ AutoML solutions make ML accessible to non-specialists and significantly reduce 
 to forecast US inflation using the <a class="reference external" href="https://research.stlouisfed.org/econ/mccracken/fred-databases/">FRED-MD</a> dataset <a class="reference external" href="#references">[2]</a>.
 FRED-MD is an open-source dataset maintained by the Federal Reserve Bank of St. Louis
 including over 100 monthly time series of US macroeconomic indicators (see the <a class="reference external" href="#appendix">Appendix</a> for the full list).
-FRED-MD is widely used in economic research, and has become a common benchmark for evaluating machine learning models
+FRED-MD is widely used in economic research, and has become a standard benchmark for evaluating machine learning models
 for US inflation forecasting (see, for instance, <a class="reference external" href="#references">[3]</a>, <a class="reference external" href="#references">[4]</a>, <a class="reference external" href="#references">[5]</a>).</p>
 <p>In this demonstration, we use AutoML to forecast the monthly percentage change in the <a class="reference external" href="https://fred.stlouisfed.org/series/CPIAUCSL">US Consumer Price Index (CPI)</a>
 one month ahead. On each month, we forecast the percentage change in the US CPI on the following month
@@ -320,9 +320,8 @@ The transformation codes are included in the first row of each FRED-MD dataset a
 </code>
 </p><p>The FRED-MD dataset is updated on a monthly basis. The monthly releases are referred to as <em>vintages</em>.
 Different vintages can include different time series, as indicators are occasionally added and removed from the dataset.</p>
-<p>To make sure that the same time series are used for training, validating and testing the ML pipeline,
-we define a function for determining which indicators have complete time series in all dataset releases
-between two dates.</p>
+<p>To ensure consistent data across training, validation, and testing, we define a function that identifies
+which indicators have complete time series across all consecutive vintages in our analysis period.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">get_common_series</span><span class="p">(</span>
 </span><span data-line="2">    <span class="n">start_vintage</span><span class="p">,</span>
 </span><span data-line="3">    <span class="n">end_vintage</span>
@@ -583,7 +582,7 @@ for each month is extracted separately from the corresponding vintage.</p>
 the best candidate model to generate the test set predictions.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>Make sure to exclude the header and to drop the column with the target time series from the
+<p>Make sure to exclude the header and to drop the target column from the
 test dataset before uploading it to S3, otherwise the batch transform job will fail.</p>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Prepare the test data</span>

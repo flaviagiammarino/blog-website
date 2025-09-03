@@ -35,7 +35,7 @@ In this post, we demonstrate how to use Amazon SageMaker Autopilot `[1] <#refere
 to forecast US inflation using the `FRED-MD <https://research.stlouisfed.org/econ/mccracken/fred-databases/>`__ dataset `[2] <#references>`_.
 FRED-MD is an open-source dataset maintained by the Federal Reserve Bank of St. Louis
 including over 100 monthly time series of US macroeconomic indicators (see the `Appendix <#appendix>`_ for the full list).
-FRED-MD is widely used in economic research, and has become a common benchmark for evaluating machine learning models
+FRED-MD is widely used in economic research, and has become a standard benchmark for evaluating machine learning models
 for US inflation forecasting (see, for instance, `[3] <#references>`_, `[4] <#references>`_, `[5] <#references>`_).
 
 In this demonstration, we use AutoML to forecast the monthly percentage change in the `US Consumer Price Index (CPI) <https://fred.stlouisfed.org/series/CPIAUCSL>`__
@@ -165,9 +165,8 @@ The transformation codes are included in the first row of each FRED-MD dataset a
 The FRED-MD dataset is updated on a monthly basis. The monthly releases are referred to as *vintages*.
 Different vintages can include different time series, as indicators are occasionally added and removed from the dataset.
 
-To make sure that the same time series are used for training, validating and testing the ML pipeline,
-we define a function for determining which indicators have complete time series in all dataset releases
-between two dates.
+To ensure consistent data across training, validation, and testing, we define a function that identifies
+which indicators have complete time series across all consecutive vintages in our analysis period.
 
 .. code:: python
 
@@ -456,7 +455,7 @@ the best candidate model to generate the test set predictions.
 
 .. warning::
 
-    Make sure to exclude the header and to drop the column with the target time series from the
+    Make sure to exclude the header and to drop the target column from the
     test dataset before uploading it to S3, otherwise the batch transform job will fail.
 
 .. code:: python
