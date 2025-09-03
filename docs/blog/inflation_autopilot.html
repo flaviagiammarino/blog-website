@@ -713,17 +713,20 @@ monitoring report with a detailed analysis of the pipeline’s performance on th
 <div style="margin: 2em 0em 2em 0em">
 
 <img
-    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/inflation_autopilot/forecasts_table.png"
-    style="width:50%"
-    alt="Table of 1-month-ahead AutoML forecasts of US CPI month-on-month inflation and historical FRED-MD data"
->
-
-<p>
-<span style="font-weight:600">Figure 4:</span>
-<span>1-month-ahead AutoML forecasts of US CPI month-on-month inflation and historical FRED-MD data.</span>
-</p>
-
-</div><p>To evaluate the quality of the forecasts, we calculate the root mean square error (RMSE), mean absolute error (MAE)
+    src="https://m<dl>
+<dt>achine-learning-blog.s3.eu-west-2.amazonaws.com/inflation_autopilot/forecasts_table.png”</dt><dd><blockquote>
+<div><p>style=”width:60%”
+alt=”Table of 1-month-ahead AutoML forecasts of US CPI month-on-month inflation and historical FRED-MD data”</p>
+</div></blockquote>
+<p>&gt;</p>
+<p>&lt;p&gt;
+&lt;span style=”font-weight:600”&gt;Figure 4:&lt;/span&gt;
+&lt;span&gt;1-month-ahead AutoML forecasts of US CPI month-on-month inflation and historical FRED-MD data.&lt;/span&gt;
+&lt;/p&gt;</p>
+<p>&lt;/div&gt;</p>
+</dd>
+</dl>
+<p>To evaluate the quality of the forecasts, we calculate the root mean square error (RMSE), mean absolute error (MAE)
 and correlation with the historical data.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Calculate the correlations between the predictions and the actual values</span>
 </span><span data-line="2"><span class="n">correlations</span> <span class="o">=</span> <span class="n">predictions</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span>
