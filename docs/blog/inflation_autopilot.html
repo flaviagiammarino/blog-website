@@ -216,8 +216,8 @@ Then, we use this pipeline in an Amazon SageMaker batch transform job to generat
 </section>
 <section id="solution">
 <h2>2. Solution<a class="headerlink" href="#solution" title="Link to this heading">¶</a></h2>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
 <p>To be able to run the code provided in this section, you will need to launch an Amazon SageMaker notebook instance.
 You will also need to download the CSV files with the FRED-MD data from the <a class="reference external" href="https://research.stlouisfed.org/econ/mccracken/fred-databases/">FRED-MD website</a>
 and store them in a local folder.</p>
@@ -586,8 +586,8 @@ we use the data from January 2024 to December 2024, where again the data
 for each month is extracted separately from the corresponding vintage.</p>
 <p>The testing is performed later by performing a batch transform job with
 the best candidate model to generate the test set predictions.</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
 <p>Make sure to exclude the header and to drop the target column from the
 test dataset before uploading it to S3, otherwise the batch transform job will fail.</p>
 </div>

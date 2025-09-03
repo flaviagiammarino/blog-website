@@ -47,7 +47,7 @@ Then, we use this pipeline in an Amazon SageMaker batch transform job to generat
 2. Solution
 ***************************************************************************************************************
 
-.. warning::
+.. note::
 
     To be able to run the code provided in this section, you will need to launch an Amazon SageMaker notebook instance.
     You will also need to download the CSV files with the FRED-MD data from the `FRED-MD website <https://research.stlouisfed.org/econ/mccracken/fred-databases/>`__
@@ -458,7 +458,7 @@ for each month is extracted separately from the corresponding vintage.
 The testing is performed later by performing a batch transform job with
 the best candidate model to generate the test set predictions.
 
-.. warning::
+.. important::
 
     Make sure to exclude the header and to drop the target column from the
     test dataset before uploading it to S3, otherwise the batch transform job will fail.
