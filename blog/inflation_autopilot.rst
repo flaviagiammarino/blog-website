@@ -530,10 +530,25 @@ the model artifacts and the model documentation of the final selected pipeline.
     automl.best_candidate()
 
 The AutoML experiments automatically generates several reports for each candidate pipeline,
-including an explainability report with the feature importances (Shap values), and a model
+including an explainability report with the feature importances (SHAP values), and a model
 monitoring report with a detailed analysis of the pipeline's performance on the validation set.
 
+.. raw:: html
 
+    <div style="margin: 2em 0em 2em 0em">
+
+    <img
+        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/inflation_autopilot/feature_importance_plot.png"
+        style="width:100%"
+        alt="Visualization of top 10 features by SHAP value."
+    >
+
+    <p>
+    <span style="font-weight:600">Figure 4:</span>
+    <span>Top 10 features by SHAP value.</span>
+    </p>
+
+    </div>
 
 
 2.4 Generate the AutoML predictions
@@ -596,6 +611,23 @@ The root mean square error (RMSE) of the forecasts is 0.1322%
 while the mean absolute error (MAE) is 0.0978%. The forecasts display a relatively high
 correlation with the data (69% correlation), even though some significant deviations
 are observed on several months.
+
+.. raw:: html
+
+    <div style="margin: 2em 0em 2em 0em">
+
+    <img
+        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/inflation_autopilot/forecasts_plot.png"
+        style="width:100%"
+        alt="Visualization of 1-month-ahead AutoML forecasts of US CPI month-on-month inflation against historical FRED-MD data"
+    >
+
+    <p>
+    <span style="font-weight:600">Figure 4:</span>
+    <span>1-month-ahead AutoML forecasts of US CPI month-on-month inflation against historical FRED-MD data.</span>
+    </p>
+
+    </div>
 
 References
 ***************************************************************************************************************
