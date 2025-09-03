@@ -220,7 +220,7 @@ Then, we use this pipeline in an Amazon SageMaker batch transform job to generat
 <p class="admonition-title">Warning</p>
 <p>To be able to run the code provided in this section, you will need to launch an Amazon SageMaker notebook instance.
 You will also need to download the CSV files with the FRED-MD data from the <a class="reference external" href="https://research.stlouisfed.org/econ/mccracken/fred-databases/">FRED-MD website</a>
-and store them in a local <code class="docutils literal notranslate"><span class="pre">data</span></code> folder.</p>
+and store them in a local folder.</p>
 </div>
 <section id="set-up-the-environment">
 <h3>2.1 Set up the environment<a class="headerlink" href="#set-up-the-environment" title="Link to this heading">¶</a></h3>
@@ -725,14 +725,14 @@ monitoring report with a detailed analysis of the pipeline’s performance on th
 
 </div><p>To evaluate the quality of the forecasts, we calculate the root mean square error (RMSE), mean absolute error (MAE)
 and correlation with the historical data.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Calculate the correlations between the predictions and the actual values</span>
-</span><span data-line="2"><span class="n">correlations</span> <span class="o">=</span> <span class="n">predictions</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span>
-</span><span data-line="3">
-</span><span data-line="4"><span class="c1"># Calculate the error metrics</span>
-</span><span data-line="5"><span class="n">errors</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
-</span><span data-line="6">    <span class="s2">&quot;RMSE&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">format</span><span class="p">(</span><span class="n">root_mean_squared_error</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">predictions</span><span class="p">[</span><span class="s2">&quot;Actual&quot;</span><span class="p">],</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">predictions</span><span class="p">[</span><span class="s2">&quot;Forecast&quot;</span><span class="p">]),</span> <span class="s2">&quot;.4%&quot;</span><span class="p">)],</span>
-</span><span data-line="7">    <span class="s2">&quot;MAE&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">format</span><span class="p">(</span><span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">predictions</span><span class="p">[</span><span class="s2">&quot;Actual&quot;</span><span class="p">],</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">predictions</span><span class="p">[</span><span class="s2">&quot;Forecast&quot;</span><span class="p">]),</span> <span class="s2">&quot;.4%&quot;</span><span class="p">)]</span>
-</span><span data-line="8"><span class="p">})</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Calculate the error metrics</span>
+</span><span data-line="2"><span class="n">errors</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+</span><span data-line="3">    <span class="s2">&quot;RMSE&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">format</span><span class="p">(</span><span class="n">root_mean_squared_error</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">predictions</span><span class="p">[</span><span class="s2">&quot;Actual&quot;</span><span class="p">],</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">predictions</span><span class="p">[</span><span class="s2">&quot;Forecast&quot;</span><span class="p">]),</span> <span class="s2">&quot;.4%&quot;</span><span class="p">)],</span>
+</span><span data-line="4">    <span class="s2">&quot;MAE&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">format</span><span class="p">(</span><span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">predictions</span><span class="p">[</span><span class="s2">&quot;Actual&quot;</span><span class="p">],</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">predictions</span><span class="p">[</span><span class="s2">&quot;Forecast&quot;</span><span class="p">]),</span> <span class="s2">&quot;.4%&quot;</span><span class="p">)]</span>
+</span><span data-line="5"><span class="p">})</span>
+</span><span data-line="6">
+</span><span data-line="7"><span class="c1"># Calculate the correlations between the predictions and the actual values</span>
+</span><span data-line="8"><span class="n">correlations</span> <span class="o">=</span> <span class="n">predictions</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span>
 </span></pre></div>
 </div>
 <p>The RMSE is 0.1322% while the MAE is 0.0978%. The forecasts display a relatively high
@@ -751,7 +751,9 @@ are observed on several months.</p>
 <span>1-month-ahead AutoML forecasts of US CPI month-on-month inflation against historical FRED-MD data.</span>
 </p>
 
-</div></section>
+</div><p>You can download the Amazon SageMaker notebook with the full code from our
+<a class="reference external" href="https://github.com/flaviagiammarino/machine-learning-blog/blob/main/inflation_autopilot/amazon_sagemaker_notebook.ipynb">GitHub repository</a>.</p>
+</section>
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Link to this heading">¶</a></h2>

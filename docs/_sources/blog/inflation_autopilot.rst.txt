@@ -51,7 +51,7 @@ Then, we use this pipeline in an Amazon SageMaker batch transform job to generat
 
     To be able to run the code provided in this section, you will need to launch an Amazon SageMaker notebook instance.
     You will also need to download the CSV files with the FRED-MD data from the `FRED-MD website <https://research.stlouisfed.org/econ/mccracken/fred-databases/>`__
-    and store them in a local ``data`` folder.
+    and store them in a local folder.
 
 2.1 Set up the environment
 ===============================================================================================================
@@ -619,14 +619,14 @@ and correlation with the historical data.
 
 .. code:: python
 
-    # Calculate the correlations between the predictions and the actual values
-    correlations = predictions.corr()
-
     # Calculate the error metrics
     errors = pd.DataFrame({
         "RMSE": [format(root_mean_squared_error(y_true=predictions["Actual"], y_pred=predictions["Forecast"]), ".4%")],
         "MAE": [format(mean_absolute_error(y_true=predictions["Actual"], y_pred=predictions["Forecast"]), ".4%")]
     })
+
+    # Calculate the correlations between the predictions and the actual values
+    correlations = predictions.corr()
 
 The RMSE is 0.1322% while the MAE is 0.0978%. The forecasts display a relatively high
 correlation with the data (69% correlation), even though some significant deviations
@@ -648,6 +648,9 @@ are observed on several months.
     </p>
 
     </div>
+
+You can download the Amazon SageMaker notebook with the full code from our
+`GitHub repository <https://github.com/flaviagiammarino/machine-learning-blog/blob/main/inflation_autopilot/amazon_sagemaker_notebook.ipynb>`__.
 
 References
 ***************************************************************************************************************
