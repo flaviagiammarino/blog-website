@@ -508,22 +508,28 @@ as the resulting time series can’t be interpreted as an inflation rate.
 We use percentage changes (<code class="docutils literal notranslate"><span class="pre">tcode</span> <span class="pre">=</span> <span class="pre">7</span></code>) insted, which results in a
 month-on-month (MoM) inflation rate time series.</p>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">target_name</span> <span class="o">=</span> <span class="s2">&quot;CPIAUCSL&quot;</span>
-</span><span data-line="2"><span class="n">target_tcode</span> <span class="o">=</span> <span class="mi">7</span>
-</span><span data-line="3"><span class="n">n_lags</span> <span class="o">=</span> <span class="mi">1</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Define the name of the target time series</span>
+</span><span data-line="2"><span class="n">target_name</span> <span class="o">=</span> <span class="s2">&quot;CPIAUCSL&quot;</span>
+</span><span data-line="3">
+</span><span data-line="4"><span class="c1"># Define the transformation code of the target time series</span>
+</span><span data-line="5"><span class="n">target_tcode</span> <span class="o">=</span> <span class="mi">7</span>
+</span><span data-line="6">
+</span><span data-line="7"><span class="c1"># Define the number of autoregressive lags of each time series</span>
+</span><span data-line="8"><span class="n">n_lags</span> <span class="o">=</span> <span class="mi">1</span>
 </span></pre></div>
 </div>
 <p>After that, we extract the list of complete time series included in all vintages used for the analysis.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">series_names</span> <span class="o">=</span> <span class="n">get_common_series</span><span class="p">(</span>
-</span><span data-line="2">    <span class="n">start_vintage</span><span class="o">=</span><span class="s2">&quot;2023-01&quot;</span><span class="p">,</span>
-</span><span data-line="3">    <span class="n">end_vintage</span><span class="o">=</span><span class="s2">&quot;2025-01&quot;</span><span class="p">,</span>
-</span><span data-line="4"><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Get the list of complete time series included in all vintages from 2023-01 to 2025-01</span>
+</span><span data-line="2"><span class="n">series_names</span> <span class="o">=</span> <span class="n">get_common_series</span><span class="p">(</span>
+</span><span data-line="3">    <span class="n">start_vintage</span><span class="o">=</span><span class="s2">&quot;2023-01&quot;</span><span class="p">,</span>
+</span><span data-line="4">    <span class="n">end_vintage</span><span class="o">=</span><span class="s2">&quot;2025-01&quot;</span><span class="p">,</span>
+</span><span data-line="5"><span class="p">)</span>
 </span></pre></div>
 </div>
 <p>This results in 101 time series, including the target time series.</p>
 <section id="training-data">
 <h4>2.3.1 Training data<a class="headerlink" href="#training-data" title="Link to this heading">¶</a></h4>
-<p>For training the candidate models during the AutoML experiment, we use the <em>2023-01</em> vintage,
+<p>For training the candidate models during the AutoML experiment, we use the 2023-01 vintage,
 which includes the data up to December 2022.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Prepare the training data</span>
 </span><span data-line="2"><span class="n">training_data</span> <span class="o">=</span> <span class="n">get_data</span><span class="p">(</span>
@@ -651,7 +657,7 @@ the model artifacts and the model documentation of the final selected pipeline.<
 </span><span data-line="2"><span class="n">automl</span><span class="o">.</span><span class="n">best_candidate</span><span class="p">()</span>
 </span></pre></div>
 </div>
-<p>The AutoML experiments automatically generates several reports for each candidate pipeline,
+<p>The AutoML job automatically generates several reports for each candidate pipeline,
 including an explainability report with the feature importances (SHAP values), and a model
 monitoring report with a detailed analysis of the pipeline’s performance on the validation set.</p>
 <div style="margin: 2em 0em 2em 0em">

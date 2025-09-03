@@ -371,14 +371,20 @@ We now use the functions defined in the previous section for processing the FRED
 
 .. code:: python
 
+    # Define the name of the target time series
     target_name = "CPIAUCSL"
+
+    # Define the transformation code of the target time series
     target_tcode = 7
+
+    # Define the number of autoregressive lags of each time series
     n_lags = 1
 
 After that, we extract the list of complete time series included in all vintages used for the analysis.
 
 .. code:: python
 
+    # Get the list of complete time series included in all vintages from 2023-01 to 2025-01
     series_names = get_common_series(
         start_vintage="2023-01",
         end_vintage="2025-01",
@@ -389,7 +395,7 @@ This results in 101 time series, including the target time series.
 2.3.1 Training data
 --------------------------------------------------------------------------------------------------------------
 
-For training the candidate models during the AutoML experiment, we use the *2023-01* vintage,
+For training the candidate models during the AutoML experiment, we use the 2023-01 vintage,
 which includes the data up to December 2022.
 
 .. code:: python
@@ -527,7 +533,7 @@ the model artifacts and the model documentation of the final selected pipeline.
     # Get the best model
     automl.best_candidate()
 
-The AutoML experiments automatically generates several reports for each candidate pipeline,
+The AutoML job automatically generates several reports for each candidate pipeline,
 including an explainability report with the feature importances (SHAP values), and a model
 monitoring report with a detailed analysis of the pipeline's performance on the validation set.
 
