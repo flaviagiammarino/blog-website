@@ -602,8 +602,7 @@ After the batch transform job has completed, we can load the forecasts from S3.
     <div style="margin: 2em 0em 2em 0em">
 
     <img
-        src="https://m
-achine-learning-blog.s3.eu-west-2.amazonaws.com/inflation_autopilot/forecasts_table.png"
+        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/inflation_autopilot/forecasts_table.png"
         style="width:60%"
         alt="Table of 1-month-ahead AutoML forecasts of US CPI month-on-month inflation and historical FRED-MD data"
     >
