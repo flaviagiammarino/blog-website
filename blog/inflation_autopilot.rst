@@ -579,8 +579,7 @@ We now run a batch transform job with the selected pipeline to generate the fore
 2.5 Evaluate the AutoML prediction
 ===============================================================================================================
 
-After the batch transform job has completed, we can load the forecasts from S3
-and evaluate their performance against the actual data.
+After the batch transform job has completed, we can load the forecasts from S3.
 
 .. code:: python
 
@@ -598,6 +597,28 @@ and evaluate their performance against the actual data.
     # Add the actual values to the data frame
     predictions.insert(0, "Actual", test_data[target_name])
 
+.. raw:: html
+
+    <div style="margin: 2em 0em 2em 0em">
+
+    <img
+        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/inflation_autopilot/forecasts_table.png"
+        style="width:100%"
+        alt="Table of 1-month-ahead AutoML forecasts of US CPI month-on-month inflation and historical FRED-MD data"
+    >
+
+    <p>
+    <span style="font-weight:600">Figure 4:</span>
+    <span>1-month-ahead AutoML forecasts of US CPI month-on-month inflation and historical FRED-MD data.</span>
+    </p>
+
+    </div>
+
+To evaluate the quality of the forecasts, we calculate the root mean square error (RMSE), mean absolute error (MAE)
+and correlation with the historical data.
+
+.. code:: python
+
     # Calculate the correlations between the predictions and the actual values
     correlations = predictions.corr()
 
@@ -607,8 +628,7 @@ and evaluate their performance against the actual data.
         "MAE": [format(mean_absolute_error(y_true=predictions["Actual"], y_pred=predictions["Forecast"]), ".4%")]
     })
 
-The root mean square error (RMSE) of the forecasts is 0.1322%
-while the mean absolute error (MAE) is 0.0978%. The forecasts display a relatively high
+The RMSE is 0.1322% while the MAE is 0.0978%. The forecasts display a relatively high
 correlation with the data (69% correlation), even though some significant deviations
 are observed on several months.
 
