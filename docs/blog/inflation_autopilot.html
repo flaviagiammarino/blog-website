@@ -547,7 +547,7 @@ which includes the data up to December 2022.</p>
 <section id="validation-data">
 <h4>2.3.2 Validation data<a class="headerlink" href="#validation-data" title="Link to this heading">¶</a></h4>
 <p>For evaluating and ranking the candidate models during the AutoML experiment,
-we use the data from January 2023 to December 2023, where data for each month is
+we use the data from January 2023 to December 2023, where the data for each month is
 extracted separately from the corresponding vintage.</p>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
@@ -580,7 +580,7 @@ training the model on future data and evaluating it on past data.</p>
 we use the data from January 2024 to December 2024, where again the data
 for each month is extracted separately from the corresponding vintage.</p>
 <p>The testing is performed later by performing a batch transform job with
-the best candidate model to obtain the predictions.</p>
+the best candidate model to generate the test set predictions.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>Make sure to exclude the header and to drop the column with the target time series from the
@@ -654,11 +654,11 @@ the model artifacts and the model documentation of the final selected pipeline.<
 </div>
 <p>The AutoML experiments automatically generates several reports for each candidate pipeline,
 including an explainability report with the feature importances (Shap values), and a model
-monitoring report with a detailed analysis of the pipeline’s performance on the validation data.</p>
+monitoring report with a detailed analysis of the pipeline’s performance on the validation set.</p>
 </section>
-<hr class="docutils" />
 <section id="generate-the-automl-predictions">
 <h3>2.4 Generate the AutoML predictions<a class="headerlink" href="#generate-the-automl-predictions" title="Link to this heading">¶</a></h3>
+<p>We now run a batch transform job with the selected pipeline to generate the forecasts over the test set.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Create the model</span>
 </span><span data-line="2"><span class="n">model</span> <span class="o">=</span> <span class="n">automl</span><span class="o">.</span><span class="n">create_model</span><span class="p">(</span>
 </span><span data-line="3">    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;us-cpi-model&quot;</span><span class="p">,</span>
@@ -681,6 +681,8 @@ monitoring report with a detailed analysis of the pipeline’s performance on th
 </section>
 <section id="evaluate-the-automl-prediction">
 <h3>2.5 Evaluate the AutoML prediction<a class="headerlink" href="#evaluate-the-automl-prediction" title="Link to this heading">¶</a></h3>
+<p>After the batch transform job has completed, we can load the forecasts from S3
+and evaluate their performance against the actual data.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Get the AutoML predictions from S3</span>
 </span><span data-line="2"><span class="n">predictions</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">read_s3_file</span><span class="p">(</span>
 </span><span data-line="3">    <span class="n">bucket</span><span class="o">=</span><span class="n">bucket</span><span class="p">,</span>
@@ -694,6 +696,15 @@ monitoring report with a detailed analysis of the pipeline’s performance on th
 </span><span data-line="11">
 </span><span data-line="12"><span class="c1"># Add the actual values to the data frame</span>
 </span><span data-line="13"><span class="n">predictions</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;Actual&quot;</span><span class="p">,</span> <span class="n">test_data</span><span class="p">[</span><span class="n">target_name</span><span class="p">])</span>
+</span><span data-line="14">
+</span><span data-line="15"><span class="c1"># Calculate the correlations between the predictions and the actual values</span>
+</span><span data-line="16"><span class="n">correlations</span> <span class="o">=</span> <span class="n">predictions</span><span class="o">.</span><span class="n">corr</span><span class="p">()</span>
+</span><span data-line="17">
+</span><span data-line="18"><span class="c1"># Calculate the error metrics</span>
+</span><span data-line="19"><span class="n">errors</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+</span><span data-line="20">    <span class="s2">&quot;RMSE&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">format</span><span class="p">(</span><span class="n">root_mean_squared_error</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">predictions</span><span class="p">[</span><span class="s2">&quot;Actual&quot;</span><span class="p">],</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">predictions</span><span class="p">[</span><span class="s2">&quot;Forecast&quot;</span><span class="p">]),</span> <span class="s2">&quot;.4%&quot;</span><span class="p">)],</span>
+</span><span data-line="21">    <span class="s2">&quot;MAE&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">format</span><span class="p">(</span><span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">predictions</span><span class="p">[</span><span class="s2">&quot;Actual&quot;</span><span class="p">],</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">predictions</span><span class="p">[</span><span class="s2">&quot;Forecast&quot;</span><span class="p">]),</span> <span class="s2">&quot;.4%&quot;</span><span class="p">)]</span>
+</span><span data-line="22"><span class="p">})</span>
 </span></pre></div>
 </div>
 <p>The root mean square error (RMSE) of the forecasts is 0.1322%

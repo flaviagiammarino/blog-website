@@ -416,7 +416,7 @@ which includes the data up to December 2022.
 --------------------------------------------------------------------------------------------------------------
 
 For evaluating and ranking the candidate models during the AutoML experiment,
-we use the data from January 2023 to December 2023, where data for each month is
+we use the data from January 2023 to December 2023, where the data for each month is
 extracted separately from the corresponding vintage.
 
 .. important::
@@ -452,7 +452,7 @@ we use the data from January 2024 to December 2024, where again the data
 for each month is extracted separately from the corresponding vintage.
 
 The testing is performed later by performing a batch transform job with
-the best candidate model to obtain the predictions.
+the best candidate model to generate the test set predictions.
 
 .. warning::
 
@@ -531,13 +531,15 @@ the model artifacts and the model documentation of the final selected pipeline.
 
 The AutoML experiments automatically generates several reports for each candidate pipeline,
 including an explainability report with the feature importances (Shap values), and a model
-monitoring report with a detailed analysis of the pipeline's performance on the validation data.
+monitoring report with a detailed analysis of the pipeline's performance on the validation set.
 
-....
+
 
 
 2.4 Generate the AutoML predictions
 ===============================================================================================================
+
+We now run a batch transform job with the selected pipeline to generate the forecasts over the test set.
 
 .. code:: python
 
@@ -562,6 +564,9 @@ monitoring report with a detailed analysis of the pipeline's performance on the 
 2.5 Evaluate the AutoML prediction
 ===============================================================================================================
 
+After the batch transform job has completed, we can load the forecasts from S3
+and evaluate their performance against the actual data.
+
 .. code:: python
 
     # Get the AutoML predictions from S3
@@ -578,11 +583,19 @@ monitoring report with a detailed analysis of the pipeline's performance on the 
     # Add the actual values to the data frame
     predictions.insert(0, "Actual", test_data[target_name])
 
+    # Calculate the correlations between the predictions and the actual values
+    correlations = predictions.corr()
+
+    # Calculate the error metrics
+    errors = pd.DataFrame({
+        "RMSE": [format(root_mean_squared_error(y_true=predictions["Actual"], y_pred=predictions["Forecast"]), ".4%")],
+        "MAE": [format(mean_absolute_error(y_true=predictions["Actual"], y_pred=predictions["Forecast"]), ".4%")]
+    })
+
 The root mean square error (RMSE) of the forecasts is 0.1322%
 while the mean absolute error (MAE) is 0.0978%. The forecasts display a relatively high
 correlation with the data (69% correlation), even though some significant deviations
 are observed on several months.
-
 
 References
 ***************************************************************************************************************
