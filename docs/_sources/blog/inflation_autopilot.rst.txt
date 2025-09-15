@@ -535,7 +535,7 @@ the model artifacts of the final selected pipeline.
 
 The AutoML job automatically generates several reports for each candidate pipeline,
 including an explainability report with the feature importances (SHAP values), and a model
-monitoring report with a detailed analysis of the pipeline's performance.
+quality report with an analysis of the performance on the validation data.
 
 .. raw:: html
 
