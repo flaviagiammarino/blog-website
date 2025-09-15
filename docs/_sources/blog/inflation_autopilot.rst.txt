@@ -533,14 +533,15 @@ the model artifacts of the final selected pipeline.
     automl.best_candidate()
 
 The AutoML job automatically generates several reports for each candidate pipeline,
-including a model explainability report with the feature importances (SHAP values), and a model
+including a model explainability report with the feature importances and a model
 quality report with an analysis of the performance on the validation data, which are also saved to S3.
 
 2.4.1 Model explainability report
 --------------------------------------------------------------------------------------------------------------
 
-The model explainability report shows that the previous month’s CPI inflation is the most influential predictor,
-followed by industrial production for residential utilities and the crude oil price.
+The model explainability report includes the feature importances calculated using the Kernel SHAP method.
+The report shows that the previous month’s CPI inflation is the most influential predictor,
+followed by the industrial production for residential utilities and the crude oil price.
 Transportation inflation and producer prices for finished consumer goods are also important,
 while factors such as initial unemployment claims, the AAA corporate bond spread,
 and real money supply are also relevant, though less significant.
@@ -565,7 +566,9 @@ and real money supply are also relevant, though less significant.
 2.4.2 Model quality report
 --------------------------------------------------------------------------------------------------------------
 
-The model quality report shows that the model achieves a root mean squared error (RMSE) of 0.2073%,
+The model quality report includes the model’s performance metrics on the validation data as well as several diagnostic plots,
+such as actual versus predicted scatter plots and standardized residual plots.
+The report shows that the model achieves a root mean squared error (RMSE) of 0.2073%,
 a mean absolute error (MAE) of 0.1743% and a 60% R-squared on the validation data.
 
 .. raw:: html
@@ -575,12 +578,12 @@ a mean absolute error (MAE) of 0.1743% and a 60% R-squared on the validation dat
     <img
         src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/inflation_autopilot/actual_vs_predicted_plot.png"
         style="width:100%"
-        alt="Scatter plot of actual vs predicted US CPI MoM inflation from January 2023 to December 2023"
+        alt="Scatter plot of actual versus predicted US CPI MoM inflation from January 2023 to December 2023"
     >
 
     <p>
     <span style="font-weight:600">Figure 2:</span>
-    <span>Actual vs predicted US CPI MoM inflation from January 2023 to December 2023.</span>
+    <span>Actual versus predicted US CPI MoM inflation from January 2023 to December 2023.</span>
     </p>
 
     </div>
