@@ -481,23 +481,6 @@ the best candidate model to generate the test set predictions.
         key="data/test.csv"
     )
 
-.. raw:: html
-
-    <div style="margin: 2em 0em 2em 0em">
-
-    <img
-        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/inflation_autopilot/time_series_plot.png"
-        style="width:100%"
-        alt="US CPI MoM inflation from January 1960 to December 2024."
-    >
-
-    <p>
-    <span style="font-weight:600">Figure 1:</span>
-    <span>US CPI MoM inflation from January 1960 to December 2024.</span>
-    </p>
-
-    </div>
-
 2.3 Configure and run the AutoML job
 ===============================================================================================================
 
@@ -570,7 +553,7 @@ and real money supply are also relevant, though less significant.
     >
 
     <p>
-    <span style="font-weight:600">Figure 2:</span>
+    <span style="font-weight:600">Figure 1:</span>
     <span>Top 10 features by SHAP value.</span>
     </p>
 
@@ -590,7 +573,7 @@ a mean absolute error (MAE) of 0.1743% and a 60% R-squared on the validation dat
     >
 
     <p>
-    <span style="font-weight:600">Figure 3:</span>
+    <span style="font-weight:600">Figure 2:</span>
     <span>Actual vs predicted US CPI MoM inflation from January 2023 to December 2023.</span>
     </p>
 
@@ -653,7 +636,7 @@ After the batch transform job has completed, we can load the forecasts from S3.
     >
 
     <p>
-    <span style="font-weight:600">Figure 4:</span>
+    <span style="font-weight:600">Figure 3:</span>
     <span>1-month-ahead AutoML forecasts of US CPI MoM inflation and historical FRED-MD data.</span>
     </p>
 
@@ -685,7 +668,7 @@ are observed on a few months.
     >
 
     <p>
-    <span style="font-weight:600">Figure 5:</span>
+    <span style="font-weight:600">Figure 4:</span>
     <span>1-month-ahead AutoML forecasts of US CPI MoM inflation against historical FRED-MD data from January 2024 to December 2024.</span>
     </p>
 
