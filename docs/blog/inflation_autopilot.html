@@ -208,11 +208,11 @@ FRED-MD is an open-source dataset maintained by the Federal Reserve Bank of St. 
 including over 100 monthly time series of US macroeconomic indicators (see the <a class="reference external" href="#appendix">Appendix</a> for the full list).
 FRED-MD is widely used in economic research, and has become a standard benchmark for evaluating machine learning models
 for US inflation forecasting (see, for instance, <a class="reference external" href="#references">[3]</a>, <a class="reference external" href="#references">[4]</a>, <a class="reference external" href="#references">[5]</a>).</p>
-<p>In this demonstration, we use AutoML to forecast month-on-month US CPI inflation.
-On each month, the model predicts the following month’s the percentage change in the <a class="reference external" href="https://fred.stlouisfed.org/series/CPIAUCSL">US Consumer Price Index (CPI)</a>
+<p>In this demonstration, we use AutoML to forecast the month-on-month US CPI inflation.
+On each month, the model predicts the following month’s percentage change in the <a class="reference external" href="https://fred.stlouisfed.org/series/CPIAUCSL">US Consumer Price Index (CPI)</a>
 using the current month’s FRED-MD indicators as inputs.
 We first run an AutoML job on FRED-MD data from January 1960 to December 2023 to select the best ML pipeline.
-We then use this pipeline in an Amazon SageMaker batch transform job to generate one-month-ahead forecasts for January 2024 to December 2024.</p>
+We then use this ML pipeline in an Amazon SageMaker batch transform job to generate one-month-ahead forecasts for January 2024 to December 2024.</p>
 </section>
 <section id="solution">
 <h2>2. Solution<a class="headerlink" href="#solution" title="Link to this heading">¶</a></h2>
@@ -371,7 +371,7 @@ which indicators have complete time series across all consecutive vintages in ou
 </code>
 </p><p>The <code class="docutils literal notranslate"><span class="pre">get_data</span></code> function loads the data for a selected dataset vintage from the
 corresponding CSV file and prepares it for the model by transforming and lagging
-(or shifting) the time series.</p>
+the time series.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">get_data</span><span class="p">(</span>
 </span><span data-line="2">    <span class="n">vintage</span><span class="p">,</span>
 </span><span data-line="3">    <span class="n">series_names</span><span class="p">,</span>
@@ -529,8 +529,7 @@ month-on-month inflation rate time series.</p>
 <p>This results in 101 time series, including the target time series.</p>
 <section id="training-data">
 <h4>2.3.1 Training data<a class="headerlink" href="#training-data" title="Link to this heading">¶</a></h4>
-<p>For training the candidate models during the AutoML experiment, we use the 2023-01 vintage,
-which includes the data up to December 2022.</p>
+<p>For training the candidate models during the AutoML experiment, we use the data up to December 2022.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Prepare the training data</span>
 </span><span data-line="2"><span class="n">training_data</span> <span class="o">=</span> <span class="n">get_data</span><span class="p">(</span>
 </span><span data-line="3">    <span class="n">vintage</span><span class="o">=</span><span class="s2">&quot;2023-01&quot;</span><span class="p">,</span>
@@ -660,6 +659,11 @@ the model artifacts of the final selected pipeline.</p>
 <p>The AutoML job automatically generates several reports for each candidate pipeline,
 including an explainability report with the feature importances (SHAP values), and a model
 quality report with an analysis of the performance on the validation data, which are also saved to S3.</p>
+<p>The explainability report shows that the previous month’s CPI inflation is the most influential predictor,
+followed by industrial production for residential utilities and the crude oil price.
+Transportation inflation and producer prices for finished consumer goods are also important,
+while factors such as initial unemployment claims, the AAA corporate bond spread,
+and real money supply are also relevant, though less significant.</p>
 <div style="margin: 2em 0em 2em 0em">
 
 <img
@@ -673,7 +677,9 @@ quality report with an analysis of the performance on the validation data, which
 <span>Top 10 features by SHAP value.</span>
 </p>
 
-</div><div style="margin: 2em 0em 2em 0em">
+</div><p>The model quality report shows that the model achieves a root mean squared error (RMSE) of 0.2073%,
+a mean absolute error (MAE) of 0.1743% and a 60% R-squared on the validation data.</p>
+<div style="margin: 2em 0em 2em 0em">
 
 <img
     src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/inflation_autopilot/actual_vs_predicted_plot.png"
@@ -741,9 +747,7 @@ quality report with an analysis of the performance on the validation data, which
 <span>1-month-ahead AutoML forecasts of US CPI month-on-month inflation and historical FRED-MD data.</span>
 </p>
 
-</div><p>To evaluate the quality of the forecasts, we calculate the root mean square error (RMSE), mean absolute error (MAE)
-and correlation with the historical data.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Calculate the error metrics</span>
+</div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Calculate the error metrics</span>
 </span><span data-line="2"><span class="n">errors</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
 </span><span data-line="3">    <span class="s2">&quot;RMSE&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">format</span><span class="p">(</span><span class="n">root_mean_squared_error</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">predictions</span><span class="p">[</span><span class="s2">&quot;Actual&quot;</span><span class="p">],</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">predictions</span><span class="p">[</span><span class="s2">&quot;Forecast&quot;</span><span class="p">]),</span> <span class="s2">&quot;.4%&quot;</span><span class="p">)],</span>
 </span><span data-line="4">    <span class="s2">&quot;MAE&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">format</span><span class="p">(</span><span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">y_true</span><span class="o">=</span><span class="n">predictions</span><span class="p">[</span><span class="s2">&quot;Actual&quot;</span><span class="p">],</span> <span class="n">y_pred</span><span class="o">=</span><span class="n">predictions</span><span class="p">[</span><span class="s2">&quot;Forecast&quot;</span><span class="p">]),</span> <span class="s2">&quot;.4%&quot;</span><span class="p">)]</span>
@@ -754,7 +758,7 @@ and correlation with the historical data.</p>
 </span></pre></div>
 </div>
 <p>The RMSE is 0.1322% while the MAE is 0.0978%. The forecasts display a relatively high
-correlation with the data (69% correlation), even though some significant deviations
+correlation with the data (78% R-squared), even though some significant deviations
 are observed on a few months.</p>
 <div style="margin: 2em 0em 2em 0em">
 

@@ -38,11 +38,11 @@ including over 100 monthly time series of US macroeconomic indicators (see the `
 FRED-MD is widely used in economic research, and has become a standard benchmark for evaluating machine learning models
 for US inflation forecasting (see, for instance, `[3] <#references>`_, `[4] <#references>`_, `[5] <#references>`_).
 
-In this demonstration, we use AutoML to forecast month-on-month US CPI inflation.
-On each month, the model predicts the following month's the percentage change in the `US Consumer Price Index (CPI) <https://fred.stlouisfed.org/series/CPIAUCSL>`__
+In this demonstration, we use AutoML to forecast the month-on-month US CPI inflation.
+On each month, the model predicts the following month's percentage change in the `US Consumer Price Index (CPI) <https://fred.stlouisfed.org/series/CPIAUCSL>`__
 using the current month's FRED-MD indicators as inputs.
 We first run an AutoML job on FRED-MD data from January 1960 to December 2023 to select the best ML pipeline.
-We then use this pipeline in an Amazon SageMaker batch transform job to generate one-month-ahead forecasts for January 2024 to December 2024.
+We then use this ML pipeline in an Amazon SageMaker batch transform job to generate one-month-ahead forecasts for January 2024 to December 2024.
 
 2. Solution
 ***************************************************************************************************************
@@ -221,7 +221,7 @@ which indicators have complete time series across all consecutive vintages in ou
 
 The ``get_data`` function loads the data for a selected dataset vintage from the
 corresponding CSV file and prepares it for the model by transforming and lagging
-(or shifting) the time series.
+the time series.
 
 .. code:: python
 
@@ -395,8 +395,7 @@ This results in 101 time series, including the target time series.
 2.3.1 Training data
 --------------------------------------------------------------------------------------------------------------
 
-For training the candidate models during the AutoML experiment, we use the 2023-01 vintage,
-which includes the data up to December 2022.
+For training the candidate models during the AutoML experiment, we use the data up to December 2022.
 
 .. code:: python
 
@@ -537,6 +536,12 @@ The AutoML job automatically generates several reports for each candidate pipeli
 including an explainability report with the feature importances (SHAP values), and a model
 quality report with an analysis of the performance on the validation data, which are also saved to S3.
 
+The explainability report shows that the previous month’s CPI inflation is the most influential predictor,
+followed by industrial production for residential utilities and the crude oil price.
+Transportation inflation and producer prices for finished consumer goods are also important,
+while factors such as initial unemployment claims, the AAA corporate bond spread,
+and real money supply are also relevant, though less significant.
+
 .. raw:: html
 
     <div style="margin: 2em 0em 2em 0em">
@@ -554,6 +559,8 @@ quality report with an analysis of the performance on the validation data, which
 
     </div>
 
+The model quality report shows that the model achieves a root mean squared error (RMSE) of 0.2073%,
+a mean absolute error (MAE) of 0.1743% and a 60% R-squared on the validation data.
 
 .. raw:: html
 
@@ -635,9 +642,6 @@ After the batch transform job has completed, we can load the forecasts from S3.
 
     </div>
 
-To evaluate the quality of the forecasts, we calculate the root mean square error (RMSE), mean absolute error (MAE)
-and correlation with the historical data.
-
 .. code:: python
 
     # Calculate the error metrics
@@ -650,7 +654,7 @@ and correlation with the historical data.
     correlations = predictions.corr()
 
 The RMSE is 0.1322% while the MAE is 0.0978%. The forecasts display a relatively high
-correlation with the data (69% correlation), even though some significant deviations
+correlation with the data (78% R-squared), even though some significant deviations
 are observed on a few months.
 
 .. raw:: html
