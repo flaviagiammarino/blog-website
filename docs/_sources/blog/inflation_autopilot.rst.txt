@@ -86,7 +86,7 @@ Next, we define a set of auxiliary functions for processing the FRED-MD data.
 .. raw:: html
 
     <p>
-    <span style="font-weight:600">2.2.1.1</span>
+    <span style="font-weight:600">2.2.1</span>
     <code class="docutils literal notranslate">
     <span class="pre" style="font-weight:600">transform_series</span>
     </code>
@@ -156,7 +156,7 @@ The transformation codes are included in the first row of each FRED-MD dataset a
 .. raw:: html
 
     <p>
-    <span style="font-weight:600">2.2.1.1</span>
+    <span style="font-weight:600">2.2.2</span>
     <code class="docutils literal notranslate">
     <span class="pre" style="font-weight:600">get_common_series</span>
     </code>
@@ -213,7 +213,7 @@ which indicators have complete time series across all consecutive vintages in ou
 .. raw:: html
 
     <p>
-    <span style="font-weight:600">2.2.1.1</span>
+    <span style="font-weight:600">2.2.3</span>
     <code class="docutils literal notranslate">
     <span class="pre" style="font-weight:600">get_data</span>
     </code>
@@ -282,7 +282,7 @@ the time series.
 .. raw:: html
 
     <p>
-    <span style="font-weight:600">2.2.1.1</span>
+    <span style="font-weight:600">2.2.4</span>
     <code class="docutils literal notranslate">
     <span class="pre" style="font-weight:600">get_real_time_data</span>
     </code>
@@ -392,8 +392,12 @@ After that, we extract the list of complete time series included in all vintages
 
 This results in 101 time series, including the target time series.
 
-2.3.1 Training data
---------------------------------------------------------------------------------------------------------------
+.. raw:: html
+
+    <p>
+    <span style="font-weight:600">2.3.1</span>
+    <span class="pre" style="font-weight:600">Training data</span>
+    </p>
 
 For training the candidate models during the AutoML experiment, we use the data from January 1960 to December 2022.
 
@@ -415,8 +419,12 @@ For training the candidate models during the AutoML experiment, we use the data 
         key="data/train.csv"
     )
 
-2.3.2 Validation data
---------------------------------------------------------------------------------------------------------------
+.. raw:: html
+
+    <p>
+    <span style="font-weight:600">2.3.2</span>
+    <span class="pre" style="font-weight:600">Validation data</span>
+    </p>
 
 For evaluating and ranking the candidate models during the AutoML experiment,
 we use the data from January 2023 to December 2023, where the data for each month is
@@ -447,8 +455,12 @@ extracted separately from the corresponding vintage.
         key="data/valid.csv"
     )
 
-2.3.3 Test data
---------------------------------------------------------------------------------------------------------------
+.. raw:: html
+
+    <p>
+    <span style="font-weight:600">2.3.3</span>
+    <span class="pre" style="font-weight:600">Test data</span>
+    </p>
 
 For testing the best candidate model selected by the AutoML experiment,
 we use the data from January 2024 to December 2024, where again the data
@@ -536,8 +548,12 @@ The AutoML job automatically generates several reports for each candidate pipeli
 including a model explainability report with the feature importances and a model
 quality report with an analysis of the performance on the validation data, which are also saved to S3.
 
-2.4.1 Model explainability report
---------------------------------------------------------------------------------------------------------------
+.. raw:: html
+
+    <p>
+    <span style="font-weight:600">2.4.1</span>
+    <span class="pre" style="font-weight:600">Model explainability report</span>
+    </p>
 
 The model explainability report includes the feature importances calculated using the Kernel SHAP method.
 The report shows that the previous month’s CPI inflation is the most influential predictor,
@@ -563,8 +579,12 @@ and real money supply are also relevant, though less significant.
 
     </div>
 
-2.4.2 Model quality report
---------------------------------------------------------------------------------------------------------------
+.. raw:: html
+
+    <p>
+    <span style="font-weight:600">2.4.2</span>
+    <span class="pre" style="font-weight:600">Model quality report</span>
+    </p>
 
 The model quality report includes the model’s performance metrics on the validation data as well as several diagnostic plots,
 such as actual versus predicted scatter plots and standardized residual plots.

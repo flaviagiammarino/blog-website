@@ -147,17 +147,8 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#solution">2. Solution</a><ul>
 <li><a class="reference internal" href="#set-up-the-environment">2.1 Set up the environment</a></li>
 <li><a class="reference internal" href="#define-the-auxiliary-functions-for-working-with-the-fred-md-data">2.2 Define the auxiliary functions for working with the FRED-MD data</a></li>
-<li><a class="reference internal" href="#prepare-the-fred-md-data-and-upload-it-to-s3">2.3 Prepare the FRED-MD data and upload it to S3</a><ul>
-<li><a class="reference internal" href="#training-data">2.3.1 Training data</a></li>
-<li><a class="reference internal" href="#validation-data">2.3.2 Validation data</a></li>
-<li><a class="reference internal" href="#test-data">2.3.3 Test data</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#configure-and-run-the-automl-job">2.4 Configure and run the AutoML job</a><ul>
-<li><a class="reference internal" href="#model-explainability-report">2.4.1 Model explainability report</a></li>
-<li><a class="reference internal" href="#model-quality-report">2.4.2 Model quality report</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#prepare-the-fred-md-data-and-upload-it-to-s3">2.3 Prepare the FRED-MD data and upload it to S3</a></li>
+<li><a class="reference internal" href="#configure-and-run-the-automl-job">2.4 Configure and run the AutoML job</a></li>
 <li><a class="reference internal" href="#generate-the-automl-predictions">2.5 Generate the AutoML predictions</a></li>
 <li><a class="reference internal" href="#evaluate-the-automl-prediction">2.6 Evaluate the AutoML prediction</a></li>
 </ul>
@@ -253,7 +244,7 @@ and store them in a local folder.</p>
 <h3>2.2 Define the auxiliary functions for working with the FRED-MD data<a class="headerlink" href="#define-the-auxiliary-functions-for-working-with-the-fred-md-data" title="Link to this heading">¶</a></h3>
 <p>Next, we define a set of auxiliary functions for processing the FRED-MD data.</p>
 <p>
-<span style="font-weight:600">2.2.1.1</span>
+<span style="font-weight:600">2.2.1</span>
 <code class="docutils literal notranslate">
 <span class="pre" style="font-weight:600">transform_series</span>
 </code>
@@ -318,7 +309,7 @@ The transformation codes are included in the first row of each FRED-MD dataset a
 </span></pre></div>
 </div>
 <p>
-<span style="font-weight:600">2.2.1.1</span>
+<span style="font-weight:600">2.2.2</span>
 <code class="docutils literal notranslate">
 <span class="pre" style="font-weight:600">get_common_series</span>
 </code>
@@ -369,7 +360,7 @@ which indicators have complete time series across all consecutive vintages in ou
 </span></pre></div>
 </div>
 <p>
-<span style="font-weight:600">2.2.1.1</span>
+<span style="font-weight:600">2.2.3</span>
 <code class="docutils literal notranslate">
 <span class="pre" style="font-weight:600">get_data</span>
 </code>
@@ -432,7 +423,7 @@ the time series.</p>
 </span></pre></div>
 </div>
 <p>
-<span style="font-weight:600">2.2.1.1</span>
+<span style="font-weight:600">2.2.4</span>
 <code class="docutils literal notranslate">
 <span class="pre" style="font-weight:600">get_real_time_data</span>
 </code>
@@ -531,9 +522,10 @@ MoM inflation rate time series.</p>
 </span></pre></div>
 </div>
 <p>This results in 101 time series, including the target time series.</p>
-<section id="training-data">
-<h4>2.3.1 Training data<a class="headerlink" href="#training-data" title="Link to this heading">¶</a></h4>
-<p>For training the candidate models during the AutoML experiment, we use the data from January 1960 to December 2022.</p>
+<p>
+<span style="font-weight:600">2.3.1</span>
+<span class="pre" style="font-weight:600">Training data</span>
+</p><p>For training the candidate models during the AutoML experiment, we use the data from January 1960 to December 2022.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Prepare the training data</span>
 </span><span data-line="2"><span class="n">training_data</span> <span class="o">=</span> <span class="n">get_data</span><span class="p">(</span>
 </span><span data-line="3">    <span class="n">vintage</span><span class="o">=</span><span class="s2">&quot;2023-01&quot;</span><span class="p">,</span>
@@ -551,10 +543,10 @@ MoM inflation rate time series.</p>
 </span><span data-line="15"><span class="p">)</span>
 </span></pre></div>
 </div>
-</section>
-<section id="validation-data">
-<h4>2.3.2 Validation data<a class="headerlink" href="#validation-data" title="Link to this heading">¶</a></h4>
-<p>For evaluating and ranking the candidate models during the AutoML experiment,
+<p>
+<span style="font-weight:600">2.3.2</span>
+<span class="pre" style="font-weight:600">Validation data</span>
+</p><p>For evaluating and ranking the candidate models during the AutoML experiment,
 we use the data from January 2023 to December 2023, where the data for each month is
 extracted separately from the corresponding vintage.</p>
 <div class="admonition important">
@@ -581,10 +573,10 @@ training the model on future data and evaluating it on past data.</p>
 </span><span data-line="16"><span class="p">)</span>
 </span></pre></div>
 </div>
-</section>
-<section id="test-data">
-<h4>2.3.3 Test data<a class="headerlink" href="#test-data" title="Link to this heading">¶</a></h4>
-<p>For testing the best candidate model selected by the AutoML experiment,
+<p>
+<span style="font-weight:600">2.3.3</span>
+<span class="pre" style="font-weight:600">Test data</span>
+</p><p>For testing the best candidate model selected by the AutoML experiment,
 we use the data from January 2024 to December 2024, where again the data
 for each month is extracted separately from the corresponding vintage.</p>
 <p>The testing is performed later by performing a batch transform job with
@@ -612,7 +604,6 @@ test dataset before uploading it to S3, otherwise the batch transform job will f
 </span><span data-line="16"><span class="p">)</span>
 </span></pre></div>
 </div>
-</section>
 </section>
 <section id="configure-and-run-the-automl-job">
 <h3>2.4 Configure and run the AutoML job<a class="headerlink" href="#configure-and-run-the-automl-job" title="Link to this heading">¶</a></h3>
@@ -663,9 +654,10 @@ the model artifacts of the final selected pipeline.</p>
 <p>The AutoML job automatically generates several reports for each candidate pipeline,
 including a model explainability report with the feature importances and a model
 quality report with an analysis of the performance on the validation data, which are also saved to S3.</p>
-<section id="model-explainability-report">
-<h4>2.4.1 Model explainability report<a class="headerlink" href="#model-explainability-report" title="Link to this heading">¶</a></h4>
-<p>The model explainability report includes the feature importances calculated using the Kernel SHAP method.
+<p>
+<span style="font-weight:600">2.4.1</span>
+<span class="pre" style="font-weight:600">Model explainability report</span>
+</p><p>The model explainability report includes the feature importances calculated using the Kernel SHAP method.
 The report shows that the previous month’s CPI inflation is the most influential predictor,
 followed by the industrial production for residential utilities and the crude oil price.
 Transportation inflation and producer prices for finished consumer goods are also important,
@@ -684,10 +676,10 @@ and real money supply are also relevant, though less significant.</p>
 <span>Top 10 features by SHAP value.</span>
 </p>
 
-</div></section>
-<section id="model-quality-report">
-<h4>2.4.2 Model quality report<a class="headerlink" href="#model-quality-report" title="Link to this heading">¶</a></h4>
-<p>The model quality report includes the model’s performance metrics on the validation data as well as several diagnostic plots,
+</div><p>
+<span style="font-weight:600">2.4.2</span>
+<span class="pre" style="font-weight:600">Model quality report</span>
+</p><p>The model quality report includes the model’s performance metrics on the validation data as well as several diagnostic plots,
 such as actual versus predicted scatter plots and standardized residual plots.
 The report shows that the model achieves a root mean squared error (RMSE) of 0.2073%,
 a mean absolute error (MAE) of 0.1743% and a 60% R-squared on the validation data.</p>
@@ -705,7 +697,6 @@ a mean absolute error (MAE) of 0.1743% and a 60% R-squared on the validation dat
 </p>
 
 </div></section>
-</section>
 <section id="generate-the-automl-predictions">
 <h3>2.5 Generate the AutoML predictions<a class="headerlink" href="#generate-the-automl-predictions" title="Link to this heading">¶</a></h3>
 <p>We now run a batch transform job with the selected pipeline to generate the forecasts over the test set.</p>
