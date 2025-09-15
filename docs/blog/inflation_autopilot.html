@@ -153,9 +153,13 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#test-data">2.3.3 Test data</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#configure-and-run-the-automl-job">2.3 Configure and run the AutoML job</a></li>
-<li><a class="reference internal" href="#generate-the-automl-predictions">2.4 Generate the AutoML predictions</a></li>
-<li><a class="reference internal" href="#evaluate-the-automl-prediction">2.5 Evaluate the AutoML prediction</a></li>
+<li><a class="reference internal" href="#configure-and-run-the-automl-job">2.4 Configure and run the AutoML job</a><ul>
+<li><a class="reference internal" href="#model-explainability-report">2.4.1 Model explainability report</a></li>
+<li><a class="reference internal" href="#model-quality-report">2.4.2 Model quality report</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#generate-the-automl-predictions">2.5 Generate the AutoML predictions</a></li>
+<li><a class="reference internal" href="#evaluate-the-automl-prediction">2.6 Evaluate the AutoML prediction</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#references">References</a></li>
@@ -529,7 +533,7 @@ MoM inflation rate time series.</p>
 <p>This results in 101 time series, including the target time series.</p>
 <section id="training-data">
 <h4>2.3.1 Training data<a class="headerlink" href="#training-data" title="Link to this heading">¶</a></h4>
-<p>For training the candidate models during the AutoML experiment, we use the data up to December 2022.</p>
+<p>For training the candidate models during the AutoML experiment, we use the data from January 1960 to December 2022.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Prepare the training data</span>
 </span><span data-line="2"><span class="n">training_data</span> <span class="o">=</span> <span class="n">get_data</span><span class="p">(</span>
 </span><span data-line="3">    <span class="n">vintage</span><span class="o">=</span><span class="s2">&quot;2023-01&quot;</span><span class="p">,</span>
@@ -611,7 +615,7 @@ test dataset before uploading it to S3, otherwise the batch transform job will f
 </section>
 </section>
 <section id="configure-and-run-the-automl-job">
-<h3>2.3 Configure and run the AutoML job<a class="headerlink" href="#configure-and-run-the-automl-job" title="Link to this heading">¶</a></h3>
+<h3>2.4 Configure and run the AutoML job<a class="headerlink" href="#configure-and-run-the-automl-job" title="Link to this heading">¶</a></h3>
 <p>We configure the AutoML experiment as a regression task, using mean squared error (MSE) as the validation objective to minimize.
 The experiment is run in ensembling mode, so the final pipeline combines multiple algorithms rather than returning a single optimized model.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Define the AutoML job configuration</span>
@@ -657,9 +661,11 @@ the model artifacts of the final selected pipeline.</p>
 </span></pre></div>
 </div>
 <p>The AutoML job automatically generates several reports for each candidate pipeline,
-including an explainability report with the feature importances (SHAP values), and a model
+including a model explainability report with the feature importances (SHAP values), and a model
 quality report with an analysis of the performance on the validation data, which are also saved to S3.</p>
-<p>The explainability report shows that the previous month’s CPI inflation is the most influential predictor,
+<section id="model-explainability-report">
+<h4>2.4.1 Model explainability report<a class="headerlink" href="#model-explainability-report" title="Link to this heading">¶</a></h4>
+<p>The model explainability report shows that the previous month’s CPI inflation is the most influential predictor,
 followed by industrial production for residential utilities and the crude oil price.
 Transportation inflation and producer prices for finished consumer goods are also important,
 while factors such as initial unemployment claims, the AAA corporate bond spread,
@@ -677,7 +683,10 @@ and real money supply are also relevant, though less significant.</p>
 <span>Top 10 features by SHAP value.</span>
 </p>
 
-</div><p>The model quality report shows that the model achieves a root mean squared error (RMSE) of 0.2073%,
+</div></section>
+<section id="model-quality-report">
+<h4>2.4.2 Model quality report<a class="headerlink" href="#model-quality-report" title="Link to this heading">¶</a></h4>
+<p>The model quality report shows that the model achieves a root mean squared error (RMSE) of 0.2073%,
 a mean absolute error (MAE) of 0.1743% and a 60% R-squared on the validation data.</p>
 <div style="margin: 2em 0em 2em 0em">
 
@@ -693,8 +702,9 @@ a mean absolute error (MAE) of 0.1743% and a 60% R-squared on the validation dat
 </p>
 
 </div></section>
+</section>
 <section id="generate-the-automl-predictions">
-<h3>2.4 Generate the AutoML predictions<a class="headerlink" href="#generate-the-automl-predictions" title="Link to this heading">¶</a></h3>
+<h3>2.5 Generate the AutoML predictions<a class="headerlink" href="#generate-the-automl-predictions" title="Link to this heading">¶</a></h3>
 <p>We now run a batch transform job with the selected pipeline to generate the forecasts over the test set.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Create the model</span>
 </span><span data-line="2"><span class="n">model</span> <span class="o">=</span> <span class="n">automl</span><span class="o">.</span><span class="n">create_model</span><span class="p">(</span>
@@ -717,7 +727,7 @@ a mean absolute error (MAE) of 0.1743% and a 60% R-squared on the validation dat
 </div>
 </section>
 <section id="evaluate-the-automl-prediction">
-<h3>2.5 Evaluate the AutoML prediction<a class="headerlink" href="#evaluate-the-automl-prediction" title="Link to this heading">¶</a></h3>
+<h3>2.6 Evaluate the AutoML prediction<a class="headerlink" href="#evaluate-the-automl-prediction" title="Link to this heading">¶</a></h3>
 <p>After the batch transform job has completed, we can load the forecasts from S3.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Get the AutoML predictions from S3</span>
 </span><span data-line="2"><span class="n">predictions</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">read_s3_file</span><span class="p">(</span>

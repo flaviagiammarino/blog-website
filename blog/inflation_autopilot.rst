@@ -395,7 +395,7 @@ This results in 101 time series, including the target time series.
 2.3.1 Training data
 --------------------------------------------------------------------------------------------------------------
 
-For training the candidate models during the AutoML experiment, we use the data up to December 2022.
+For training the candidate models during the AutoML experiment, we use the data from January 1960 to December 2022.
 
 .. code:: python
 
@@ -481,7 +481,7 @@ the best candidate model to generate the test set predictions.
         key="data/test.csv"
     )
 
-2.3 Configure and run the AutoML job
+2.4 Configure and run the AutoML job
 ===============================================================================================================
 
 We configure the AutoML experiment as a regression task, using mean squared error (MSE) as the validation objective to minimize.
@@ -533,10 +533,13 @@ the model artifacts of the final selected pipeline.
     automl.best_candidate()
 
 The AutoML job automatically generates several reports for each candidate pipeline,
-including an explainability report with the feature importances (SHAP values), and a model
+including a model explainability report with the feature importances (SHAP values), and a model
 quality report with an analysis of the performance on the validation data, which are also saved to S3.
 
-The explainability report shows that the previous month’s CPI inflation is the most influential predictor,
+2.4.1 Model explainability report
+--------------------------------------------------------------------------------------------------------------
+
+The model explainability report shows that the previous month’s CPI inflation is the most influential predictor,
 followed by industrial production for residential utilities and the crude oil price.
 Transportation inflation and producer prices for finished consumer goods are also important,
 while factors such as initial unemployment claims, the AAA corporate bond spread,
@@ -559,6 +562,9 @@ and real money supply are also relevant, though less significant.
 
     </div>
 
+2.4.2 Model quality report
+--------------------------------------------------------------------------------------------------------------
+
 The model quality report shows that the model achieves a root mean squared error (RMSE) of 0.2073%,
 a mean absolute error (MAE) of 0.1743% and a 60% R-squared on the validation data.
 
@@ -579,7 +585,7 @@ a mean absolute error (MAE) of 0.1743% and a 60% R-squared on the validation dat
 
     </div>
 
-2.4 Generate the AutoML predictions
+2.5 Generate the AutoML predictions
 ===============================================================================================================
 
 We now run a batch transform job with the selected pipeline to generate the forecasts over the test set.
@@ -604,7 +610,7 @@ We now run a batch transform job with the selected pipeline to generate the fore
         content_type="text/csv",
     )
 
-2.5 Evaluate the AutoML prediction
+2.6 Evaluate the AutoML prediction
 ===============================================================================================================
 
 After the batch transform job has completed, we can load the forecasts from S3.
