@@ -38,11 +38,11 @@ including over 100 monthly time series of US macroeconomic indicators (see the `
 FRED-MD is widely used in economic research, and has become a standard benchmark for evaluating machine learning models
 for US inflation forecasting (see, for instance, `[3] <#references>`_, `[4] <#references>`_, `[5] <#references>`_).
 
-In this demonstration, we use AutoML to forecast the monthly percentage change in the `US Consumer Price Index (CPI) <https://fred.stlouisfed.org/series/CPIAUCSL>`__
-one month ahead. On each month, we forecast the percentage change in the US CPI on the following month
-using as input the FRED-MD indicators for the current month.
-First, we run an AutoML job on the FRED-MD data from January 1960 to December 2023 to select the best ML pipeline.
-Then, we use this pipeline in an Amazon SageMaker batch transform job to generate the one-month-ahead forecasts from January 2024 to December 2024.
+In this demonstration, we use AutoML to forecast month-on-month (MoM) US CPI inflation.
+On each month, the model predicts the following month's the percentage change in the `US Consumer Price Index (CPI) <https://fred.stlouisfed.org/series/CPIAUCSL>`__
+using the current month's FRED-MD indicators as inputs.
+We first run an AutoML job on FRED-MD data from January 1960 to December 2023 to select the best ML pipeline.
+We then use this pipeline in an Amazon SageMaker batch transform job to generate one-month-ahead forecasts for January 2024 to December 2024.
 
 2. Solution
 ***************************************************************************************************************
@@ -293,7 +293,7 @@ inflation adjustments, and backfilling of missing values. As a result,
 different vintages can report different values for the same time series on the same date.
 
 To address any potential data leakage, while replicating realistic model usage
-where the AutoML model makes predictions on newly available data, we construct our
+where the model makes predictions on newly available data, we construct our
 evaluation set using the last month from each consecutive vintage.
 
 This approach is implemented in the ``get_real_time_data`` function, which processes
@@ -526,7 +526,7 @@ The experiment is run in ensembling mode, so the final pipeline combines multipl
     )
 
 After the AutoML job has completed, we can extract the S3 location containing
-the model artifacts and the model documentation of the final selected pipeline.
+the model artifacts of the final selected pipeline.
 
 .. code:: python
 
@@ -535,7 +535,7 @@ the model artifacts and the model documentation of the final selected pipeline.
 
 The AutoML job automatically generates several reports for each candidate pipeline,
 including an explainability report with the feature importances (SHAP values), and a model
-monitoring report with a detailed analysis of the pipeline's performance on the validation set.
+monitoring report with a detailed analysis of the pipeline's performance.
 
 .. raw:: html
 
@@ -634,7 +634,7 @@ and correlation with the historical data.
 
 The RMSE is 0.1322% while the MAE is 0.0978%. The forecasts display a relatively high
 correlation with the data (69% correlation), even though some significant deviations
-are observed on several months.
+are observed on a few months.
 
 .. raw:: html
 
