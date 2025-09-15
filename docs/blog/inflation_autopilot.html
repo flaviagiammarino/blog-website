@@ -523,8 +523,7 @@ MoM inflation rate time series.</p>
 </div>
 <p>This results in 101 time series, including the target time series.</p>
 <p>
-<span style="font-weight:600">2.3.1</span>
-<span class="pre" style="font-weight:600">Training data</span>
+<span style="font-weight:600">2.3.1 Training data</span>
 </p><p>For training the candidate models during the AutoML experiment, we use the data from January 1960 to December 2022.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Prepare the training data</span>
 </span><span data-line="2"><span class="n">training_data</span> <span class="o">=</span> <span class="n">get_data</span><span class="p">(</span>
@@ -544,8 +543,7 @@ MoM inflation rate time series.</p>
 </span></pre></div>
 </div>
 <p>
-<span style="font-weight:600">2.3.2</span>
-<span class="pre" style="font-weight:600">Validation data</span>
+<span style="font-weight:600">2.3.2 Validation data</span>
 </p><p>For evaluating and ranking the candidate models during the AutoML experiment,
 we use the data from January 2023 to December 2023, where the data for each month is
 extracted separately from the corresponding vintage.</p>
@@ -574,8 +572,7 @@ training the model on future data and evaluating it on past data.</p>
 </span></pre></div>
 </div>
 <p>
-<span style="font-weight:600">2.3.3</span>
-<span class="pre" style="font-weight:600">Test data</span>
+<span style="font-weight:600">2.3.3 Test data</span>
 </p><p>For testing the best candidate model selected by the AutoML experiment,
 we use the data from January 2024 to December 2024, where again the data
 for each month is extracted separately from the corresponding vintage.</p>
@@ -655,8 +652,7 @@ the model artifacts of the final selected pipeline.</p>
 including a model explainability report with the feature importances and a model
 quality report with an analysis of the performance on the validation data, which are also saved to S3.</p>
 <p>
-<span style="font-weight:600">2.4.1</span>
-<span class="pre" style="font-weight:600">Model explainability report</span>
+<span style="font-weight:600">2.4.1 Model explainability report</span>
 </p><p>The model explainability report includes the feature importances calculated using the Kernel SHAP method.
 The report shows that the previous month’s CPI inflation is the most influential predictor,
 followed by the industrial production for residential utilities and the crude oil price.
@@ -677,8 +673,7 @@ and real money supply are also relevant, though less significant.</p>
 </p>
 
 </div><p>
-<span style="font-weight:600">2.4.2</span>
-<span class="pre" style="font-weight:600">Model quality report</span>
+<span style="font-weight:600">2.4.2 Model quality report</span>
 </p><p>The model quality report includes the model’s performance metrics on the validation data as well as several diagnostic plots,
 such as actual versus predicted scatter plots and standardized residual plots.
 The report shows that the model achieves a root mean squared error (RMSE) of 0.2073%,

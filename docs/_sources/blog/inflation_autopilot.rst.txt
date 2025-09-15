@@ -395,8 +395,7 @@ This results in 101 time series, including the target time series.
 .. raw:: html
 
     <p>
-    <span style="font-weight:600">2.3.1</span>
-    <span class="pre" style="font-weight:600">Training data</span>
+    <span style="font-weight:600">2.3.1 Training data</span>
     </p>
 
 For training the candidate models during the AutoML experiment, we use the data from January 1960 to December 2022.
@@ -422,8 +421,7 @@ For training the candidate models during the AutoML experiment, we use the data 
 .. raw:: html
 
     <p>
-    <span style="font-weight:600">2.3.2</span>
-    <span class="pre" style="font-weight:600">Validation data</span>
+    <span style="font-weight:600">2.3.2 Validation data</span>
     </p>
 
 For evaluating and ranking the candidate models during the AutoML experiment,
@@ -458,8 +456,7 @@ extracted separately from the corresponding vintage.
 .. raw:: html
 
     <p>
-    <span style="font-weight:600">2.3.3</span>
-    <span class="pre" style="font-weight:600">Test data</span>
+    <span style="font-weight:600">2.3.3 Test data</span>
     </p>
 
 For testing the best candidate model selected by the AutoML experiment,
@@ -551,8 +548,7 @@ quality report with an analysis of the performance on the validation data, which
 .. raw:: html
 
     <p>
-    <span style="font-weight:600">2.4.1</span>
-    <span class="pre" style="font-weight:600">Model explainability report</span>
+    <span style="font-weight:600">2.4.1 Model explainability report</span>
     </p>
 
 The model explainability report includes the feature importances calculated using the Kernel SHAP method.
@@ -582,8 +578,7 @@ and real money supply are also relevant, though less significant.
 .. raw:: html
 
     <p>
-    <span style="font-weight:600">2.4.2</span>
-    <span class="pre" style="font-weight:600">Model quality report</span>
+    <span style="font-weight:600">2.4.2 Model quality report</span>
     </p>
 
 The model quality report includes the model’s performance metrics on the validation data as well as several diagnostic plots,
