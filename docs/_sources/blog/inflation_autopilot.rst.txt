@@ -1,7 +1,7 @@
 :layout: post
 
 .. post:: March 20, 2025
-    :tags: Time Series Forecasting, Amazon SageMaker Autopilot
+    :tags: Time Series Forecasting, Amazon SageMaker, Machine Learning
     :category: AutoML
     :author: Flavia
     :description: Forecast US Inflation with AutoML in Amazon SageMaker Autopilot using the FRED-MD dataset
