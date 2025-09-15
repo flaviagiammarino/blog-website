@@ -38,7 +38,7 @@ including over 100 monthly time series of US macroeconomic indicators (see the `
 FRED-MD is widely used in economic research, and has become a standard benchmark for evaluating machine learning models
 for US inflation forecasting (see, for instance, `[3] <#references>`_, `[4] <#references>`_, `[5] <#references>`_).
 
-In this demonstration, we use AutoML to forecast month-on-month (MoM) US CPI inflation.
+In this demonstration, we use AutoML to forecast month-on-month US CPI inflation.
 On each month, the model predicts the following month's the percentage change in the `US Consumer Price Index (CPI) <https://fred.stlouisfed.org/series/CPIAUCSL>`__
 using the current month's FRED-MD indicators as inputs.
 We first run an AutoML job on FRED-MD data from January 1960 to December 2023 to select the best ML pipeline.
@@ -367,7 +367,7 @@ We now use the functions defined in the previous section for processing the FRED
     which is second order logarithmic difference (``tcode = 6``),
     as the resulting time series can't be interpreted as an inflation rate.
     We use percentage changes (``tcode = 7``) insted, which results in a
-    month-on-month (MoM) inflation rate time series.
+    month-on-month inflation rate time series.
 
 .. code:: python
 
@@ -544,16 +544,33 @@ quality report with an analysis of the performance on the validation data.
     <img
         src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/inflation_autopilot/feature_importance_plot.png"
         style="width:100%"
-        alt="Visualization of top 10 features by SHAP value."
+        alt="Bar chart of top 10 features by SHAP value"
     >
 
     <p>
-    <span style="font-weight:600">Figure 4:</span>
+    <span style="font-weight:600">Figure 1:</span>
     <span>Top 10 features by SHAP value.</span>
     </p>
 
     </div>
 
+
+.. raw:: html
+
+    <div style="margin: 2em 0em 2em 0em">
+
+    <img
+        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/inflation_autopilot/actual_vs_predicted_plot.png"
+        style="width:100%"
+        alt="Scatter plot of actual vs predicted US CPI month-on-month inflation from January 2023 to December 2023"
+    >
+
+    <p>
+    <span style="font-weight:600">Figure 2:</span>
+    <span>Actual vs predicted US CPI month-on-month inflation from January 2023 to December 2023.</span>
+    </p>
+
+    </div>
 
 2.4 Generate the AutoML predictions
 ===============================================================================================================
@@ -612,7 +629,7 @@ After the batch transform job has completed, we can load the forecasts from S3.
     >
 
     <p>
-    <span style="font-weight:600">Figure 4:</span>
+    <span style="font-weight:600">Figure 3:</span>
     <span>1-month-ahead AutoML forecasts of US CPI month-on-month inflation and historical FRED-MD data.</span>
     </p>
 
@@ -643,12 +660,12 @@ are observed on a few months.
     <img
         src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/inflation_autopilot/forecasts_plot.png"
         style="width:100%"
-        alt="Visualization of 1-month-ahead AutoML forecasts of US CPI month-on-month inflation against historical FRED-MD data"
+        alt="Line chart of 1-month-ahead AutoML forecasts of US CPI month-on-month inflation against historical FRED-MD data from January 2024 to December 2024"
     >
 
     <p>
     <span style="font-weight:600">Figure 4:</span>
-    <span>1-month-ahead AutoML forecasts of US CPI month-on-month inflation against historical FRED-MD data.</span>
+    <span>1-month-ahead AutoML forecasts of US CPI month-on-month inflation against historical FRED-MD data from January 2024 to December 2024.</span>
     </p>
 
     </div>

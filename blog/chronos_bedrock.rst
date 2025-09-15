@@ -609,7 +609,7 @@ highlighting its strength in capturing complex temporal patterns.
     <img
         src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/forecasts_plot.png"
         style="width:100%"
-        alt="Visualization of Amazon Chronos zero-shot probabilistic forecasts of the Italian electricity system's total demand for August 17-18, 2025 against historical data"
+        alt="Line chart of Amazon Chronos zero-shot probabilistic forecasts of the Italian electricity system's total demand for August 17-18, 2025 against historical data"
     >
 
     <p>
