@@ -1,0 +1,5 @@
+@media (min-width: 80rem) {
+    .md\:shrink-0 {
+        flex-shrink: 0;
+    }
+}

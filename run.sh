@@ -1,4 +1,4 @@
-#git clone https://github.com/flaviagiammarino/ablog
+#git clone https://github.com/flaviagiammarino/ablog-sphinx-extension ablog
 #python3 -m pip install ./ablog
 #chmod -R +w ablog
 #rm -r ablog
