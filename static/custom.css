@@ -1,5 +1,5 @@
 @media (max-width: 800px) {
-    .md\:shrink-0 {
+    .sy-scrollbar {
         flex-shrink: 0;
     }
 }
