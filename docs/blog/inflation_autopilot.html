@@ -214,13 +214,13 @@ for US inflation forecasting (see, for instance, <a class="reference external" h
 On each month, the model predicts the following month’s percentage change in the <a class="reference external" href="https://fred.stlouisfed.org/series/CPIAUCSL">US Consumer Price Index (CPI)</a>
 using the current month’s FRED-MD indicators as inputs.
 We first run an AutoML job on FRED-MD data from January 1960 to December 2023 to select the best ML pipeline.
-We then use this ML pipeline in an Amazon SageMaker batch transform job to generate one-month-ahead forecasts for January 2024 to December 2024.</p>
+We then use this ML pipeline in an Amazon SageMaker batch transform job to generate one-month-ahead forecasts from January 2024 to December 2024.</p>
 <section id="fred-md-dataset">
 <h3>1.1 FRED-MD dataset<a class="headerlink" href="#fred-md-dataset" title="Link to this heading">¶</a></h3>
 <p>FRED-MD is a large, publicly available, dataset of monthly U.S. macroeconomic indicators maintained by the Federal Reserve Bank of St. Louis.
 The FRED-MD dataset was introduced to provide a common benchmark for comparing model performance and to facilitate the
 reproducibility of research results <a class="reference external" href="#references">[1]</a>.</p>
-<p>The FRED-MD dataset is updated on a monthly basis, with each monthly released referred to as <em>vintage</em>.
+<p>The FRED-MD dataset is updated on a monthly basis, with each monthly release referred to as <em>vintage</em>.
 The vintages are published on the <a class="reference external" href="https://research.stlouisfed.org/econ/mccracken/fred-databases/">FRED-MD website</a> in CSV format.
 Each vintage includes the data from January 1959 up to the month prior to the release.
 For instance, the January 2024 vintage includes the data from January 1959 to December 2023.
@@ -344,7 +344,7 @@ The transformation codes are included in the first row of each CSV file and are 
 <code class="docutils literal notranslate">
 <span class="pre" style="font-weight:600">get_data</span>
 </code>
-</p><p>The <code class="docutils literal notranslate"><span class="pre">get_data</span></code> function loads the data for a selected FRED-MD vintage from the
+</p><p>The <code class="docutils literal notranslate"><span class="pre">get_data</span></code> function loads the data for a selected vintage from the
 corresponding CSV file and prepares it for the model by transforming and lagging
 the time series.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">get_data</span><span class="p">(</span>

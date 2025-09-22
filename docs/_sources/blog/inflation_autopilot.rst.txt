@@ -42,7 +42,7 @@ In this demonstration, we use AutoML to forecast the month-on-month (MoM) US CPI
 On each month, the model predicts the following month's percentage change in the `US Consumer Price Index (CPI) <https://fred.stlouisfed.org/series/CPIAUCSL>`__
 using the current month's FRED-MD indicators as inputs.
 We first run an AutoML job on FRED-MD data from January 1960 to December 2023 to select the best ML pipeline.
-We then use this ML pipeline in an Amazon SageMaker batch transform job to generate one-month-ahead forecasts for January 2024 to December 2024.
+We then use this ML pipeline in an Amazon SageMaker batch transform job to generate one-month-ahead forecasts from January 2024 to December 2024.
 
 1.1 FRED-MD dataset
 ===============================================================================================================
@@ -50,7 +50,7 @@ FRED-MD is a large, publicly available, dataset of monthly U.S. macroeconomic in
 The FRED-MD dataset was introduced to provide a common benchmark for comparing model performance and to facilitate the
 reproducibility of research results `[1] <#references>`_.
 
-The FRED-MD dataset is updated on a monthly basis, with each monthly released referred to as *vintage*.
+The FRED-MD dataset is updated on a monthly basis, with each monthly release referred to as *vintage*.
 The vintages are published on the `FRED-MD website <https://research.stlouisfed.org/econ/mccracken/fred-databases/>`_ in CSV format.
 Each vintage includes the data from January 1959 up to the month prior to the release.
 For instance, the January 2024 vintage includes the data from January 1959 to December 2023.
@@ -189,7 +189,7 @@ The transformation codes are included in the first row of each CSV file and are 
     </code>
     </p>
 
-The ``get_data`` function loads the data for a selected FRED-MD vintage from the
+The ``get_data`` function loads the data for a selected vintage from the
 corresponding CSV file and prepares it for the model by transforming and lagging
 the time series.
 
