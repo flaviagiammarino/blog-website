@@ -147,7 +147,10 @@ data-aria-dark="Switch to auto color mode">
                 On this page
             </h3>
             <ul>
-<li><a class="reference internal" href="#overview">1. Overview</a></li>
+<li><a class="reference internal" href="#overview">1. Overview</a><ul>
+<li><a class="reference internal" href="#fred-md-dataset">1.1 FRED-MD dataset</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#solution">2. Solution</a><ul>
 <li><a class="reference internal" href="#set-up-the-environment">2.1 Set up the environment</a></li>
 <li><a class="reference internal" href="#define-the-auxiliary-functions-for-working-with-the-fred-md-data">2.2 Define the auxiliary functions for working with the FRED-MD data</a></li>
@@ -158,7 +161,7 @@ data-aria-dark="Switch to auto color mode">
 </ul>
 </li>
 <li><a class="reference internal" href="#references">References</a></li>
-<li><a class="reference internal" href="#id6">Appendix</a></li>
+<li><a class="reference internal" href="#appendix">Appendix</a></li>
 </ul>
 
         </div></div>
@@ -204,7 +207,7 @@ AutoML solutions make ML accessible to non-specialists and significantly reduce 
 <p>In this post, we demonstrate how to use Amazon SageMaker Autopilot <a class="reference external" href="#references">[1]</a>, AWS’s AutoML framework,
 to forecast US inflation using the <a class="reference external" href="https://research.stlouisfed.org/econ/mccracken/fred-databases/">FRED-MD</a> dataset <a class="reference external" href="#references">[2]</a>.
 FRED-MD is an open-source dataset maintained by the Federal Reserve Bank of St. Louis
-including over 100 monthly time series of US macroeconomic indicators (see the <a class="reference external" href="#appendix">Appendix</a> for the full list).
+including over 100 monthly time series of US macroeconomic indicators (see the <a class="reference internal" href="#appendix">Appendix</a> for the full list).
 FRED-MD is widely used in economic research, and has become a standard benchmark for evaluating machine learning models
 for US inflation forecasting (see, for instance, <a class="reference external" href="#references">[3]</a>, <a class="reference external" href="#references">[4]</a>, <a class="reference external" href="#references">[5]</a>).</p>
 <p>In this demonstration, we use AutoML to forecast the month-on-month (MoM) US CPI inflation.
@@ -212,6 +215,30 @@ On each month, the model predicts the following month’s percentage change in t
 using the current month’s FRED-MD indicators as inputs.
 We first run an AutoML job on FRED-MD data from January 1960 to December 2023 to select the best ML pipeline.
 We then use this ML pipeline in an Amazon SageMaker batch transform job to generate one-month-ahead forecasts for January 2024 to December 2024.</p>
+<section id="fred-md-dataset">
+<h3>1.1 FRED-MD dataset<a class="headerlink" href="#fred-md-dataset" title="Link to this heading">¶</a></h3>
+<p>FRED-MD is a large, publicly available, dataset of monthly U.S. macroeconomic indicators maintained by the Federal Reserve Bank of St. Louis.
+The FRED-MD dataset was introduced to provide a common benchmark for comparing model performance and to facilitate the
+reproducibility of research results <a class="reference external" href="#references">[1]</a>.</p>
+<p>The FRED-MD dataset is updated on a monthly basis, with each monthly released referred to as <em>vintage</em>.
+The vintages are published on the <a class="reference external" href="https://research.stlouisfed.org/econ/mccracken/fred-databases/">FRED-MD website</a> in CSV format.
+Each vintage includes the data from January 1959 up to the month prior to the release.
+For instance, the January 2024 vintage includes the data from January 1959 to December 2023.
+Different vintages can include different time series, as indicators are occasionally added and removed from the dataset.</p>
+<p>The FRED-MD time series are sourced from the
+<a class="reference external" href="href=&quot;https://fred.stlouisfed.org/">Federal Reserve Economic Data (FRED) database</a>,
+which is St. Louis Fed’s main, publicly available, economic database.
+Different retrospective adjustments are applied to the time series sourced from the FRED database,
+including seasonal adjustments, inflation adjustments and backfilling of missing values.
+As a result, different vintages can report different values for the same time series on the same date.</p>
+<p>The FRED-MD dataset has been used extensively for forecasting US inflation.
+In <a class="reference external" href="#references">[3]</a> it was shown that a random forest model trained on the FRED-MD dataset outperforms several
+standard inflation forecasting models at different forecasting horizons.
+<a class="reference external" href="#references">[4]</a> applied different dimension reduction techniques to the FRED-MD dataset in order to forecast
+US inflation and found that autoencoders provide the best performance.
+<a class="reference external" href="#references">[5]</a> expanded the analysis in <a class="reference external" href="#references">[3]</a> to include an LSTM model and found that it did
+not significantly outperform the random forest model.</p>
+</section>
 </section>
 <section id="solution">
 <h2>2. Solution<a class="headerlink" href="#solution" title="Link to this heading">¶</a></h2>
@@ -254,7 +281,7 @@ and store them in a local folder.</p>
 </code>
 </p><p>The <code class="docutils literal notranslate"><span class="pre">transform_series</span></code> function transforms each FRED-MD time series according to the assigned transformation code.
 The transformation code specifies which transformation the FRED-MD authors suggest applying to each time series in order to make it stationary.
-The transformation codes are included in the first row of each FRED-MD dataset and are defined as follows:</p>
+The transformation codes are included in the first row of each CSV file and are defined as follows:</p>
 <ol class="arabic simple">
 <li><p>no transformation</p></li>
 <li><p>first order difference</p></li>
@@ -315,60 +342,9 @@ The transformation codes are included in the first row of each FRED-MD dataset a
 <p>
 <span style="font-weight:600">2.2.2</span>
 <code class="docutils literal notranslate">
-<span class="pre" style="font-weight:600">get_common_series</span>
-</code>
-</p><p>The FRED-MD dataset is updated on a monthly basis. The monthly releases are referred to as <em>vintages</em>.
-Different vintages can include different time series, as indicators are occasionally added and removed from the dataset.
-To ensure consistent data across training, validation, and testing, we define a function that identifies
-which indicators have complete time series across all consecutive vintages in our analysis period.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">get_common_series</span><span class="p">(</span>
-</span><span data-line="2">    <span class="n">start_vintage</span><span class="p">,</span>
-</span><span data-line="3">    <span class="n">end_vintage</span>
-</span><span data-line="4"><span class="p">):</span>
-</span><span data-line="5"><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span data-line="6"><span class="sd">    Get the list of complete time series included in all dataset releases between two vintages.</span>
-</span><span data-line="7">
-</span><span data-line="8"><span class="sd">    Parameters:</span>
-</span><span data-line="9"><span class="sd">    ========================================================================================================</span>
-</span><span data-line="10"><span class="sd">    start_vintage: str.</span>
-</span><span data-line="11"><span class="sd">        The first vintage, in &quot;YYYY-MM&quot; format.</span>
-</span><span data-line="12">
-</span><span data-line="13"><span class="sd">    end_vintage: str.</span>
-</span><span data-line="14"><span class="sd">        The last vintage, in &quot;YYYY-MM&quot; format.</span>
-</span><span data-line="15"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span data-line="16">    <span class="c1"># Generate the date range</span>
-</span><span data-line="17">    <span class="n">dates</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span>
-</span><span data-line="18">        <span class="n">start</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">start_vintage</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">start_vintage</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">-01&quot;</span><span class="p">,</span>
-</span><span data-line="19">        <span class="n">end</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">end_vintage</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">end_vintage</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">-01&quot;</span><span class="p">,</span>
-</span><span data-line="20">        <span class="n">freq</span><span class="o">=</span><span class="s2">&quot;MS&quot;</span>
-</span><span data-line="21">    <span class="p">)</span>
-</span><span data-line="22">
-</span><span data-line="23">    <span class="c1"># Create a list for storing the names of the complete time series</span>
-</span><span data-line="24">    <span class="n">series</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span data-line="25">
-</span><span data-line="26">    <span class="c1"># Loop across the dates</span>
-</span><span data-line="27">    <span class="k">for</span> <span class="n">date</span> <span class="ow">in</span> <span class="n">dates</span><span class="p">:</span>
-</span><span data-line="28">        <span class="c1"># Load the data for the considered date</span>
-</span><span data-line="29">        <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;data/</span><span class="si">{</span><span class="n">date</span><span class="o">.</span><span class="n">year</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="nb">format</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">month</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;02d&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">)),</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-</span><span data-line="30">
-</span><span data-line="31">        <span class="c1"># Drop the incomplete time series</span>
-</span><span data-line="32">        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">data</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
-</span><span data-line="33">
-</span><span data-line="34">        <span class="c1"># Save the names of the complete time series</span>
-</span><span data-line="35">        <span class="n">series</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">c</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">])</span>
-</span><span data-line="36">
-</span><span data-line="37">    <span class="c1"># Get the list of complete time series included in the dataset on all dates</span>
-</span><span data-line="38">    <span class="n">series</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="o">*</span><span class="nb">map</span><span class="p">(</span><span class="nb">set</span><span class="p">,</span> <span class="n">series</span><span class="p">)))</span>
-</span><span data-line="39">
-</span><span data-line="40">    <span class="k">return</span> <span class="n">series</span>
-</span></pre></div>
-</div>
-<p>
-<span style="font-weight:600">2.2.3</span>
-<code class="docutils literal notranslate">
 <span class="pre" style="font-weight:600">get_data</span>
 </code>
-</p><p>The <code class="docutils literal notranslate"><span class="pre">get_data</span></code> function loads the data for a selected dataset vintage from the
+</p><p>The <code class="docutils literal notranslate"><span class="pre">get_data</span></code> function loads the data for a selected FRED-MD vintage from the
 corresponding CSV file and prepares it for the model by transforming and lagging
 the time series.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">get_data</span><span class="p">(</span>
@@ -427,14 +403,60 @@ the time series.</p>
 </span></pre></div>
 </div>
 <p>
+<span style="font-weight:600">2.2.3</span>
+<code class="docutils literal notranslate">
+<span class="pre" style="font-weight:600">get_common_series</span>
+</code>
+</p><p>To ensure consistent data across training, validation, and testing, we define a function that identifies
+which indicators have complete time series across all consecutive vintages in our analysis period.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">get_common_series</span><span class="p">(</span>
+</span><span data-line="2">    <span class="n">start_vintage</span><span class="p">,</span>
+</span><span data-line="3">    <span class="n">end_vintage</span>
+</span><span data-line="4"><span class="p">):</span>
+</span><span data-line="5"><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span data-line="6"><span class="sd">    Get the list of complete time series included in all dataset releases between two vintages.</span>
+</span><span data-line="7">
+</span><span data-line="8"><span class="sd">    Parameters:</span>
+</span><span data-line="9"><span class="sd">    ========================================================================================================</span>
+</span><span data-line="10"><span class="sd">    start_vintage: str.</span>
+</span><span data-line="11"><span class="sd">        The first vintage, in &quot;YYYY-MM&quot; format.</span>
+</span><span data-line="12">
+</span><span data-line="13"><span class="sd">    end_vintage: str.</span>
+</span><span data-line="14"><span class="sd">        The last vintage, in &quot;YYYY-MM&quot; format.</span>
+</span><span data-line="15"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="16">    <span class="c1"># Generate the date range</span>
+</span><span data-line="17">    <span class="n">dates</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span>
+</span><span data-line="18">        <span class="n">start</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">start_vintage</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">start_vintage</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">-01&quot;</span><span class="p">,</span>
+</span><span data-line="19">        <span class="n">end</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">end_vintage</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">end_vintage</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">-01&quot;</span><span class="p">,</span>
+</span><span data-line="20">        <span class="n">freq</span><span class="o">=</span><span class="s2">&quot;MS&quot;</span>
+</span><span data-line="21">    <span class="p">)</span>
+</span><span data-line="22">
+</span><span data-line="23">    <span class="c1"># Create a list for storing the names of the complete time series</span>
+</span><span data-line="24">    <span class="n">series</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span data-line="25">
+</span><span data-line="26">    <span class="c1"># Loop across the dates</span>
+</span><span data-line="27">    <span class="k">for</span> <span class="n">date</span> <span class="ow">in</span> <span class="n">dates</span><span class="p">:</span>
+</span><span data-line="28">        <span class="c1"># Load the data for the considered date</span>
+</span><span data-line="29">        <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;data/</span><span class="si">{</span><span class="n">date</span><span class="o">.</span><span class="n">year</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="nb">format</span><span class="p">(</span><span class="n">date</span><span class="o">.</span><span class="n">month</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;02d&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">)),</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</span><span data-line="30">
+</span><span data-line="31">        <span class="c1"># Drop the incomplete time series</span>
+</span><span data-line="32">        <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="n">data</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+</span><span data-line="33">
+</span><span data-line="34">        <span class="c1"># Save the names of the complete time series</span>
+</span><span data-line="35">        <span class="n">series</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">c</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">columns</span><span class="p">])</span>
+</span><span data-line="36">
+</span><span data-line="37">    <span class="c1"># Get the list of complete time series included in the dataset on all dates</span>
+</span><span data-line="38">    <span class="n">series</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="o">*</span><span class="nb">map</span><span class="p">(</span><span class="nb">set</span><span class="p">,</span> <span class="n">series</span><span class="p">)))</span>
+</span><span data-line="39">
+</span><span data-line="40">    <span class="k">return</span> <span class="n">series</span>
+</span></pre></div>
+</div>
+<p>
 <span style="font-weight:600">2.2.4</span>
 <code class="docutils literal notranslate">
 <span class="pre" style="font-weight:600">get_real_time_data</span>
 </code>
-</p><p>The vintages are subject to retrospective adjustments, including seasonal adjustments,
-inflation adjustments, and backfilling of missing values. As a result,
-different vintages can report different values for the same time series on the same date.</p>
-<p>To address any potential data leakage, while replicating realistic model usage
+</p><p>To address any potential data leakage, while replicating realistic model usage
 where the model makes predictions on newly available data, we construct our
 evaluation set using the last month from each consecutive vintage.</p>
 <p>This approach is implemented in the <code class="docutils literal notranslate"><span class="pre">get_real_time_data</span></code> function, which processes
@@ -498,7 +520,8 @@ each vintage into a unique Pandas DataFrame.</p>
 </section>
 <section id="prepare-the-fred-md-data-and-upload-it-to-s3">
 <h3>2.3 Prepare the FRED-MD data and upload it to S3<a class="headerlink" href="#prepare-the-fred-md-data-and-upload-it-to-s3" title="Link to this heading">¶</a></h3>
-<p>We now use the functions defined in the previous section for processing the FRED-MD data.</p>
+<p>We now use the functions defined in the previous section for processing the FRED-MD data.
+We start by defining the target name, the target transformation code and the number of lags used for constructing the features.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>We override the suggested transformation for the US CPI,
@@ -800,8 +823,8 @@ Forecasting inflation in a data-rich environment: the benefits of machine learni
 <em>International Journal of Forecasting</em>, In press.
 <a class="reference external" href="https://doi.org/10.1016/j.ijforecast.2024.07.010">doi: 10.1016/j.ijforecast.2024.07.010</a>.</p>
 </section>
-<section id="id6">
-<h2>Appendix<a class="headerlink" href="#id6" title="Link to this heading">¶</a></h2>
+<section id="appendix">
+<h2>Appendix<a class="headerlink" href="#appendix" title="Link to this heading">¶</a></h2>
 <p><strong>Group 1: Output and Income.</strong></p>
 <div class="table-wrapper docutils container">
 <table class="docutils align-default">

@@ -34,7 +34,7 @@ AutoML solutions make ML accessible to non-specialists and significantly reduce 
 In this post, we demonstrate how to use Amazon SageMaker Autopilot `[1] <#references>`_, AWS's AutoML framework,
 to forecast US inflation using the `FRED-MD <https://research.stlouisfed.org/econ/mccracken/fred-databases/>`__ dataset `[2] <#references>`_.
 FRED-MD is an open-source dataset maintained by the Federal Reserve Bank of St. Louis
-including over 100 monthly time series of US macroeconomic indicators (see the `Appendix <#appendix>`_ for the full list).
+including over 100 monthly time series of US macroeconomic indicators (see the `Appendix`_ for the full list).
 FRED-MD is widely used in economic research, and has become a standard benchmark for evaluating machine learning models
 for US inflation forecasting (see, for instance, `[3] <#references>`_, `[4] <#references>`_, `[5] <#references>`_).
 
@@ -43,6 +43,33 @@ On each month, the model predicts the following month's percentage change in the
 using the current month's FRED-MD indicators as inputs.
 We first run an AutoML job on FRED-MD data from January 1960 to December 2023 to select the best ML pipeline.
 We then use this ML pipeline in an Amazon SageMaker batch transform job to generate one-month-ahead forecasts for January 2024 to December 2024.
+
+1.1 FRED-MD dataset
+===============================================================================================================
+FRED-MD is a large, publicly available, dataset of monthly U.S. macroeconomic indicators maintained by the Federal Reserve Bank of St. Louis.
+The FRED-MD dataset was introduced to provide a common benchmark for comparing model performance and to facilitate the
+reproducibility of research results `[1] <#references>`_.
+
+The FRED-MD dataset is updated on a monthly basis, with each monthly released referred to as *vintage*.
+The vintages are published on the `FRED-MD website <https://research.stlouisfed.org/econ/mccracken/fred-databases/>`_ in CSV format.
+Each vintage includes the data from January 1959 up to the month prior to the release.
+For instance, the January 2024 vintage includes the data from January 1959 to December 2023.
+Different vintages can include different time series, as indicators are occasionally added and removed from the dataset.
+
+The FRED-MD time series are sourced from the
+`Federal Reserve Economic Data (FRED) database <href="https://fred.stlouisfed.org/>`_,
+which is St. Louis Fed’s main, publicly available, economic database.
+Different retrospective adjustments are applied to the time series sourced from the FRED database,
+including seasonal adjustments, inflation adjustments and backfilling of missing values.
+As a result, different vintages can report different values for the same time series on the same date.
+
+The FRED-MD dataset has been used extensively for forecasting US inflation.
+In `[3] <#references>`_ it was shown that a random forest model trained on the FRED-MD dataset outperforms several
+standard inflation forecasting models at different forecasting horizons.
+`[4] <#references>`_ applied different dimension reduction techniques to the FRED-MD dataset in order to forecast
+US inflation and found that autoencoders provide the best performance.
+`[5] <#references>`_ expanded the analysis in `[3] <#references>`_ to include an LSTM model and found that it did
+not significantly outperform the random forest model.
 
 2. Solution
 ***************************************************************************************************************
@@ -94,7 +121,7 @@ Next, we define a set of auxiliary functions for processing the FRED-MD data.
 
 The ``transform_series`` function transforms each FRED-MD time series according to the assigned transformation code.
 The transformation code specifies which transformation the FRED-MD authors suggest applying to each time series in order to make it stationary.
-The transformation codes are included in the first row of each FRED-MD dataset and are defined as follows:
+The transformation codes are included in the first row of each CSV file and are defined as follows:
 
 1. no transformation
 2. first order difference
@@ -158,68 +185,11 @@ The transformation codes are included in the first row of each FRED-MD dataset a
     <p>
     <span style="font-weight:600">2.2.2</span>
     <code class="docutils literal notranslate">
-    <span class="pre" style="font-weight:600">get_common_series</span>
-    </code>
-    </p>
-
-The FRED-MD dataset is updated on a monthly basis. The monthly releases are referred to as *vintages*.
-Different vintages can include different time series, as indicators are occasionally added and removed from the dataset.
-To ensure consistent data across training, validation, and testing, we define a function that identifies
-which indicators have complete time series across all consecutive vintages in our analysis period.
-
-.. code:: python
-
-    def get_common_series(
-        start_vintage,
-        end_vintage
-    ):
-        """
-        Get the list of complete time series included in all dataset releases between two vintages.
-
-        Parameters:
-        ========================================================================================================
-        start_vintage: str.
-            The first vintage, in "YYYY-MM" format.
-
-        end_vintage: str.
-            The last vintage, in "YYYY-MM" format.
-        """
-        # Generate the date range
-        dates = pd.date_range(
-            start=f"{start_vintage.split('-')[0]}-{start_vintage.split('-')[1]}-01",
-            end=f"{end_vintage.split('-')[0]}-{end_vintage.split('-')[1]}-01",
-            freq="MS"
-        )
-
-        # Create a list for storing the names of the complete time series
-        series = []
-
-        # Loop across the dates
-        for date in dates:
-            # Load the data for the considered date
-            data = pd.read_csv(f"data/{date.year}-{format(date.month, '02d')}.csv", skiprows=list(range(1, 11)), index_col=0)
-
-            # Drop the incomplete time series
-            data = data.loc[:, data.isna().sum() == 0]
-
-            # Save the names of the complete time series
-            series.append([c.upper() for c in data.columns])
-
-        # Get the list of complete time series included in the dataset on all dates
-        series = list(set.intersection(*map(set, series)))
-
-        return series
-
-.. raw:: html
-
-    <p>
-    <span style="font-weight:600">2.2.3</span>
-    <code class="docutils literal notranslate">
     <span class="pre" style="font-weight:600">get_data</span>
     </code>
     </p>
 
-The ``get_data`` function loads the data for a selected dataset vintage from the
+The ``get_data`` function loads the data for a selected FRED-MD vintage from the
 corresponding CSV file and prepares it for the model by transforming and lagging
 the time series.
 
@@ -282,15 +252,67 @@ the time series.
 .. raw:: html
 
     <p>
+    <span style="font-weight:600">2.2.3</span>
+    <code class="docutils literal notranslate">
+    <span class="pre" style="font-weight:600">get_common_series</span>
+    </code>
+    </p>
+
+To ensure consistent data across training, validation, and testing, we define a function that identifies
+which indicators have complete time series across all consecutive vintages in our analysis period.
+
+.. code:: python
+
+    def get_common_series(
+        start_vintage,
+        end_vintage
+    ):
+        """
+        Get the list of complete time series included in all dataset releases between two vintages.
+
+        Parameters:
+        ========================================================================================================
+        start_vintage: str.
+            The first vintage, in "YYYY-MM" format.
+
+        end_vintage: str.
+            The last vintage, in "YYYY-MM" format.
+        """
+        # Generate the date range
+        dates = pd.date_range(
+            start=f"{start_vintage.split('-')[0]}-{start_vintage.split('-')[1]}-01",
+            end=f"{end_vintage.split('-')[0]}-{end_vintage.split('-')[1]}-01",
+            freq="MS"
+        )
+
+        # Create a list for storing the names of the complete time series
+        series = []
+
+        # Loop across the dates
+        for date in dates:
+            # Load the data for the considered date
+            data = pd.read_csv(f"data/{date.year}-{format(date.month, '02d')}.csv", skiprows=list(range(1, 11)), index_col=0)
+
+            # Drop the incomplete time series
+            data = data.loc[:, data.isna().sum() == 0]
+
+            # Save the names of the complete time series
+            series.append([c.upper() for c in data.columns])
+
+        # Get the list of complete time series included in the dataset on all dates
+        series = list(set.intersection(*map(set, series)))
+
+        return series
+
+
+.. raw:: html
+
+    <p>
     <span style="font-weight:600">2.2.4</span>
     <code class="docutils literal notranslate">
     <span class="pre" style="font-weight:600">get_real_time_data</span>
     </code>
     </p>
-
-The vintages are subject to retrospective adjustments, including seasonal adjustments,
-inflation adjustments, and backfilling of missing values. As a result,
-different vintages can report different values for the same time series on the same date.
 
 To address any potential data leakage, while replicating realistic model usage
 where the model makes predictions on newly available data, we construct our
@@ -360,6 +382,7 @@ each vintage into a unique Pandas DataFrame.
 ===============================================================================================================
 
 We now use the functions defined in the previous section for processing the FRED-MD data.
+We start by defining the target name, the target transformation code and the number of lags used for constructing the features.
 
 .. note::
 
