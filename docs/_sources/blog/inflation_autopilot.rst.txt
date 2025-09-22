@@ -44,15 +44,32 @@ using the current month's FRED-MD indicators as inputs.
 We first run an AutoML job on FRED-MD data from January 1960 to December 2023 to select the best ML pipeline.
 We then use this ML pipeline in an Amazon SageMaker batch transform job to generate one-month-ahead forecasts from January 2024 to December 2024.
 
-1.1 FRED-MD dataset
+1.1 Amazon SageMaker Autopilot
 ===============================================================================================================
-FRED-MD is a large, publicly available, dataset of monthly U.S. macroeconomic indicators maintained by the Federal Reserve Bank of St. Louis.
+
+Autopilot is a fully managed AutoML solution designed to automate the end-to-end ML pipeline
+while maintaining transparency and flexibility `[1] <#references>`_.
+Unlike traditional black-box AutoML systems, Autopilot provides a white-box approach,
+allowing users to inspect and modify the generated ML pipelines to incorporate domain expertise when necessary.
+
+Given a tabular dataset and a specified target column, Autopilot generates a set of candidate ML pipelines optimized for the
+given dataset's characteristics and the specific problem type. Each candidate pipeline implements the end-to-end process of
+data preparation, feature selection, algorithm training and hyperparameter tuning.
+Autopilot then evaluates the candidate pipelines to produce a leaderboard and select the best-performing pipeline.
+
+As part of this process, Autopilot automatically generates a set of data analysis and model insights reports in various formats,
+along with Jupyter notebooks that allow users to examine and refine the pipelines without reverting to a fully manual approach.
+Autopilot's full integration with the broader SageMaker platform allows users to quickly deploy the final selected pipeline in production.
+
+1.2 FRED-MD dataset
+===============================================================================================================
+FRED-MD is a publicly available dataset of U.S. macroeconomic indicators maintained by the Federal Reserve Bank of St. Louis.
 The FRED-MD dataset was introduced to provide a common benchmark for comparing model performance and to facilitate the
 reproducibility of research results `[1] <#references>`_.
 
 The FRED-MD dataset is updated on a monthly basis, with each monthly release referred to as *vintage*.
 The vintages are published on the `FRED-MD website <https://research.stlouisfed.org/econ/mccracken/fred-databases/>`_ in CSV format.
-Each vintage includes the data from January 1959 up to the month prior to the release.
+Each vintage includes monthly data from January 1959 up to the month prior to the release.
 For instance, the January 2024 vintage includes the data from January 1959 to December 2023.
 Different vintages can include different time series, as indicators are occasionally added and removed from the dataset.
 
@@ -61,7 +78,7 @@ The FRED-MD time series are sourced from the
 which is St. Louis Fed’s main, publicly accessible, economic database.
 Different retrospective adjustments are applied to the time series sourced from the FRED database,
 including seasonal adjustments, inflation adjustments and backfilling of missing values.
-As a result, different vintages can report different values for the same time series on the same date.
+As a result, different vintages can report different values for the same time series on the same month.
 
 The FRED-MD dataset has been used extensively for forecasting US inflation.
 In `[3] <#references>`_ it was shown that a random forest model trained on the FRED-MD dataset outperforms several
@@ -70,23 +87,6 @@ standard inflation forecasting models at different forecasting horizons.
 US inflation and found that autoencoders provide the best performance.
 `[5] <#references>`_ expanded the analysis in `[3] <#references>`_ to include an LSTM model and found that it did
 not significantly outperform the random forest model.
-
-1.2 Amazon SageMaker Autopilot
-===============================================================================================================
-
-Autopilot is a fully managed AutoML solution designed to automate the end-to-end ML pipeline
-while maintaining transparency and flexibility.
-Unlike traditional black-box AutoML systems, Autopilot provides a white-box approach,
-allowing users to inspect and modify the generated ML pipelines to incorporate domain expertise when necessary.
-
-Given a tabular dataset and a specified target column, Autopilot generates a set of candidate ML pipelines optimized for the
-dataset's characteristics and the specific problem type. Each candidate pipeline implements the end-to-end process of
-data preparation, feature selection, algorithm training and hyperparameter tuning.
-Autopilot then evaluates the candidate pipelines to produce a leaderboard and select the best-performing pipeline.
-
-As part of this process, Autopilot automatically generates a set of data analysis and model insights reports in various formats,
-along with Jupyter notebooks that allow users to examine and refine the pipelines without reverting to a fully manual approach.
-Autopilot's full integration with the broader SageMaker platform allows users to quickly deploy the final selected pipeline in production.
 
 2. Solution
 ***************************************************************************************************************
