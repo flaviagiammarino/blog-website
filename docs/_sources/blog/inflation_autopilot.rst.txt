@@ -74,11 +74,10 @@ not significantly outperform the random forest model.
 1.2 Amazon SageMaker Autopilot
 ===============================================================================================================
 
-Amazon SageMaker Autopilot is a fully managed AutoML solution designed to automate the end-to-end ML pipeline
+Autopilot is a fully managed AutoML solution designed to automate the end-to-end ML pipeline
 while maintaining transparency and flexibility.
 Unlike traditional black-box AutoML systems, Autopilot provides a white-box approach,
 allowing users to inspect and modify the generated ML pipelines to incorporate domain expertise when necessary.
-Autopilot is fully integrated with the broader SageMaker platform, allowing users to quickly deploy AutoML models in production.
 
 Given a tabular dataset and a specified target column, Autopilot generates a set of candidate ML pipelines optimized for the
 dataset's characteristics and the specific problem type, with each ML pipeline implementing the end-to-end process of
@@ -86,7 +85,8 @@ data preparation, feature selection, algorithm training and hyperparameter tunin
 After that, Autopilot evaluates the candidate ML pipelines to produce a leaderboard and select the one with the best performance.
 
 As part of this process, Autopilot automatically generates a set of data analysis and model insights reports in various formats,
-along with Jupyter notebooks that allow users to examine and refine the generated pipelines without reverting to a fully manual approach.
+along with Jupyter notebooks that allow users to examine and refine the ML pipelines without reverting to a fully manual approach.
+Autopilot's full integration with the broader SageMaker platform allows users to quickly deploy the final ML pipeline in production.
 
 2. Solution
 ***************************************************************************************************************
