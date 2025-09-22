@@ -149,6 +149,7 @@ data-aria-dark="Switch to auto color mode">
             <ul>
 <li><a class="reference internal" href="#overview">1. Overview</a><ul>
 <li><a class="reference internal" href="#fred-md-dataset">1.1 FRED-MD dataset</a></li>
+<li><a class="reference internal" href="#amazon-sagemaker-autopilot">1.2 Amazon SageMaker Autopilot</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#solution">2. Solution</a><ul>
@@ -238,6 +239,21 @@ standard inflation forecasting models at different forecasting horizons.
 US inflation and found that autoencoders provide the best performance.
 <a class="reference external" href="#references">[5]</a> expanded the analysis in <a class="reference external" href="#references">[3]</a> to include an LSTM model and found that it did
 not significantly outperform the random forest model.</p>
+</section>
+<section id="amazon-sagemaker-autopilot">
+<h3>1.2 Amazon SageMaker Autopilot<a class="headerlink" href="#amazon-sagemaker-autopilot" title="Link to this heading">¶</a></h3>
+<p>Amazon SageMaker Autopilot is a fully managed AutoML solution designed to automate the end-to-end ML pipeline
+while maintaining transparency and flexibility.</p>
+<p>Unlike traditional black-box AutoML systems, Autopilot provides a white-box approach,
+allowing users to inspect and modify the generated pipelines to incorporate domain expertise when necessary.</p>
+<p>Given a tabular dataset and a specified target column, Autopilot performs several key tasks:</p>
+<ul class="simple">
+<li><p>Data analysis: Assesses dataset characteristics, including missing values, correlations, and distributions.</p></li>
+<li><p>Candidate generation: Constructs a diverse set of ML pipelines including data preprocessing, feature selection, algorithm training and hyperparameter tuning.</p></li>
+<li><p>Best candidate selection: Evaluates the ML pipelines to select the best-performing candidate.</p></li>
+</ul>
+<p>Autopilot automatically generates a set of data analysis and model performance reports in various formats,
+along with Jupyter notebooks that allow users to examine and refine the generated pipelines without reverting to a fully manual approach.</p>
 </section>
 </section>
 <section id="solution">
