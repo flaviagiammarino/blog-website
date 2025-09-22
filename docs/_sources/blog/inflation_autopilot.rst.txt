@@ -484,7 +484,6 @@ extracted separately from the corresponding vintage.
 For testing the best candidate model selected by the AutoML experiment,
 we use the data from January 2024 to December 2024, where again the data
 for each month is extracted separately from the corresponding vintage.
-
 The testing is performed later by performing a batch transform job with
 the best candidate model to generate the test set predictions.
 
