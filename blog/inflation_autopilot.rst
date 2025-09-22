@@ -317,7 +317,6 @@ which indicators have complete time series across all consecutive vintages in ou
 To address any potential data leakage, while replicating realistic model usage
 where the model makes predictions on newly available data, we construct our
 evaluation set using the last month from each consecutive vintage.
-
 This approach is implemented in the ``get_real_time_data`` function, which processes
 each vintage using the ``get_data`` function and concatenates the final month from
 each vintage into a unique Pandas DataFrame.
