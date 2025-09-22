@@ -48,9 +48,9 @@ We then use this ML pipeline in an Amazon SageMaker batch transform job to gener
 ===============================================================================================================
 
 Autopilot is a fully managed AutoML solution designed to automate the end-to-end ML pipeline
-while maintaining transparency and flexibility `[1] <#references>`_.
+while maintaining transparency and flexibility.
 Unlike traditional black-box AutoML systems, Autopilot provides a white-box approach,
-allowing users to inspect and modify the generated ML pipelines to incorporate domain expertise when necessary.
+allowing users to inspect and modify the generated ML pipelines to incorporate domain expertise when necessary `[1] <#references>`_.
 
 Given a tabular dataset and a specified target column, Autopilot generates a set of candidate ML pipelines optimized for the
 given dataset's characteristics and the specific problem type. Each candidate pipeline implements the end-to-end process of
@@ -65,7 +65,7 @@ Autopilot's full integration with the broader SageMaker platform allows users to
 ===============================================================================================================
 FRED-MD is a publicly available dataset of U.S. macroeconomic indicators maintained by the Federal Reserve Bank of St. Louis.
 The FRED-MD dataset was introduced to provide a common benchmark for comparing model performance and to facilitate the
-reproducibility of research results `[1] <#references>`_.
+reproducibility of research results `[2] <#references>`_.
 
 The FRED-MD dataset is updated on a monthly basis, with each monthly release referred to as *vintage*.
 The vintages are published on the `FRED-MD website <https://research.stlouisfed.org/econ/mccracken/fred-databases/>`_ in CSV format.
