@@ -80,13 +80,13 @@ Unlike traditional black-box AutoML systems, Autopilot provides a white-box appr
 allowing users to inspect and modify the generated ML pipelines to incorporate domain expertise when necessary.
 
 Given a tabular dataset and a specified target column, Autopilot generates a set of candidate ML pipelines optimized for the
-dataset's characteristics and the specific problem type, with each ML pipeline implementing the end-to-end process of
+dataset's characteristics and the specific problem type. Each candidate pipeline implements the end-to-end process of
 data preparation, feature selection, algorithm training and hyperparameter tuning.
-After that, Autopilot evaluates the candidate ML pipelines to produce a leaderboard and select the one with the best performance.
+Autopilot then evaluates the candidate pipelines to produce a leaderboard and select the best-performing pipeline.
 
 As part of this process, Autopilot automatically generates a set of data analysis and model insights reports in various formats,
-along with Jupyter notebooks that allow users to examine and refine the ML pipelines without reverting to a fully manual approach.
-Autopilot's full integration with the broader SageMaker platform allows users to quickly deploy the final ML pipeline in production.
+along with Jupyter notebooks that allow users to examine and refine the pipelines without reverting to a fully manual approach.
+Autopilot's full integration with the broader SageMaker platform allows users to quickly deploy the final selected pipeline in production.
 
 2. Solution
 ***************************************************************************************************************
