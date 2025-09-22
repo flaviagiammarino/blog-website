@@ -46,7 +46,7 @@ We then use this ML pipeline in an Amazon SageMaker batch transform job to gener
 
 1.1 FRED-MD dataset
 ===============================================================================================================
-FRED-MD is a large, publicly available, dataset of monthly U.S. macroeconomic indicators maintained by the Federal Reserve Bank of St. Louis.
+FRED-MD is a large, publicly accessible, dataset of monthly U.S. macroeconomic indicators maintained by the Federal Reserve Bank of St. Louis.
 The FRED-MD dataset was introduced to provide a common benchmark for comparing model performance and to facilitate the
 reproducibility of research results `[1] <#references>`_.
 
