@@ -63,6 +63,7 @@ this solution can be applied to any other time series.
     <img
         src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/total_load_data.png"
         style="width:50%"
+        alt="Last 10 rows of total_load_data ClickHouse table"
     >
 
     <p>
