@@ -29,6 +29,7 @@ extensions = [
     'sphinx.ext.viewcode',
     "sphinx_automodapi.automodapi",
     'sphinx_sitemap',
+    'sphinx_copybutton',
     'myst_parser',
     'sphinx.ext.mathjax',
     'ablog',
