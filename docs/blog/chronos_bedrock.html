@@ -148,17 +148,16 @@ data-aria-dark="Switch to auto color mode">
                 On this page
             </h3>
             <ul>
-<li><a class="reference internal" href="#overview">1. Overview</a></li>
-<li><a class="reference internal" href="#solution">2. Solution</a><ul>
-<li><a class="reference internal" href="#create-the-bedrock-endpoint">2.1 Create the Bedrock endpoint</a></li>
-<li><a class="reference internal" href="#create-the-lambda-function-for-invoking-the-bedrock-endpoint-with-clickhouse-data">2.2 Create the Lambda function for invoking the Bedrock endpoint with ClickHouse data</a><ul>
-<li><a class="reference internal" href="#create-the-docker-image">2.2.1 Create the Docker image</a></li>
-<li><a class="reference internal" href="#build-the-docker-image-and-push-it-to-ecr">2.2.2 Build the Docker image and push it to ECR</a></li>
-<li><a class="reference internal" href="#create-the-lambda-function-from-the-docker-image-in-ecr">2.2.3 Create the Lambda function from the Docker image in ECR</a></li>
+<li><a class="reference internal" href="#solution">1. Solution</a><ul>
+<li><a class="reference internal" href="#create-the-bedrock-endpoint">1.1 Create the Bedrock endpoint</a></li>
+<li><a class="reference internal" href="#create-the-lambda-function-for-invoking-the-bedrock-endpoint-with-clickhouse-data">1.2 Create the Lambda function for invoking the Bedrock endpoint with ClickHouse data</a><ul>
+<li><a class="reference internal" href="#create-the-docker-image">1.2.1 Create the Docker image</a></li>
+<li><a class="reference internal" href="#build-the-docker-image-and-push-it-to-ecr">1.2.2 Build the Docker image and push it to ECR</a></li>
+<li><a class="reference internal" href="#create-the-lambda-function-from-the-docker-image-in-ecr">1.2.3 Create the Lambda function from the Docker image in ECR</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#invoke-the-lambda-function-and-generate-the-forecasts">2.3 Invoke the Lambda function and generate the forecasts</a></li>
-<li><a class="reference internal" href="#compare-the-forecasts-to-the-historical-data-stored-in-clickhouse">2.4 Compare the forecasts to the historical data stored in ClickHouse</a></li>
+<li><a class="reference internal" href="#invoke-the-lambda-function-and-generate-the-forecasts">1.3 Invoke the Lambda function and generate the forecasts</a></li>
+<li><a class="reference internal" href="#compare-the-forecasts-to-the-historical-data-stored-in-clickhouse">1.4 Compare the forecasts to the historical data stored in ClickHouse</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#references">References</a></li>
@@ -199,9 +198,7 @@ data-aria-dark="Switch to auto color mode">
     src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/architecture_diagram.png"
     style="width:100%"
     alt="Architecture diagram showing Chronos on Amazon Bedrock integrated with ClickHouse in AWS Lambda"
-><section id="overview">
-<h2>1. Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
-<p>The emergence of large language models (LLMs) with zero-shot generalization capabilities in sequence modelling
+><p>The emergence of large language models (LLMs) with zero-shot generalization capabilities in sequence modelling
 tasks has led to the development of time series foundation models (TSFMs) based on LLM architectures.
 By representing time series as sequences of tokens, TSFMs can leverage LLMs’ capability to extrapolate future
 patterns from the context data.
@@ -219,9 +216,8 @@ Chronos-Bolt is available in AutoGluon-TimeSeries, Amazon SageMaker JumpStart an
 <p>In the rest of this post, we will walk through a practical example of using Chronos-Bolt with time series data
 stored in ClickHouse. We will create a Bedrock endpoint, then build a Lambda function that invokes the Bedrock
 endpoint with context data queried from ClickHouse and returns the forecasts.</p>
-</section>
 <section id="solution">
-<h2>2. Solution<a class="headerlink" href="#solution" title="Link to this heading">¶</a></h2>
+<h2>1. Solution<a class="headerlink" href="#solution" title="Link to this heading">¶</a></h2>
 <p>In this particular example, we will work with the 15-minute time series of the Italian electricity system’s
 total demand, which we downloaded from <a class="reference external" href="https://dati.terna.it/en/download-center#/load/total-load">Terna’s data portal</a>
 and stored in a table in ClickHouse which we called <code class="docutils literal notranslate"><span class="pre">total_load_data</span></code>.
@@ -250,7 +246,7 @@ You will also need to update several variables in the code to reflect your AWS
 configuration - such as your AWS account number, region, service roles, etc. - as will be outlined below.</p>
 </div>
 <section id="create-the-bedrock-endpoint">
-<h3>2.1 Create the Bedrock endpoint<a class="headerlink" href="#create-the-bedrock-endpoint" title="Link to this heading">¶</a></h3>
+<h3>1.1 Create the Bedrock endpoint<a class="headerlink" href="#create-the-bedrock-endpoint" title="Link to this heading">¶</a></h3>
 <p>We start by deploying Chronos-Bolt to a Bedrock endpoint hosted on a CPU EC2 instance.
 This can be done using <a class="reference external" href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock/client/create_marketplace_model_endpoint.html">Boto3</a>
 as in the code below, with the <a class="reference external" href="https://docs.aws.amazon.com/cli/latest/reference/bedrock/create-marketplace-model-endpoint.html">AWS-CLI</a>,
@@ -301,7 +297,7 @@ or directly from the Bedrock console.</p>
 </div>
 </section>
 <section id="create-the-lambda-function-for-invoking-the-bedrock-endpoint-with-clickhouse-data">
-<h3>2.2 Create the Lambda function for invoking the Bedrock endpoint with ClickHouse data<a class="headerlink" href="#create-the-lambda-function-for-invoking-the-bedrock-endpoint-with-clickhouse-data" title="Link to this heading">¶</a></h3>
+<h3>1.2 Create the Lambda function for invoking the Bedrock endpoint with ClickHouse data<a class="headerlink" href="#create-the-lambda-function-for-invoking-the-bedrock-endpoint-with-clickhouse-data" title="Link to this heading">¶</a></h3>
 <p>We now build a Lambda function for invoking the Bedrock endpoint with time series data stored in ClickHouse.</p>
 <p>The Lambda function connects to ClickHouse using <a class="reference external" href="https://clickhouse.com/docs/integrations/python">ClickHouse Connect</a>
 and loads the context data using the <code class="docutils literal notranslate"><span class="pre">query_df</span></code> method, which returns the query output in a Pandas DataFrame.
@@ -310,7 +306,7 @@ After that, the Lambda function invokes the Bedrock endpoint with the context da
 at each future time step, which the Lambda function returns to the user in JSON format
 together with the corresponding timestamps.</p>
 <section id="create-the-docker-image">
-<h4>2.2.1 Create the Docker image<a class="headerlink" href="#create-the-docker-image" title="Link to this heading">¶</a></h4>
+<h4>1.2.1 Create the Docker image<a class="headerlink" href="#create-the-docker-image" title="Link to this heading">¶</a></h4>
 <p>In order to create the Lambda function’s Docker image in Elastic Container Registry (ECR), we need the following files:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">app.py</span></code>: The Python code of the Lambda function.</p></li>
@@ -479,7 +475,7 @@ to securely store, manage, and retrieve credentials.</p>
 </div>
 </section>
 <section id="build-the-docker-image-and-push-it-to-ecr">
-<h4>2.2.2 Build the Docker image and push it to ECR<a class="headerlink" href="#build-the-docker-image-and-push-it-to-ecr" title="Link to this heading">¶</a></h4>
+<h4>1.2.2 Build the Docker image and push it to ECR<a class="headerlink" href="#build-the-docker-image-and-push-it-to-ecr" title="Link to this heading">¶</a></h4>
 <p>When all the files are ready, we can build the Docker image and push it to ECR
 with the AWS-CLI as shown in the <code class="docutils literal notranslate"><span class="pre">build_and_push.sh</span></code> script below.</p>
 <div class="admonition important">
@@ -508,7 +504,7 @@ with the AWS-CLI as shown in the <code class="docutils literal notranslate"><spa
 </div>
 </section>
 <section id="create-the-lambda-function-from-the-docker-image-in-ecr">
-<h4>2.2.3 Create the Lambda function from the Docker image in ECR<a class="headerlink" href="#create-the-lambda-function-from-the-docker-image-in-ecr" title="Link to this heading">¶</a></h4>
+<h4>1.2.3 Create the Lambda function from the Docker image in ECR<a class="headerlink" href="#create-the-lambda-function-from-the-docker-image-in-ecr" title="Link to this heading">¶</a></h4>
 <p>After the Docker image has been pushed to ECR, we can create the Lambda function using <a class="reference external" href="https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/lambda/client/create_function.html">Boto3</a>
 as in the code below, with the <a class="reference external" href="https://docs.aws.amazon.com/cli/latest/reference/lambda/create-function.html">AWS-CLI</a>,
 or directly from the Lambda console.</p>
@@ -542,7 +538,7 @@ or directly from the Lambda console.</p>
 </section>
 </section>
 <section id="invoke-the-lambda-function-and-generate-the-forecasts">
-<h3>2.3 Invoke the Lambda function and generate the forecasts<a class="headerlink" href="#invoke-the-lambda-function-and-generate-the-forecasts" title="Link to this heading">¶</a></h3>
+<h3>1.3 Invoke the Lambda function and generate the forecasts<a class="headerlink" href="#invoke-the-lambda-function-and-generate-the-forecasts" title="Link to this heading">¶</a></h3>
 <p>After the Lambda function has been created, we can invoke it to generate the forecasts.</p>
 <p>The code below defines a Python function which invokes the Lambda function with the
 inputs discussed in the previous section and casts the Lambda function’s JSON output
@@ -677,7 +673,7 @@ In both cases, we use a 3-week context window to generate 1-day-ahead forecasts.
 
 </div></section>
 <section id="compare-the-forecasts-to-the-historical-data-stored-in-clickhouse">
-<h3>2.4 Compare the forecasts to the historical data stored in ClickHouse<a class="headerlink" href="#compare-the-forecasts-to-the-historical-data-stored-in-clickhouse" title="Link to this heading">¶</a></h3>
+<h3>1.4 Compare the forecasts to the historical data stored in ClickHouse<a class="headerlink" href="#compare-the-forecasts-to-the-historical-data-stored-in-clickhouse" title="Link to this heading">¶</a></h3>
 <p>Now that the forecasts have been generated, we can compare them to the historical data stored in ClickHouse.
 We again use ClickHouse Connect to query the database and retrieve the results directly into a Pandas DataFrame.</p>
 <div class="admonition important">

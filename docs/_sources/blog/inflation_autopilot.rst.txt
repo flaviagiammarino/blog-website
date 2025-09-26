@@ -23,10 +23,6 @@ Forecasting Inflation with AutoML in Amazon SageMaker Autopilot
         alt="Architecture diagram showing inflation forecasting with Amazon SageMaker Autopilot using data from FRED MD stored in Amazon S3"
     >
 
-
-1. Overview
-***************************************************************************************************************
-
 Automated Machine Learning (AutoML) frameworks address the expertise- and time-intensive nature of the traditional ML model development workflow.
 By automating the end-to-end process of building, training and tuning ML models through easy-to-use programmatic interfaces,
 AutoML solutions make ML accessible to non-specialists and significantly reduce deployment timeframes.
@@ -43,6 +39,9 @@ On each month, the model predicts the following month's percentage change in the
 using the current month's FRED-MD indicators as inputs.
 We first run an AutoML job on FRED-MD data from January 1960 to December 2023 to select the best ML pipeline.
 We then use this ML pipeline in an Amazon SageMaker batch transform job to generate one-month-ahead forecasts from January 2024 to December 2024.
+
+1. Overview
+***************************************************************************************************************
 
 1.1 Amazon SageMaker Autopilot
 ===============================================================================================================
