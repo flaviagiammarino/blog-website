@@ -552,13 +552,6 @@ In both cases, we use a 3-week context window to generate 1-day-ahead forecasts.
 Now that the forecasts have been generated, we can compare them to the historical data stored in ClickHouse.
 We again use ClickHouse Connect to query the database and retrieve the results directly into a Pandas DataFrame.
 
-.. important::
-    As before, make sure to replace the following variables before running the code:
-
-    -  ``"<clickhouse-host>"``: The ClickHouse host.
-    -  ``"<clickhouse-user>"``: The ClickHouse username.
-    -  ``"<clickhouse-password>"``: The ClickHouse password.
-
 .. code:: python
 
    import clickhouse_connect
