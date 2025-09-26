@@ -405,7 +405,7 @@ We start by defining the target name, the target transformation code and the num
     We override the suggested transformation for the US CPI,
     which is second order logarithmic difference (``tcode = 6``),
     as the resulting time series can't be interpreted as an inflation rate.
-    We use percentage changes (``tcode = 7``) insted, which results in a
+    We use percentage changes (``tcode = 7``) instead, which results in a
     MoM inflation rate time series.
 
 .. code:: python
