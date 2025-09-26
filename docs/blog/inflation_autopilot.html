@@ -201,7 +201,9 @@ data-aria-dark="Switch to auto color mode">
     src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/inflation_autopilot/architecture_diagram.png"
     style="width:100%"
     alt="Architecture diagram showing inflation forecasting with Amazon SageMaker Autopilot using data from FRED MD stored in Amazon S3"
-><p>Automated Machine Learning (AutoML) frameworks address the expertise- and time-intensive nature of the traditional ML model development workflow.
+><section id="overview">
+<h2>1. Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
+<p>Automated Machine Learning (AutoML) frameworks address the expertise- and time-intensive nature of the traditional ML model development workflow.
 By automating the end-to-end process of building, training and tuning ML models through easy-to-use programmatic interfaces,
 AutoML solutions make ML accessible to non-specialists and significantly reduce deployment timeframes.</p>
 <p>In this post, we demonstrate how to use Amazon SageMaker Autopilot <a class="reference external" href="#references">[1]</a>, AWS’s AutoML framework,
@@ -215,8 +217,6 @@ On each month, the model predicts the following month’s percentage change in t
 using the current month’s FRED-MD indicators as inputs.
 We first run an AutoML job on FRED-MD data from January 1960 to December 2023 to select the best ML pipeline.
 We then use this ML pipeline in an Amazon SageMaker batch transform job to generate one-month-ahead forecasts from January 2024 to December 2024.</p>
-<section id="overview">
-<h2>1. Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
 <section id="amazon-sagemaker-autopilot">
 <h3>1.1 Amazon SageMaker Autopilot<a class="headerlink" href="#amazon-sagemaker-autopilot" title="Link to this heading">¶</a></h3>
 <p>Autopilot is a fully managed AutoML solution designed to automate the end-to-end ML pipeline

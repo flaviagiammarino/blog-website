@@ -22,6 +22,9 @@ Zero-shot time series forecasting with Chronos using Amazon Bedrock and ClickHou
         alt="Architecture diagram showing Chronos on Amazon Bedrock integrated with ClickHouse in AWS Lambda"
     >
 
+1. Overview
+***************************************************************************************************************
+
 The emergence of large language models (LLMs) with zero-shot generalization capabilities in sequence modelling
 tasks has led to the development of time series foundation models (TSFMs) based on LLM architectures.
 By representing time series as sequences of tokens, TSFMs can leverage LLMs' capability to extrapolate future
@@ -44,7 +47,7 @@ In the rest of this post, we will walk through a practical example of using Chro
 stored in ClickHouse. We will create a Bedrock endpoint, then build a Lambda function that invokes the Bedrock
 endpoint with context data queried from ClickHouse and returns the forecasts.
 
-1. Solution
+2. Solution
 ***************************************************************************************************************
 
 In this particular example, we will work with the 15-minute time series of the Italian electricity system's
@@ -79,7 +82,7 @@ this solution can be applied to any other time series.
     You will also need to update several variables in the code to reflect your AWS
     configuration - such as your AWS account number, region, service roles, etc. - as will be outlined below.
 
-1.1 Create the Bedrock endpoint
+2.1 Create the Bedrock endpoint
 ===============================================================================================================
 
 We start by deploying Chronos-Bolt to a Bedrock endpoint hosted on a CPU EC2 instance.
@@ -131,7 +134,7 @@ or directly from the Bedrock console.
             endpointArn=bedrock_endpoint_arn
         )
 
-1.2 Create the Lambda function for invoking the Bedrock endpoint with ClickHouse data
+2.2 Create the Lambda function for invoking the Bedrock endpoint with ClickHouse data
 ===============================================================================================================
 
 We now build a Lambda function for invoking the Bedrock endpoint with time series data stored in ClickHouse.
@@ -144,7 +147,7 @@ The Bedrock endpoint response includes the predicted mean and the predicted quan
 at each future time step, which the Lambda function returns to the user in JSON format
 together with the corresponding timestamps.
 
-1.2.1 Create the Docker image
+2.2.1 Create the Docker image
 ---------------------------------------------------------------------------------------------------------------
 
 In order to create the Lambda function's Docker image in Elastic Container Registry (ECR), we need the following files:
@@ -331,7 +334,7 @@ The standard ``Dockerfile`` using the Python 3.12 AWS base image for Lambda is a
 
    CMD ["app.handler"]
 
-1.2.2 Build the Docker image and push it to ECR
+2.2.2 Build the Docker image and push it to ECR
 ---------------------------------------------------------------------------------------------------------------
 
 When all the files are ready, we can build the Docker image and push it to ECR
@@ -361,7 +364,7 @@ with the AWS-CLI as shown in the ``build_and_push.sh`` script below.
    docker push $aws_account_id.dkr.ecr.$region.amazonaws.com/$algorithm_name:latest
 
 
-1.2.3 Create the Lambda function from the Docker image in ECR
+2.2.3 Create the Lambda function from the Docker image in ECR
 ---------------------------------------------------------------------------------------------------------------
 
 After the Docker image has been pushed to ECR, we can create the Lambda function using `Boto3 <https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/lambda/client/create_function.html>`__
@@ -394,7 +397,7 @@ or directly from the Lambda console.
        Publish=True,
    )
 
-1.3 Invoke the Lambda function and generate the forecasts
+2.3 Invoke the Lambda function and generate the forecasts
 ===============================================================================================================
 
 After the Lambda function has been created, we can invoke it to generate the forecasts.
@@ -544,7 +547,7 @@ In both cases, we use a 3-week context window to generate 1-day-ahead forecasts.
 
     </div>
 
-1.4 Compare the forecasts to the historical data stored in ClickHouse
+2.4 Compare the forecasts to the historical data stored in ClickHouse
 ===============================================================================================================
 
 Now that the forecasts have been generated, we can compare them to the historical data stored in ClickHouse.
