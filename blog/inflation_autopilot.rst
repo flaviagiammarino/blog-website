@@ -83,7 +83,7 @@ As a result, different vintages can report different values for the same time se
 The FRED-MD dataset has been used extensively for forecasting US inflation.
 In `[3] <#references>`_ it was shown that a random forest model trained on the FRED-MD dataset outperforms several
 standard inflation forecasting models at different forecasting horizons.
-`[4] <#references>`_ applied different dimension reduction techniques to the FRED-MD dataset in order to forecast
+`[4] <#references>`_ applied different dimension reduction techniques to the FRED-MD dataset to forecast
 US inflation and found that autoencoders provide the best performance.
 `[5] <#references>`_ expanded the analysis in `[3] <#references>`_ to include an LSTM model and found that it did
 not significantly outperform the random forest model.
@@ -334,6 +334,7 @@ which indicators have complete time series across all consecutive vintages in ou
 To address any potential data leakage, while replicating realistic model usage
 where the model makes predictions on newly available data, we construct our
 evaluation set using the last month from each consecutive vintage.
+
 This approach is implemented in the ``get_real_time_data`` function, which processes
 each vintage using the ``get_data`` function and concatenates the final month from
 each vintage into a unique Pandas DataFrame.

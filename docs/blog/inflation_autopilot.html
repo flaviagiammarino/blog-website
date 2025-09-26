@@ -249,7 +249,7 @@ As a result, different vintages can report different values for the same time se
 <p>The FRED-MD dataset has been used extensively for forecasting US inflation.
 In <a class="reference external" href="#references">[3]</a> it was shown that a random forest model trained on the FRED-MD dataset outperforms several
 standard inflation forecasting models at different forecasting horizons.
-<a class="reference external" href="#references">[4]</a> applied different dimension reduction techniques to the FRED-MD dataset in order to forecast
+<a class="reference external" href="#references">[4]</a> applied different dimension reduction techniques to the FRED-MD dataset to forecast
 US inflation and found that autoencoders provide the best performance.
 <a class="reference external" href="#references">[5]</a> expanded the analysis in <a class="reference external" href="#references">[3]</a> to include an LSTM model and found that it did
 not significantly outperform the random forest model.</p>
@@ -473,8 +473,8 @@ which indicators have complete time series across all consecutive vintages in ou
 </code>
 </p><p>To address any potential data leakage, while replicating realistic model usage
 where the model makes predictions on newly available data, we construct our
-evaluation set using the last month from each consecutive vintage.
-This approach is implemented in the <code class="docutils literal notranslate"><span class="pre">get_real_time_data</span></code> function, which processes
+evaluation set using the last month from each consecutive vintage.</p>
+<p>This approach is implemented in the <code class="docutils literal notranslate"><span class="pre">get_real_time_data</span></code> function, which processes
 each vintage using the <code class="docutils literal notranslate"><span class="pre">get_data</span></code> function and concatenates the final month from
 each vintage into a unique Pandas DataFrame.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">def</span><span class="w"> </span><span class="nf">get_real_time_data</span><span class="p">(</span>
