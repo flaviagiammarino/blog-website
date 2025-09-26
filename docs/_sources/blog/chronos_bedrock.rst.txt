@@ -81,7 +81,7 @@ this solution can be applied to any other time series.
 
     To be able to run the code provided in the rest of this section, you will need to have Boto3 and the AWS-CLI installed on your machine.
     You will also need to update several variables in the code to reflect your AWS
-    configuration - such as your AWS account number, region, service roles, etc. - as will be outlined below.
+    configuration - such as your AWS account number, region, service roles, etc.
 
 2.1 Create the Bedrock endpoint
 ===============================================================================================================
@@ -90,12 +90,6 @@ We start by deploying Chronos-Bolt to a Bedrock endpoint hosted on a CPU EC2 ins
 This can be done using `Boto3 <https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock/client/create_marketplace_model_endpoint.html>`__
 as in the code below, with the `AWS-CLI <https://docs.aws.amazon.com/cli/latest/reference/bedrock/create-marketplace-model-endpoint.html>`__,
 or directly from the Bedrock console.
-
-.. important::
-    If using the code below, make sure to replace the following variables:
-
-    -  ``"<bedrock-marketplace-arn>"``: The Bedrock marketplace ARN of Chronos-Bolt (Base) model.
-    -  ``"<bedrock-execution-role>"``: The Bedrock execution role ARN.
 
 .. code:: python
 
@@ -121,7 +115,7 @@ or directly from the Bedrock console.
    # Get the Bedrock endpoint ARN
    bedrock_endpoint_arn = response["marketplaceModelEndpoint"]["endpointArn"]
 
-.. caution::
+.. important::
 
     Remember to delete the endpoint when is no longer needed to avoid unexpected charges.
     This can be done using `Boto3 <https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock/client/delete_marketplace_model_endpoint.html>`__
@@ -168,15 +162,7 @@ In order to create the Lambda function's Docker image in Elastic Container Regis
 
 The ``app.py`` Python script with the entry point of the Lambda function is reported below.
 
-.. important::
-    Before deploying the Lambda function, make sure to replace the following variables:
-
-    -  ``"<clickhouse-host>"``: The ClickHouse host.
-    -  ``"<clickhouse-user>"``: The ClickHouse username.
-    -  ``"<clickhouse-password>"``: The ClickHouse password.
-    -  ``"<bedrock-endpoint-arn>"``: The Bedrock endpoint ARN.
-
-.. tip::
+.. note::
 
     For simplicity, in this example we have included the ClickHouse database credentials directly in the code.
     In practice, we recommend using `AWS Secrets Manager <https://aws.amazon.com/secrets-manager/>`__
@@ -339,13 +325,6 @@ The standard ``Dockerfile`` using the Python 3.12 AWS base image for Lambda is a
 When all the files are ready, we can build the Docker image and push it to ECR
 with the AWS-CLI as shown in the ``build_and_push.sh`` script below.
 
-.. important::
-    Before running the script, make sure to replace the following variables:
-
-    -  ``"aws-account-id>"``: The AWS account number.
-    -  ``"<ecr-repository-region>"``: The region of the ECR repository.
-    -  ``"<ecr-repository-name>"``: The name of the ECR repository.
-
 .. code:: bash
 
    aws_account_id="<aws-account-id>"
@@ -369,12 +348,6 @@ with the AWS-CLI as shown in the ``build_and_push.sh`` script below.
 After the Docker image has been pushed to ECR, we can create the Lambda function using `Boto3 <https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/lambda/client/create_function.html>`__
 as in the code below, with the `AWS-CLI <https://docs.aws.amazon.com/cli/latest/reference/lambda/create-function.html>`__,
 or directly from the Lambda console.
-
-.. important::
-    If using the code below, make sure to replace the following variables:
-
-    -  ``"<ecr-image-uri>"``: The URI of the ECR image with the code of the Lambda function.
-    -  ``"<lambda-execution-role>"``: The Lambda execution role ARN.
 
 .. code:: python
 
