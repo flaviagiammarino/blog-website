@@ -31,7 +31,7 @@ By automating the end-to-end process of building, training and tuning ML models 
 AutoML solutions make ML accessible to non-specialists and significantly reduce deployment timeframes.
 
 In this post, we demonstrate how to use Amazon SageMaker Autopilot `[1] <#references>`_, AWS's AutoML framework,
-to forecast US inflation using the `FRED-MD <https://research.stlouisfed.org/econ/mccracken/fred-databases/>`__ dataset `[2] <#references>`_.
+to forecast US inflation using the FRED-MD dataset `[2] <#references>`_.
 FRED-MD is an open-source dataset maintained by the Federal Reserve Bank of St. Louis
 including over 100 monthly time series of US macroeconomic indicators (see the `Appendix`_ for the full list).
 FRED-MD is widely used in economic research, and has become a standard benchmark for evaluating machine learning models
