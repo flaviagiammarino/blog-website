@@ -53,7 +53,7 @@ allowing users to inspect and modify the generated ML pipelines to incorporate d
 
 Given a tabular dataset and a specified target column, Autopilot generates a set of candidate ML pipelines optimized for the
 given dataset's characteristics and the specific problem type. Each candidate pipeline implements the end-to-end process of
-data preparation, feature selection, algorithm training and hyperparameter tuning.
+data preparation, feature selection and algorithm training.
 Autopilot then evaluates the candidate pipelines to produce a leaderboard and select the best-performing pipeline.
 
 As part of this process, Autopilot automatically generates a set of data analysis and model insights reports in various formats,
