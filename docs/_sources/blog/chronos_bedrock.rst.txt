@@ -373,7 +373,6 @@ or directly from the Lambda console.
 ===============================================================================================================
 
 After the Lambda function has been created, we can invoke it to generate the forecasts.
-
 The code below defines a Python function which invokes the Lambda function with the
 inputs discussed in the previous section and casts the Lambda function's JSON output
 to Pandas DataFrame.
