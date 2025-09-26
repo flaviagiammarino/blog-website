@@ -156,8 +156,6 @@ In order to create the Lambda function's Docker image in Elastic Container Regis
 - ``requirements.txt``: The list of dependencies that need to be installed in the Docker container.
 - ``Dockerfile``: The file containing the instructions to build the Docker image.
 
-You can download the files directly from our `GitHub repository <https://github.com/flaviagiammarino/machine-learning-blog/tree/main/chronos_bedrock/>`__.
-
 .. raw:: html
 
     <p>
@@ -618,6 +616,8 @@ highlighting its strength in capturing complex temporal patterns.
     </p>
 
     </div>
+
+You can download the full code from the `GitHub repository <https://github.com/flaviagiammarino/machine-learning-blog/tree/main/chronos_bedrock/>`__.
 
 References
 ***************************************************************************************************************

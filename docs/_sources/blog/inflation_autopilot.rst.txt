@@ -736,7 +736,7 @@ are observed on a few months.
 
     </div>
 
-You can download the Amazon SageMaker notebook with the full code from our
+You can download the Amazon SageMaker notebook with the full code from the
 `GitHub repository <https://github.com/flaviagiammarino/machine-learning-blog/blob/main/inflation_autopilot/amazon_sagemaker_notebook.ipynb>`__.
 
 References
