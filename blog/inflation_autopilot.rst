@@ -12,7 +12,7 @@
 
 
 ###############################################################################################################
-Forecasting Inflation with AutoML in Amazon SageMaker Autopilot
+Forecasting inflation with AutoML in Amazon SageMaker Autopilot
 ###############################################################################################################
 
 .. raw:: html
