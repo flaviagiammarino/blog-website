@@ -77,7 +77,7 @@ The FRED-MD time series are sourced from the
 which is St. Louis Fed’s main, publicly accessible, economic database.
 Different retrospective adjustments are applied to the time series sourced from the FRED database,
 including seasonal adjustments, inflation adjustments and backfilling of missing values.
-As a result, different vintages can report different values for the same time series on the same month.
+As a result, different vintages can report different values for the same time series on the same date.
 
 The FRED-MD dataset has been used extensively for forecasting US inflation.
 In `[3] <#references>`_ it was shown that a random forest model trained on the FRED-MD dataset outperforms several
