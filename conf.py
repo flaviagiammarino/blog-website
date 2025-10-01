@@ -93,6 +93,7 @@ html_sidebars = {
         "ablog/categories.html",
         "ablog/tagcloud.html",
         "ablog/archives.html",
+        "ablog/authors.html",
     ]
 }
 
