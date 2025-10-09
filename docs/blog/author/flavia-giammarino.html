@@ -61,7 +61,11 @@
           "mainEntity": {
             "@type": "Person",
             "name": "Flavia Giammarino",
-            "alumniOf": "London School of Economics and Political Science",
+            "alumniOf": {
+                "@type": "CollegeOrUniversity",
+                "name": "London School of Economics and Political Science",
+                "sameAs": "https://www.lse.ac.uk"
+            },
             "knowsAbout": [
               {
                 "@type": "Thing",
@@ -76,7 +80,7 @@
             "homeLocation": {
                 "@type": "Place",
                 "address": {
-                  "@type": "PostalAddress",
+                    "@type": "PostalAddress",
                     "addressCountry": "IT"
                 }
             },
