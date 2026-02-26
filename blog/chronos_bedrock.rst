@@ -162,12 +162,6 @@ In order to create the Lambda function's Docker image in Elastic Container Regis
 
 The ``app.py`` Python script with the entry point of the Lambda function is reported below.
 
-.. note::
-
-    For simplicity, in this example we have included the ClickHouse database credentials directly in the code.
-    In practice, we recommend using `AWS Secrets Manager <https://aws.amazon.com/secrets-manager/>`__
-    to securely store, manage, and retrieve credentials.
-
 .. code:: python
 
    import json
@@ -176,12 +170,12 @@ The ``app.py`` Python script with the entry point of the Lambda function is repo
    import clickhouse_connect
 
    def handler(event, context):
-       """
-       Generate zero-shot forecasts with Chronos-Bolt (Base) Amazon Bedrock endpoint using data stored in ClickHouse.
+        """
+        Generate zero-shot forecasts with Chronos-Bolt (Base) Amazon Bedrock endpoint using data stored in ClickHouse.
 
-       Parameters:
-       ========================================================================================================
-       event: dict.
+        Parameters:
+        ========================================================================================================
+        event: dict.
            A dictionary with the following keys:
 
            initialization_timestamp: str.
@@ -199,18 +193,30 @@ The ``app.py`` Python script with the entry point of the Lambda function is repo
            quantile_levels: list of float.
                The quantiles to be predicted at each future time step.
 
-       context: AWS Lambda context object, see https://docs.aws.amazon.com/lambda/latest/dg/python-context.html.
-       """
-       # Create the ClickHouse client
-       clickhouse_client = clickhouse_connect.get_client(
-           host="<clickhouse-host>",
-           user="<clickhouse-user>",
-           password="<clickhouse-password>",
-           secure=True
-       )
+        context: AWS Lambda context object, see https://docs.aws.amazon.com/lambda/latest/dg/python-context.html.
+        """
 
-       # Load the input data from ClickHouse
-       df = clickhouse_client.query_df(
+        # Create the Secrets Manager client
+        secret_manager_client = boto3.client("secretsmanager")
+
+        # Retrieve the ClickHouse credentials from Secrets Manager
+        credentials = json.loads(
+            secret_manager_client.get_secret_value(
+                SecretId="<clickhouse-secret-name>"
+            ).get("SecretString")
+        )
+
+        # Create the ClickHouse client
+        clickhouse_client = clickhouse_connect.get_client(
+            host=credentials["host"],
+            user=credentials["user"],
+            password=credentials["password"],
+            port=credentials["port"],
+            secure=True
+        )
+
+        # Load the input data from ClickHouse
+        df = clickhouse_client.query_df(
            f"""
                select
                    timestamp,
@@ -224,13 +230,13 @@ The ``app.py`` Python script with the entry point of the Lambda function is repo
                order by
                    timestamp asc
            """
-       )
+        )
 
-       # Create the Bedrock client
-       bedrock_runtime_client = boto3.client("bedrock-runtime")
+        # Create the Bedrock client
+        bedrock_runtime_client = boto3.client("bedrock-runtime")
 
-       # Invoke the Bedrock endpoint with the ClickHouse data
-       response = bedrock_runtime_client.invoke_model(
+        # Invoke the Bedrock endpoint with the ClickHouse data
+        response = bedrock_runtime_client.invoke_model(
            modelId="<bedrock-endpoint-arn>",
            body=json.dumps({
                "inputs": [{
@@ -241,13 +247,13 @@ The ``app.py`` Python script with the entry point of the Lambda function is repo
                    "quantile_levels": event["quantile_levels"],
                }
            })
-       )
+        )
 
-       # Extract the forecasts
-       predictions = json.loads(response["body"].read()).get("predictions")[0]
+        # Extract the forecasts
+        predictions = json.loads(response["body"].read()).get("predictions")[0]
 
-       # Add the timestamps to the forecasts
-       predictions = {
+        # Add the timestamps to the forecasts
+        predictions = {
            "timestamp": [
                x.strftime("%Y-%m-%d %H:%M:%S")
                for x in pd.date_range(
@@ -256,13 +262,13 @@ The ``app.py`` Python script with the entry point of the Lambda function is repo
                    freq=f"{event['frequency']}min",
                )
            ]
-       } | predictions
+        } | predictions
 
-       # Return the forecasts
-       return {
+        # Return the forecasts
+        return {
            "statusCode": 200,
            "body": json.dumps(predictions)
-       }
+        }
 
 The ``handler`` function has two arguments:
 
@@ -333,7 +339,7 @@ with the AWS-CLI as shown in the ``build_and_push.sh`` script below.
 
    aws ecr get-login-password --region $region | docker login --username AWS --password-stdin $aws_account_id.dkr.ecr.$region.amazonaws.com
 
-   aws ecr describe-repositories --repository-names ${algorithm_name} || aws ecr create-repository --repository-name ${algorithm_name}
+   aws ecr create-repository --repository-name ${algorithm_name}
 
    docker build -t $algorithm_name .
 
@@ -526,38 +532,49 @@ We again use ClickHouse Connect to query the database and retrieve the results d
 
 .. code:: python
 
-   import clickhouse_connect
+    import clickhouse_connect
 
-   # Create the ClickHouse client
-   clickhouse_client = clickhouse_connect.get_client(
-       host="<clickhouse-host>",
-       user="<clickhouse-user>",
-       password="<clickhouse-password>",
-       secure=True
-   )
+    # Create the Secrets Manager client
+    secret_manager_client = boto3.client("secretsmanager")
 
-   # Load the historical data from ClickHouse
-   df = clickhouse_client.query_df(
-       """
-       select
+    # Retrieve the ClickHouse credentials from Secrets Manager
+    credentials = json.loads(
+        secret_manager_client.get_secret_value(
+            SecretId="<clickhouse-secret-name>"
+        ).get("SecretString")
+    )
+
+    # Create the ClickHouse client
+    clickhouse_client = clickhouse_connect.get_client(
+        host=credentials["host"],
+        user=credentials["user"],
+        password=credentials["password"],
+        port=credentials["port"],
+        secure=True
+    )
+
+    # Load the historical data from ClickHouse
+    df = clickhouse_client.query_df(
+        """
+        select
            timestamp,
            total_load
-       from
+        from
            total_load_data
-       where
+        where
            timestamp >= toDateTime('2025-08-18 23:45:00') - INTERVAL 14 DAYS
-       order by
+        order by
            timestamp asc
-       """
-   )
+        """
+    )
 
-   # Outer join the historical data with the model outputs
-   output = pd.merge(
+    # Outer join the historical data with the model outputs
+    output = pd.merge(
        left=df,
        right=pd.concat([predictions, forecasts], axis=0),
        on="timestamp",
        how="outer"
-   )
+    )
 
 The results show that the forecasts are closely aligned with the actual data,
 demonstrating the model's ability to generalize effectively in a zero-shot setting.

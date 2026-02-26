@@ -317,24 +317,18 @@ together with the corresponding timestamps.</p>
 <span class="pre" style="font-weight:600">app.py</span>
 </code>
 </p><p>The <code class="docutils literal notranslate"><span class="pre">app.py</span></code> Python script with the entry point of the Lambda function is reported below.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>For simplicity, in this example we have included the ClickHouse database credentials directly in the code.
-In practice, we recommend using <a class="reference external" href="https://aws.amazon.com/secrets-manager/">AWS Secrets Manager</a>
-to securely store, manage, and retrieve credentials.</p>
-</div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 </span><span data-line="2"><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
 </span><span data-line="3"><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 </span><span data-line="4"><span class="kn">import</span><span class="w"> </span><span class="nn">clickhouse_connect</span>
 </span><span data-line="5">
 </span><span data-line="6"><span class="k">def</span><span class="w"> </span><span class="nf">handler</span><span class="p">(</span><span class="n">event</span><span class="p">,</span> <span class="n">context</span><span class="p">):</span>
-</span><span data-line="7"><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span data-line="8"><span class="sd">    Generate zero-shot forecasts with Chronos-Bolt (Base) Amazon Bedrock endpoint using data stored in ClickHouse.</span>
+</span><span data-line="7"><span class="w">     </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span data-line="8"><span class="sd">     Generate zero-shot forecasts with Chronos-Bolt (Base) Amazon Bedrock endpoint using data stored in ClickHouse.</span>
 </span><span data-line="9">
-</span><span data-line="10"><span class="sd">    Parameters:</span>
-</span><span data-line="11"><span class="sd">    ========================================================================================================</span>
-</span><span data-line="12"><span class="sd">    event: dict.</span>
+</span><span data-line="10"><span class="sd">     Parameters:</span>
+</span><span data-line="11"><span class="sd">     ========================================================================================================</span>
+</span><span data-line="12"><span class="sd">     event: dict.</span>
 </span><span data-line="13"><span class="sd">        A dictionary with the following keys:</span>
 </span><span data-line="14">
 </span><span data-line="15"><span class="sd">        initialization_timestamp: str.</span>
@@ -352,70 +346,82 @@ to securely store, manage, and retrieve credentials.</p>
 </span><span data-line="27"><span class="sd">        quantile_levels: list of float.</span>
 </span><span data-line="28"><span class="sd">            The quantiles to be predicted at each future time step.</span>
 </span><span data-line="29">
-</span><span data-line="30"><span class="sd">    context: AWS Lambda context object, see https://docs.aws.amazon.com/lambda/latest/dg/python-context.html.</span>
-</span><span data-line="31"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span data-line="32">    <span class="c1"># Create the ClickHouse client</span>
-</span><span data-line="33">    <span class="n">clickhouse_client</span> <span class="o">=</span> <span class="n">clickhouse_connect</span><span class="o">.</span><span class="n">get_client</span><span class="p">(</span>
-</span><span data-line="34">        <span class="n">host</span><span class="o">=</span><span class="s2">&quot;&lt;clickhouse-host&gt;&quot;</span><span class="p">,</span>
-</span><span data-line="35">        <span class="n">user</span><span class="o">=</span><span class="s2">&quot;&lt;clickhouse-user&gt;&quot;</span><span class="p">,</span>
-</span><span data-line="36">        <span class="n">password</span><span class="o">=</span><span class="s2">&quot;&lt;clickhouse-password&gt;&quot;</span><span class="p">,</span>
-</span><span data-line="37">        <span class="n">secure</span><span class="o">=</span><span class="kc">True</span>
-</span><span data-line="38">    <span class="p">)</span>
-</span><span data-line="39">
-</span><span data-line="40">    <span class="c1"># Load the input data from ClickHouse</span>
-</span><span data-line="41">    <span class="n">df</span> <span class="o">=</span> <span class="n">clickhouse_client</span><span class="o">.</span><span class="n">query_df</span><span class="p">(</span>
-</span><span data-line="42">        <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
-</span><span data-line="43"><span class="s2">            select</span>
-</span><span data-line="44"><span class="s2">                timestamp,</span>
-</span><span data-line="45"><span class="s2">                total_load</span>
-</span><span data-line="46"><span class="s2">            from</span>
-</span><span data-line="47"><span class="s2">                total_load_data</span>
-</span><span data-line="48"><span class="s2">            where</span>
-</span><span data-line="49"><span class="s2">                timestamp &lt; toDateTime(&#39;</span><span class="si">{</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;initialization_timestamp&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;)</span>
-</span><span data-line="50"><span class="s2">            and</span>
-</span><span data-line="51"><span class="s2">                timestamp &gt;= toDateTime(&#39;</span><span class="si">{</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;initialization_timestamp&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;) - INTERVAL </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">])</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;context_length&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2"> MINUTES</span>
-</span><span data-line="52"><span class="s2">            order by</span>
-</span><span data-line="53"><span class="s2">                timestamp asc</span>
-</span><span data-line="54"><span class="s2">        &quot;&quot;&quot;</span>
-</span><span data-line="55">    <span class="p">)</span>
-</span><span data-line="56">
-</span><span data-line="57">    <span class="c1"># Create the Bedrock client</span>
-</span><span data-line="58">    <span class="n">bedrock_runtime_client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;bedrock-runtime&quot;</span><span class="p">)</span>
-</span><span data-line="59">
-</span><span data-line="60">    <span class="c1"># Invoke the Bedrock endpoint with the ClickHouse data</span>
-</span><span data-line="61">    <span class="n">response</span> <span class="o">=</span> <span class="n">bedrock_runtime_client</span><span class="o">.</span><span class="n">invoke_model</span><span class="p">(</span>
-</span><span data-line="62">        <span class="n">modelId</span><span class="o">=</span><span class="s2">&quot;&lt;bedrock-endpoint-arn&gt;&quot;</span><span class="p">,</span>
-</span><span data-line="63">        <span class="n">body</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
-</span><span data-line="64">            <span class="s2">&quot;inputs&quot;</span><span class="p">:</span> <span class="p">[{</span>
-</span><span data-line="65">                <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;total_load&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
-</span><span data-line="66">            <span class="p">}],</span>
-</span><span data-line="67">            <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span data-line="68">                <span class="s2">&quot;prediction_length&quot;</span><span class="p">:</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;prediction_length&quot;</span><span class="p">],</span>
-</span><span data-line="69">                <span class="s2">&quot;quantile_levels&quot;</span><span class="p">:</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;quantile_levels&quot;</span><span class="p">],</span>
-</span><span data-line="70">            <span class="p">}</span>
-</span><span data-line="71">        <span class="p">})</span>
-</span><span data-line="72">    <span class="p">)</span>
-</span><span data-line="73">
-</span><span data-line="74">    <span class="c1"># Extract the forecasts</span>
-</span><span data-line="75">    <span class="n">predictions</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;body&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">read</span><span class="p">())</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;predictions&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-</span><span data-line="76">
-</span><span data-line="77">    <span class="c1"># Add the timestamps to the forecasts</span>
-</span><span data-line="78">    <span class="n">predictions</span> <span class="o">=</span> <span class="p">{</span>
-</span><span data-line="79">        <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="p">[</span>
-</span><span data-line="80">            <span class="n">x</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span>
-</span><span data-line="81">            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span>
-</span><span data-line="82">                <span class="n">start</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s2">&quot;initialization_timestamp&quot;</span><span class="p">],</span>
-</span><span data-line="83">                <span class="n">periods</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s2">&quot;prediction_length&quot;</span><span class="p">],</span>
-</span><span data-line="84">                <span class="n">freq</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">min&quot;</span><span class="p">,</span>
-</span><span data-line="85">            <span class="p">)</span>
-</span><span data-line="86">        <span class="p">]</span>
-</span><span data-line="87">    <span class="p">}</span> <span class="o">|</span> <span class="n">predictions</span>
+</span><span data-line="30"><span class="sd">     context: AWS Lambda context object, see https://docs.aws.amazon.com/lambda/latest/dg/python-context.html.</span>
+</span><span data-line="31"><span class="sd">     &quot;&quot;&quot;</span>
+</span><span data-line="32">
+</span><span data-line="33">     <span class="c1"># Create the Secrets Manager client</span>
+</span><span data-line="34">     <span class="n">secret_manager_client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;secretsmanager&quot;</span><span class="p">)</span>
+</span><span data-line="35">
+</span><span data-line="36">     <span class="c1"># Retrieve the ClickHouse credentials from Secrets Manager</span>
+</span><span data-line="37">     <span class="n">credentials</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span>
+</span><span data-line="38">         <span class="n">secret_manager_client</span><span class="o">.</span><span class="n">get_secret_value</span><span class="p">(</span>
+</span><span data-line="39">             <span class="n">SecretId</span><span class="o">=</span><span class="s2">&quot;&lt;clickhouse-secret-name&gt;&quot;</span>
+</span><span data-line="40">         <span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SecretString&quot;</span><span class="p">)</span>
+</span><span data-line="41">     <span class="p">)</span>
+</span><span data-line="42">
+</span><span data-line="43">     <span class="c1"># Create the ClickHouse client</span>
+</span><span data-line="44">     <span class="n">clickhouse_client</span> <span class="o">=</span> <span class="n">clickhouse_connect</span><span class="o">.</span><span class="n">get_client</span><span class="p">(</span>
+</span><span data-line="45">         <span class="n">host</span><span class="o">=</span><span class="n">credentials</span><span class="p">[</span><span class="s2">&quot;host&quot;</span><span class="p">],</span>
+</span><span data-line="46">         <span class="n">user</span><span class="o">=</span><span class="n">credentials</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">],</span>
+</span><span data-line="47">         <span class="n">password</span><span class="o">=</span><span class="n">credentials</span><span class="p">[</span><span class="s2">&quot;password&quot;</span><span class="p">],</span>
+</span><span data-line="48">         <span class="n">port</span><span class="o">=</span><span class="n">credentials</span><span class="p">[</span><span class="s2">&quot;port&quot;</span><span class="p">],</span>
+</span><span data-line="49">         <span class="n">secure</span><span class="o">=</span><span class="kc">True</span>
+</span><span data-line="50">     <span class="p">)</span>
+</span><span data-line="51">
+</span><span data-line="52">     <span class="c1"># Load the input data from ClickHouse</span>
+</span><span data-line="53">     <span class="n">df</span> <span class="o">=</span> <span class="n">clickhouse_client</span><span class="o">.</span><span class="n">query_df</span><span class="p">(</span>
+</span><span data-line="54">        <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+</span><span data-line="55"><span class="s2">            select</span>
+</span><span data-line="56"><span class="s2">                timestamp,</span>
+</span><span data-line="57"><span class="s2">                total_load</span>
+</span><span data-line="58"><span class="s2">            from</span>
+</span><span data-line="59"><span class="s2">                total_load_data</span>
+</span><span data-line="60"><span class="s2">            where</span>
+</span><span data-line="61"><span class="s2">                timestamp &lt; toDateTime(&#39;</span><span class="si">{</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;initialization_timestamp&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;)</span>
+</span><span data-line="62"><span class="s2">            and</span>
+</span><span data-line="63"><span class="s2">                timestamp &gt;= toDateTime(&#39;</span><span class="si">{</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;initialization_timestamp&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;) - INTERVAL </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">])</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">int</span><span class="p">(</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;context_length&#39;</span><span class="p">])</span><span class="si">}</span><span class="s2"> MINUTES</span>
+</span><span data-line="64"><span class="s2">            order by</span>
+</span><span data-line="65"><span class="s2">                timestamp asc</span>
+</span><span data-line="66"><span class="s2">        &quot;&quot;&quot;</span>
+</span><span data-line="67">     <span class="p">)</span>
+</span><span data-line="68">
+</span><span data-line="69">     <span class="c1"># Create the Bedrock client</span>
+</span><span data-line="70">     <span class="n">bedrock_runtime_client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;bedrock-runtime&quot;</span><span class="p">)</span>
+</span><span data-line="71">
+</span><span data-line="72">     <span class="c1"># Invoke the Bedrock endpoint with the ClickHouse data</span>
+</span><span data-line="73">     <span class="n">response</span> <span class="o">=</span> <span class="n">bedrock_runtime_client</span><span class="o">.</span><span class="n">invoke_model</span><span class="p">(</span>
+</span><span data-line="74">        <span class="n">modelId</span><span class="o">=</span><span class="s2">&quot;&lt;bedrock-endpoint-arn&gt;&quot;</span><span class="p">,</span>
+</span><span data-line="75">        <span class="n">body</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
+</span><span data-line="76">            <span class="s2">&quot;inputs&quot;</span><span class="p">:</span> <span class="p">[{</span>
+</span><span data-line="77">                <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;total_load&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+</span><span data-line="78">            <span class="p">}],</span>
+</span><span data-line="79">            <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">{</span>
+</span><span data-line="80">                <span class="s2">&quot;prediction_length&quot;</span><span class="p">:</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;prediction_length&quot;</span><span class="p">],</span>
+</span><span data-line="81">                <span class="s2">&quot;quantile_levels&quot;</span><span class="p">:</span> <span class="n">event</span><span class="p">[</span><span class="s2">&quot;quantile_levels&quot;</span><span class="p">],</span>
+</span><span data-line="82">            <span class="p">}</span>
+</span><span data-line="83">        <span class="p">})</span>
+</span><span data-line="84">     <span class="p">)</span>
+</span><span data-line="85">
+</span><span data-line="86">     <span class="c1"># Extract the forecasts</span>
+</span><span data-line="87">     <span class="n">predictions</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;body&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">read</span><span class="p">())</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;predictions&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 </span><span data-line="88">
-</span><span data-line="89">    <span class="c1"># Return the forecasts</span>
-</span><span data-line="90">    <span class="k">return</span> <span class="p">{</span>
-</span><span data-line="91">        <span class="s2">&quot;statusCode&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
-</span><span data-line="92">        <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
-</span><span data-line="93">    <span class="p">}</span>
+</span><span data-line="89">     <span class="c1"># Add the timestamps to the forecasts</span>
+</span><span data-line="90">     <span class="n">predictions</span> <span class="o">=</span> <span class="p">{</span>
+</span><span data-line="91">        <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="p">[</span>
+</span><span data-line="92">            <span class="n">x</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span>
+</span><span data-line="93">            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span>
+</span><span data-line="94">                <span class="n">start</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s2">&quot;initialization_timestamp&quot;</span><span class="p">],</span>
+</span><span data-line="95">                <span class="n">periods</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s2">&quot;prediction_length&quot;</span><span class="p">],</span>
+</span><span data-line="96">                <span class="n">freq</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">min&quot;</span><span class="p">,</span>
+</span><span data-line="97">            <span class="p">)</span>
+</span><span data-line="98">        <span class="p">]</span>
+</span><span data-line="99">     <span class="p">}</span> <span class="o">|</span> <span class="n">predictions</span>
+</span><span data-line="100">
+</span><span data-line="101">     <span class="c1"># Return the forecasts</span>
+</span><span data-line="102">     <span class="k">return</span> <span class="p">{</span>
+</span><span data-line="103">        <span class="s2">&quot;statusCode&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+</span><span data-line="104">        <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
+</span><span data-line="105">     <span class="p">}</span>
 </span></pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">handler</span></code> function has two arguments:</p>
@@ -471,7 +477,7 @@ with the AWS-CLI as shown in the <code class="docutils literal notranslate"><spa
 </span><span data-line="4">
 </span><span data-line="5">aws<span class="w"> </span>ecr<span class="w"> </span>get-login-password<span class="w"> </span>--region<span class="w"> </span><span class="nv">$region</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>docker<span class="w"> </span>login<span class="w"> </span>--username<span class="w"> </span>AWS<span class="w"> </span>--password-stdin<span class="w"> </span><span class="nv">$aws_account_id</span>.dkr.ecr.<span class="nv">$region</span>.amazonaws.com
 </span><span data-line="6">
-</span><span data-line="7">aws<span class="w"> </span>ecr<span class="w"> </span>describe-repositories<span class="w"> </span>--repository-names<span class="w"> </span><span class="si">${</span><span class="nv">algorithm_name</span><span class="si">}</span><span class="w"> </span><span class="o">||</span><span class="w"> </span>aws<span class="w"> </span>ecr<span class="w"> </span>create-repository<span class="w"> </span>--repository-name<span class="w"> </span><span class="si">${</span><span class="nv">algorithm_name</span><span class="si">}</span>
+</span><span data-line="7">aws<span class="w"> </span>ecr<span class="w"> </span>create-repository<span class="w"> </span>--repository-name<span class="w"> </span><span class="si">${</span><span class="nv">algorithm_name</span><span class="si">}</span>
 </span><span data-line="8">
 </span><span data-line="9">docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span><span class="nv">$algorithm_name</span><span class="w"> </span>.
 </span><span data-line="10">
@@ -648,36 +654,47 @@ In both cases, we use a 3-week context window to generate 1-day-ahead forecasts.
 We again use ClickHouse Connect to query the database and retrieve the results directly into a Pandas DataFrame.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">clickhouse_connect</span>
 </span><span data-line="2">
-</span><span data-line="3"><span class="c1"># Create the ClickHouse client</span>
-</span><span data-line="4"><span class="n">clickhouse_client</span> <span class="o">=</span> <span class="n">clickhouse_connect</span><span class="o">.</span><span class="n">get_client</span><span class="p">(</span>
-</span><span data-line="5">    <span class="n">host</span><span class="o">=</span><span class="s2">&quot;&lt;clickhouse-host&gt;&quot;</span><span class="p">,</span>
-</span><span data-line="6">    <span class="n">user</span><span class="o">=</span><span class="s2">&quot;&lt;clickhouse-user&gt;&quot;</span><span class="p">,</span>
-</span><span data-line="7">    <span class="n">password</span><span class="o">=</span><span class="s2">&quot;&lt;clickhouse-password&gt;&quot;</span><span class="p">,</span>
-</span><span data-line="8">    <span class="n">secure</span><span class="o">=</span><span class="kc">True</span>
-</span><span data-line="9"><span class="p">)</span>
-</span><span data-line="10">
-</span><span data-line="11"><span class="c1"># Load the historical data from ClickHouse</span>
-</span><span data-line="12"><span class="n">df</span> <span class="o">=</span> <span class="n">clickhouse_client</span><span class="o">.</span><span class="n">query_df</span><span class="p">(</span>
-</span><span data-line="13"><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span data-line="14"><span class="sd">    select</span>
-</span><span data-line="15"><span class="sd">        timestamp,</span>
-</span><span data-line="16"><span class="sd">        total_load</span>
-</span><span data-line="17"><span class="sd">    from</span>
-</span><span data-line="18"><span class="sd">        total_load_data</span>
-</span><span data-line="19"><span class="sd">    where</span>
-</span><span data-line="20"><span class="sd">        timestamp &gt;= toDateTime(&#39;2025-08-18 23:45:00&#39;) - INTERVAL 14 DAYS</span>
-</span><span data-line="21"><span class="sd">    order by</span>
-</span><span data-line="22"><span class="sd">        timestamp asc</span>
-</span><span data-line="23"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span data-line="24"><span class="p">)</span>
-</span><span data-line="25">
-</span><span data-line="26"><span class="c1"># Outer join the historical data with the model outputs</span>
-</span><span data-line="27"><span class="n">output</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
-</span><span data-line="28">    <span class="n">left</span><span class="o">=</span><span class="n">df</span><span class="p">,</span>
-</span><span data-line="29">    <span class="n">right</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">predictions</span><span class="p">,</span> <span class="n">forecasts</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
-</span><span data-line="30">    <span class="n">on</span><span class="o">=</span><span class="s2">&quot;timestamp&quot;</span><span class="p">,</span>
-</span><span data-line="31">    <span class="n">how</span><span class="o">=</span><span class="s2">&quot;outer&quot;</span>
-</span><span data-line="32"><span class="p">)</span>
+</span><span data-line="3"><span class="c1"># Create the Secrets Manager client</span>
+</span><span data-line="4"><span class="n">secret_manager_client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;secretsmanager&quot;</span><span class="p">)</span>
+</span><span data-line="5">
+</span><span data-line="6"><span class="c1"># Retrieve the ClickHouse credentials from Secrets Manager</span>
+</span><span data-line="7"><span class="n">credentials</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span>
+</span><span data-line="8">    <span class="n">secret_manager_client</span><span class="o">.</span><span class="n">get_secret_value</span><span class="p">(</span>
+</span><span data-line="9">        <span class="n">SecretId</span><span class="o">=</span><span class="s2">&quot;&lt;clickhouse-secret-name&gt;&quot;</span>
+</span><span data-line="10">    <span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SecretString&quot;</span><span class="p">)</span>
+</span><span data-line="11"><span class="p">)</span>
+</span><span data-line="12">
+</span><span data-line="13"><span class="c1"># Create the ClickHouse client</span>
+</span><span data-line="14"><span class="n">clickhouse_client</span> <span class="o">=</span> <span class="n">clickhouse_connect</span><span class="o">.</span><span class="n">get_client</span><span class="p">(</span>
+</span><span data-line="15">    <span class="n">host</span><span class="o">=</span><span class="n">credentials</span><span class="p">[</span><span class="s2">&quot;host&quot;</span><span class="p">],</span>
+</span><span data-line="16">    <span class="n">user</span><span class="o">=</span><span class="n">credentials</span><span class="p">[</span><span class="s2">&quot;user&quot;</span><span class="p">],</span>
+</span><span data-line="17">    <span class="n">password</span><span class="o">=</span><span class="n">credentials</span><span class="p">[</span><span class="s2">&quot;password&quot;</span><span class="p">],</span>
+</span><span data-line="18">    <span class="n">port</span><span class="o">=</span><span class="n">credentials</span><span class="p">[</span><span class="s2">&quot;port&quot;</span><span class="p">],</span>
+</span><span data-line="19">    <span class="n">secure</span><span class="o">=</span><span class="kc">True</span>
+</span><span data-line="20"><span class="p">)</span>
+</span><span data-line="21">
+</span><span data-line="22"><span class="c1"># Load the historical data from ClickHouse</span>
+</span><span data-line="23"><span class="n">df</span> <span class="o">=</span> <span class="n">clickhouse_client</span><span class="o">.</span><span class="n">query_df</span><span class="p">(</span>
+</span><span data-line="24"><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+</span><span data-line="25"><span class="sd">    select</span>
+</span><span data-line="26"><span class="sd">       timestamp,</span>
+</span><span data-line="27"><span class="sd">       total_load</span>
+</span><span data-line="28"><span class="sd">    from</span>
+</span><span data-line="29"><span class="sd">       total_load_data</span>
+</span><span data-line="30"><span class="sd">    where</span>
+</span><span data-line="31"><span class="sd">       timestamp &gt;= toDateTime(&#39;2025-08-18 23:45:00&#39;) - INTERVAL 14 DAYS</span>
+</span><span data-line="32"><span class="sd">    order by</span>
+</span><span data-line="33"><span class="sd">       timestamp asc</span>
+</span><span data-line="34"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="35"><span class="p">)</span>
+</span><span data-line="36">
+</span><span data-line="37"><span class="c1"># Outer join the historical data with the model outputs</span>
+</span><span data-line="38"><span class="n">output</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span>
+</span><span data-line="39">   <span class="n">left</span><span class="o">=</span><span class="n">df</span><span class="p">,</span>
+</span><span data-line="40">   <span class="n">right</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">predictions</span><span class="p">,</span> <span class="n">forecasts</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
+</span><span data-line="41">   <span class="n">on</span><span class="o">=</span><span class="s2">&quot;timestamp&quot;</span><span class="p">,</span>
+</span><span data-line="42">   <span class="n">how</span><span class="o">=</span><span class="s2">&quot;outer&quot;</span>
+</span><span data-line="43"><span class="p">)</span>
 </span></pre></div>
 </div>
 <p>The results show that the forecasts are closely aligned with the actual data,
