@@ -349,11 +349,11 @@ together with the corresponding timestamps.</p>
 </span><span data-line="30"><span class="sd">     context: AWS Lambda context object, see https://docs.aws.amazon.com/lambda/latest/dg/python-context.html.</span>
 </span><span data-line="31"><span class="sd">     &quot;&quot;&quot;</span>
 </span><span data-line="32">     <span class="c1"># Create the Secrets Manager client</span>
-</span><span data-line="33">     <span class="n">secret_manager_client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;secretsmanager&quot;</span><span class="p">)</span>
+</span><span data-line="33">     <span class="n">secrets_manager_client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;secretsmanager&quot;</span><span class="p">)</span>
 </span><span data-line="34">
 </span><span data-line="35">     <span class="c1"># Retrieve the ClickHouse credentials from Secrets Manager</span>
 </span><span data-line="36">     <span class="n">credentials</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span>
-</span><span data-line="37">         <span class="n">secret_manager_client</span><span class="o">.</span><span class="n">get_secret_value</span><span class="p">(</span>
+</span><span data-line="37">         <span class="n">secrets_manager_client</span><span class="o">.</span><span class="n">get_secret_value</span><span class="p">(</span>
 </span><span data-line="38">             <span class="n">SecretId</span><span class="o">=</span><span class="s2">&quot;&lt;clickhouse-secret-name&gt;&quot;</span>
 </span><span data-line="39">         <span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SecretString&quot;</span><span class="p">)</span>
 </span><span data-line="40">     <span class="p">)</span>
@@ -654,11 +654,11 @@ We again use ClickHouse Connect to query the database and retrieve the results d
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">clickhouse_connect</span>
 </span><span data-line="2">
 </span><span data-line="3"><span class="c1"># Create the Secrets Manager client</span>
-</span><span data-line="4"><span class="n">secret_manager_client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;secretsmanager&quot;</span><span class="p">)</span>
+</span><span data-line="4"><span class="n">secrets_manager_client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;secretsmanager&quot;</span><span class="p">)</span>
 </span><span data-line="5">
 </span><span data-line="6"><span class="c1"># Retrieve the ClickHouse credentials from Secrets Manager</span>
 </span><span data-line="7"><span class="n">credentials</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span>
-</span><span data-line="8">    <span class="n">secret_manager_client</span><span class="o">.</span><span class="n">get_secret_value</span><span class="p">(</span>
+</span><span data-line="8">    <span class="n">secrets_manager_client</span><span class="o">.</span><span class="n">get_secret_value</span><span class="p">(</span>
 </span><span data-line="9">        <span class="n">SecretId</span><span class="o">=</span><span class="s2">&quot;&lt;clickhouse-secret-name&gt;&quot;</span>
 </span><span data-line="10">    <span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;SecretString&quot;</span><span class="p">)</span>
 </span><span data-line="11"><span class="p">)</span>
