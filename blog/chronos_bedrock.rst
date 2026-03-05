@@ -553,16 +553,16 @@ We again use ClickHouse Connect to query the database and retrieve the results d
 
     # Load the historical data from ClickHouse
     df = clickhouse_client.query_df(
-        """
-        select
-           timestamp,
-           total_load
-        from
-           total_load_data
-        where
-           timestamp >= toDateTime('2025-08-18 23:45:00') - INTERVAL 14 DAYS
-        order by
-           timestamp asc
+        query="""
+            select
+               timestamp,
+               total_load
+            from
+               total_load_data
+            where
+               timestamp >= toDateTime('2025-08-18 23:45:00') - INTERVAL 14 DAYS
+            order by
+               timestamp asc
         """
     )
 

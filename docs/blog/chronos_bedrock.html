@@ -673,17 +673,17 @@ We again use ClickHouse Connect to query the database and retrieve the results d
 </span><span data-line="21">
 </span><span data-line="22"><span class="c1"># Load the historical data from ClickHouse</span>
 </span><span data-line="23"><span class="n">df</span> <span class="o">=</span> <span class="n">clickhouse_client</span><span class="o">.</span><span class="n">query_df</span><span class="p">(</span>
-</span><span data-line="24"><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span data-line="25"><span class="sd">    select</span>
-</span><span data-line="26"><span class="sd">       timestamp,</span>
-</span><span data-line="27"><span class="sd">       total_load</span>
-</span><span data-line="28"><span class="sd">    from</span>
-</span><span data-line="29"><span class="sd">       total_load_data</span>
-</span><span data-line="30"><span class="sd">    where</span>
-</span><span data-line="31"><span class="sd">       timestamp &gt;= toDateTime(&#39;2025-08-18 23:45:00&#39;) - INTERVAL 14 DAYS</span>
-</span><span data-line="32"><span class="sd">    order by</span>
-</span><span data-line="33"><span class="sd">       timestamp asc</span>
-</span><span data-line="34"><span class="sd">    &quot;&quot;&quot;</span>
+</span><span data-line="24">    <span class="n">query</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+</span><span data-line="25"><span class="s2">        select</span>
+</span><span data-line="26"><span class="s2">           timestamp,</span>
+</span><span data-line="27"><span class="s2">           total_load</span>
+</span><span data-line="28"><span class="s2">        from</span>
+</span><span data-line="29"><span class="s2">           total_load_data</span>
+</span><span data-line="30"><span class="s2">        where</span>
+</span><span data-line="31"><span class="s2">           timestamp &gt;= toDateTime(&#39;2025-08-18 23:45:00&#39;) - INTERVAL 14 DAYS</span>
+</span><span data-line="32"><span class="s2">        order by</span>
+</span><span data-line="33"><span class="s2">           timestamp asc</span>
+</span><span data-line="34"><span class="s2">    &quot;&quot;&quot;</span>
 </span><span data-line="35"><span class="p">)</span>
 </span><span data-line="36">
 </span><span data-line="37"><span class="c1"># Outer join the historical data with the model outputs</span>
