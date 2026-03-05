@@ -216,7 +216,7 @@ The ``app.py`` Python script with the entry point of the Lambda function is repo
 
         # Load the input data from ClickHouse
         df = clickhouse_client.query_df(
-           f"""
+           query=f"""
                select
                    timestamp,
                    total_load
@@ -252,16 +252,15 @@ The ``app.py`` Python script with the entry point of the Lambda function is repo
         predictions = json.loads(response["body"].read()).get("predictions")[0]
 
         # Add the timestamps to the forecasts
-        predictions = {
-           "timestamp": [
-               x.strftime("%Y-%m-%d %H:%M:%S")
-               for x in pd.date_range(
-                   start=event["initialization_timestamp"],
-                   periods=event["prediction_length"],
-                   freq=f"{event['frequency']}min",
-               )
-           ]
-        } | predictions
+        predictions["timestamp"] = (
+            pd.date_range(
+                start=event["initialization_timestamp"],
+                periods=event["prediction_length"],
+                freq=f"{event['frequency']}min"
+            )
+            .strftime("%Y-%m-%d %H:%M:%S")
+            .tolist()
+        )
 
         # Return the forecasts
         return {

@@ -369,7 +369,7 @@ together with the corresponding timestamps.</p>
 </span><span data-line="50">
 </span><span data-line="51">     <span class="c1"># Load the input data from ClickHouse</span>
 </span><span data-line="52">     <span class="n">df</span> <span class="o">=</span> <span class="n">clickhouse_client</span><span class="o">.</span><span class="n">query_df</span><span class="p">(</span>
-</span><span data-line="53">        <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+</span><span data-line="53">        <span class="n">query</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
 </span><span data-line="54"><span class="s2">            select</span>
 </span><span data-line="55"><span class="s2">                timestamp,</span>
 </span><span data-line="56"><span class="s2">                total_load</span>
@@ -405,22 +405,21 @@ together with the corresponding timestamps.</p>
 </span><span data-line="86">     <span class="n">predictions</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;body&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">read</span><span class="p">())</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;predictions&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 </span><span data-line="87">
 </span><span data-line="88">     <span class="c1"># Add the timestamps to the forecasts</span>
-</span><span data-line="89">     <span class="n">predictions</span> <span class="o">=</span> <span class="p">{</span>
-</span><span data-line="90">        <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="p">[</span>
-</span><span data-line="91">            <span class="n">x</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span>
-</span><span data-line="92">            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span>
-</span><span data-line="93">                <span class="n">start</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s2">&quot;initialization_timestamp&quot;</span><span class="p">],</span>
-</span><span data-line="94">                <span class="n">periods</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s2">&quot;prediction_length&quot;</span><span class="p">],</span>
-</span><span data-line="95">                <span class="n">freq</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">min&quot;</span><span class="p">,</span>
-</span><span data-line="96">            <span class="p">)</span>
-</span><span data-line="97">        <span class="p">]</span>
-</span><span data-line="98">     <span class="p">}</span> <span class="o">|</span> <span class="n">predictions</span>
-</span><span data-line="99">
-</span><span data-line="100">     <span class="c1"># Return the forecasts</span>
-</span><span data-line="101">     <span class="k">return</span> <span class="p">{</span>
-</span><span data-line="102">        <span class="s2">&quot;statusCode&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
-</span><span data-line="103">        <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
-</span><span data-line="104">     <span class="p">}</span>
+</span><span data-line="89">     <span class="n">predictions</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+</span><span data-line="90">         <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span>
+</span><span data-line="91">             <span class="n">start</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s2">&quot;initialization_timestamp&quot;</span><span class="p">],</span>
+</span><span data-line="92">             <span class="n">periods</span><span class="o">=</span><span class="n">event</span><span class="p">[</span><span class="s2">&quot;prediction_length&quot;</span><span class="p">],</span>
+</span><span data-line="93">             <span class="n">freq</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">event</span><span class="p">[</span><span class="s1">&#39;frequency&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">min&quot;</span>
+</span><span data-line="94">         <span class="p">)</span>
+</span><span data-line="95">         <span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2"> %H:%M:%S&quot;</span><span class="p">)</span>
+</span><span data-line="96">         <span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+</span><span data-line="97">     <span class="p">)</span>
+</span><span data-line="98">
+</span><span data-line="99">     <span class="c1"># Return the forecasts</span>
+</span><span data-line="100">     <span class="k">return</span> <span class="p">{</span>
+</span><span data-line="101">        <span class="s2">&quot;statusCode&quot;</span><span class="p">:</span> <span class="mi">200</span><span class="p">,</span>
+</span><span data-line="102">        <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
+</span><span data-line="103">     <span class="p">}</span>
 </span></pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">handler</span></code> function has two arguments:</p>
