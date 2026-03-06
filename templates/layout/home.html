@@ -67,6 +67,9 @@
     </button>
     <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4">
         <div class="localtoc" style="font-size: 90%;">
+            <h3 style="color: var(--sy-c-light);">
+                Recent Posts
+            </h3>
             <ul>
             {% for post in ablog.recent(5, pagename) %}
                 <li>
@@ -82,11 +85,11 @@
     <div class="flex flex-col break-words justify-between">
       <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
         <article class="yue{% if dark_code %} dark-code{% endif %}" role="main">
-            <h1>
-            <span>
-                Recent Posts
-            </span>
-           </h1>
+<!--            <h1>-->
+<!--            <span>-->
+<!--                Recent Posts-->
+<!--            </span>-->
+<!--           </h1>-->
             <div>
               {% for post in ablog.recent(5, pagename) %}
                 <div>
