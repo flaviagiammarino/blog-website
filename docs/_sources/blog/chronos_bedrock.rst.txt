@@ -108,7 +108,7 @@ or directly from the Bedrock console.
                 "executionRole": "<bedrock-execution-role>"
             }
         },
-        endpointName="chronos-bedrock-endpoint",
+        endpointName="<bedrock-endpoint-name>",
         acceptEula=True,
     )
 
