@@ -5,3 +5,12 @@
 .hamburger{
     display: none !important;
 }
+
+.heading{
+    font-weight: 400 !important;
+    color: var(--sy-c-light) !important;
+}
+
+h1, h2, h3, h4, h5, h6{
+    font-weight: 500 !important;
+}
