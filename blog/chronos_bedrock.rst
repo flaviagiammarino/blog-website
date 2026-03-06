@@ -263,10 +263,7 @@ The ``app.py`` Python script with the entry point of the Lambda function is repo
         )
 
         # Return the forecasts
-        return {
-           "statusCode": 200,
-           "body": json.dumps(predictions)
-        }
+        return predictions
 
 The ``handler`` function has two arguments:
 
@@ -362,7 +359,7 @@ or directly from the Lambda console.
 
    # Create the Lambda function
    response = lambda_client.create_function(
-       FunctionName="chronos-lambda-function",
+       FunctionName="<lambda-function-name>",
        PackageType="Image",
        Code={
            "ImageUri": "<ecr-image-uri>"
@@ -383,48 +380,47 @@ to Pandas DataFrame.
 
 .. code:: python
 
-   import io
-   import json
-   import boto3
-   import pandas as pd
+    import json
+    import boto3
+    import pandas as pd
 
-   def invoke_lambda_function(
+    def invoke_lambda_function(
        initialization_timestamp,
        frequency,
        context_length,
        prediction_length,
        quantile_levels,
        function_name
-   ):
-       """
-       Invoke the Lambda function that generates zero-shot forecasts with Chronos-Bolt (Base)
-       Amazon Bedrock endpoint using data stored in ClickHouse.
+    ):
+        """
+        Invoke the Lambda function that generates zero-shot forecasts with Chronos-Bolt (Base)
+        Amazon Bedrock endpoint using data stored in ClickHouse.
 
-       Parameters:
-       ========================================================================================================
-       initialization_timestamp: str.
+        Parameters:
+        ========================================================================================================
+        initialization_timestamp: str.
            The initialization timestamp of the forecasts, in ISO format (YYYY-MM-DD HH:mm:ss).
 
-       frequency: int.
+        frequency: int.
            The frequency of the time series, in minutes.
 
-       context_length: int.
+        context_length: int.
            The number of past time steps to use as context.
 
-       prediction_length: int.
+        prediction_length: int.
            The number of future time steps to predict.
 
-       quantile_levels: list of float.
+        quantile_levels: list of float.
            The quantiles to be predicted at each future time step.
 
-       function_name: str.
+        function_name: str.
            The name of the Lambda function.
-       """
-       # Create the Lambda client
-       lambda_client = boto3.client("lambda")
+        """
+        # Create the Lambda client
+        lambda_client = boto3.client("lambda")
 
-       # Invoke the Lambda function
-       response = lambda_client.invoke(
+        # Invoke the Lambda function
+        response = lambda_client.invoke(
            FunctionName=function_name,
            Payload=json.dumps({
                "initialization_timestamp": initialization_timestamp,
@@ -433,13 +429,15 @@ to Pandas DataFrame.
                "context_length": context_length,
                "quantile_levels": quantile_levels
            })
-       )
+        )
 
-       # Extract the forecasts in a data frame
-       predictions = pd.read_json(io.StringIO(json.loads(response["Payload"].read())["body"]))
+        # Extract the forecasts in a data frame
+        predictions = pd.DataFrame(
+            data=json.loads(response["Payload"].read())
+        )
 
-       # Return the forecasts
-       return predictions
+        # Return the forecasts
+        return predictions
 
 Next, we make two invocations: the first time we request the forecasts over a
 past time window for which historical data is already available, which allows us to assess how
@@ -449,12 +447,12 @@ In both cases, we use a 3-week context window to generate 1-day-ahead forecasts.
 
 .. code:: python
 
-   # Define the Lambda function name and input parameters
+   # Define the Lambda function input parameters
    frequency = 15
    context_length = 24 * 4 * 7 * 3
    prediction_length = 24 * 4
    quantile_levels = [0.1, 0.5, 0.9]
-   function_name = "chronos-lambda-function"
+   function_name = "<lambda-function-name>"
 
 .. code:: python
 
