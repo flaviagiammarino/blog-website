@@ -93,27 +93,27 @@ or directly from the Bedrock console.
 
 .. code:: python
 
-   import boto3
+    import boto3
 
-   # Create the Bedrock client
-   bedrock_client = boto3.client("bedrock")
+    # Create the Bedrock client
+    bedrock_client = boto3.client("bedrock")
 
-   # Create the Bedrock endpoint
-   response = bedrock_client.create_marketplace_model_endpoint(
-       modelSourceIdentifier="<bedrock-marketplace-arn>",
-       endpointConfig={
-           "sageMaker": {
-               "initialInstanceCount": 1,
-               "instanceType": "ml.m5.4xlarge",
-               "executionRole": "<bedrock-execution-role>"
-           }
-       },
-       endpointName="chronos-bedrock-endpoint",
-       acceptEula=True,
-   )
+    # Create the Bedrock endpoint
+    response = bedrock_client.create_marketplace_model_endpoint(
+        modelSourceIdentifier="<bedrock-marketplace-arn>",
+        endpointConfig={
+            "sageMaker": {
+                "initialInstanceCount": 1,
+                "instanceType": "ml.m5.4xlarge",
+                "executionRole": "<bedrock-execution-role>"
+            }
+        },
+        endpointName="chronos-bedrock-endpoint",
+        acceptEula=True,
+    )
 
-   # Get the Bedrock endpoint ARN
-   bedrock_endpoint_arn = response["marketplaceModelEndpoint"]["endpointArn"]
+    # Get the Bedrock endpoint ARN
+    bedrock_endpoint_arn = response["marketplaceModelEndpoint"]["endpointArn"]
 
 .. important::
 
@@ -164,34 +164,34 @@ The ``app.py`` Python script with the entry point of the Lambda function is repo
 
 .. code:: python
 
-   import json
-   import boto3
-   import pandas as pd
-   import clickhouse_connect
+    import json
+    import boto3
+    import pandas as pd
+    import clickhouse_connect
 
-   def handler(event, context):
+    def handler(event, context):
         """
         Generate zero-shot forecasts with Chronos-Bolt (Base) Amazon Bedrock endpoint using data stored in ClickHouse.
 
         Parameters:
         ========================================================================================================
         event: dict.
-           A dictionary with the following keys:
+            A dictionary with the following keys:
 
-           initialization_timestamp: str.
-               The initialization timestamp of the forecasts, in ISO format (YYYY-MM-DD HH:mm:ss).
+            initialization_timestamp: str.
+                The initialization timestamp of the forecasts, in ISO format (YYYY-MM-DD HH:mm:ss).
 
-           frequency: int.
-               The frequency of the time series, in minutes.
+            frequency: int.
+                The frequency of the time series, in minutes.
 
-           context_length: int.
-               The number of past time steps to use as context.
+            context_length: int.
+                The number of past time steps to use as context.
 
-           prediction_length: int.
-               The number of future time steps to predict.
+            prediction_length: int.
+                The number of future time steps to predict.
 
-           quantile_levels: list of float.
-               The quantiles to be predicted at each future time step.
+            quantile_levels: list of float.
+                The quantiles to be predicted at each future time step.
 
         context: AWS Lambda context object, see https://docs.aws.amazon.com/lambda/latest/dg/python-context.html.
         """
@@ -216,19 +216,19 @@ The ``app.py`` Python script with the entry point of the Lambda function is repo
 
         # Load the input data from ClickHouse
         df = clickhouse_client.query_df(
-           query=f"""
-               select
-                   timestamp,
-                   total_load
-               from
-                   total_load_data
-               where
-                   timestamp < toDateTime('{event['initialization_timestamp']}')
-               and
-                   timestamp >= toDateTime('{event['initialization_timestamp']}') - INTERVAL {int(event['frequency']) * int(event['context_length'])} MINUTES
-               order by
-                   timestamp asc
-           """
+            query=f"""
+                select
+                    timestamp,
+                    total_load
+                from
+                    total_load_data
+                where
+                    timestamp < toDateTime('{event['initialization_timestamp']}')
+                and
+                    timestamp >= toDateTime('{event['initialization_timestamp']}') - INTERVAL {int(event['frequency']) * int(event['context_length'])} MINUTES
+                order by
+                    timestamp asc
+            """
         )
 
         # Create the Bedrock client
@@ -236,16 +236,16 @@ The ``app.py`` Python script with the entry point of the Lambda function is repo
 
         # Invoke the Bedrock endpoint with the ClickHouse data
         response = bedrock_runtime_client.invoke_model(
-           modelId="<bedrock-endpoint-arn>",
-           body=json.dumps({
-               "inputs": [{
-                   "target": df["total_load"].values.tolist(),
-               }],
-               "parameters": {
-                   "prediction_length": event["prediction_length"],
-                   "quantile_levels": event["quantile_levels"],
-               }
-           })
+            modelId="<bedrock-endpoint-arn>",
+            body=json.dumps({
+                "inputs": [{
+                    "target": df["total_load"].values.tolist(),
+                }],
+                "parameters": {
+                    "prediction_length": event["prediction_length"],
+                    "quantile_levels": event["quantile_levels"],
+                }
+            })
         )
 
         # Extract the forecasts
@@ -352,23 +352,23 @@ or directly from the Lambda console.
 
 .. code:: python
 
-   import boto3
+    import boto3
 
-   # Create the Lambda client
-   lambda_client = boto3.client("lambda")
+    # Create the Lambda client
+    lambda_client = boto3.client("lambda")
 
-   # Create the Lambda function
-   response = lambda_client.create_function(
-       FunctionName="<lambda-function-name>",
-       PackageType="Image",
-       Code={
-           "ImageUri": "<ecr-image-uri>"
-       },
-       Role="<lambda-execution-role>",
-       Timeout=900,
-       MemorySize=128,
-       Publish=True,
-   )
+    # Create the Lambda function
+    response = lambda_client.create_function(
+        FunctionName="<lambda-function-name>",
+        PackageType="Image",
+        Code={
+            "ImageUri": "<ecr-image-uri>"
+        },
+        Role="<lambda-execution-role>",
+        Timeout=900,
+        MemorySize=128,
+        Publish=True,
+    )
 
 2.3 Invoke the Lambda function and generate the forecasts
 ===============================================================================================================
@@ -385,12 +385,11 @@ to Pandas DataFrame.
     import pandas as pd
 
     def invoke_lambda_function(
-       initialization_timestamp,
-       frequency,
-       context_length,
-       prediction_length,
-       quantile_levels,
-       function_name
+        initialization_timestamp,
+        frequency,
+        context_length,
+        prediction_length,
+        quantile_levels
     ):
         """
         Invoke the Lambda function that generates zero-shot forecasts with Chronos-Bolt (Base)
@@ -399,34 +398,31 @@ to Pandas DataFrame.
         Parameters:
         ========================================================================================================
         initialization_timestamp: str.
-           The initialization timestamp of the forecasts, in ISO format (YYYY-MM-DD HH:mm:ss).
+            The initialization timestamp of the forecasts, in ISO format (YYYY-MM-DD HH:mm:ss).
 
         frequency: int.
-           The frequency of the time series, in minutes.
+            The frequency of the time series, in minutes.
 
         context_length: int.
-           The number of past time steps to use as context.
+            The number of past time steps to use as context.
 
         prediction_length: int.
-           The number of future time steps to predict.
+            The number of future time steps to predict.
 
         quantile_levels: list of float.
-           The quantiles to be predicted at each future time step.
-
-        function_name: str.
-           The name of the Lambda function.
+            The quantiles to be predicted at each future time step.
         """
         # Create the Lambda client
         lambda_client = boto3.client("lambda")
 
         # Invoke the Lambda function
         response = lambda_client.invoke(
-           FunctionName=function_name,
+           FunctionName="<lambda-function-name>",
            Payload=json.dumps({
                "initialization_timestamp": initialization_timestamp,
                "frequency": frequency,
-               "prediction_length": prediction_length,
                "context_length": context_length,
+               "prediction_length": prediction_length,
                "quantile_levels": quantile_levels
            })
         )
@@ -452,7 +448,6 @@ In both cases, we use a 3-week context window to generate 1-day-ahead forecasts.
    context_length = 24 * 4 * 7 * 3
    prediction_length = 24 * 4
    quantile_levels = [0.1, 0.5, 0.9]
-   function_name = "<lambda-function-name>"
 
 .. code:: python
 
@@ -462,8 +457,7 @@ In both cases, we use a 3-week context window to generate 1-day-ahead forecasts.
        frequency=frequency,
        context_length=context_length,
        prediction_length=prediction_length,
-       quantile_levels=quantile_levels,
-       function_name=function_name
+       quantile_levels=quantile_levels
    )
 
 .. raw:: html
@@ -495,8 +489,7 @@ In both cases, we use a 3-week context window to generate 1-day-ahead forecasts.
        frequency=frequency,
        context_length=context_length,
        prediction_length=prediction_length,
-       quantile_levels=quantile_levels,
-       function_name=function_name
+       quantile_levels=quantile_levels
    )
 
 .. raw:: html
