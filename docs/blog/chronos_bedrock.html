@@ -367,7 +367,7 @@ together with the corresponding timestamps.</p>
 </span><span data-line="48">        <span class="n">secure</span><span class="o">=</span><span class="kc">True</span>
 </span><span data-line="49">    <span class="p">)</span>
 </span><span data-line="50">
-</span><span data-line="51">    <span class="c1"># Load the input data from ClickHouse</span>
+</span><span data-line="51">    <span class="c1"># Load the context data from ClickHouse</span>
 </span><span data-line="52">    <span class="n">df</span> <span class="o">=</span> <span class="n">clickhouse_client</span><span class="o">.</span><span class="n">query_df</span><span class="p">(</span>
 </span><span data-line="53">        <span class="n">query</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
 </span><span data-line="54"><span class="s2">            select</span>
@@ -428,8 +428,8 @@ together with the corresponding timestamps.</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;initialization_timestamp&quot;</span></code>: The first timestamp for which the forecasts should be generated.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;frequency&quot;</span></code>: The frequency of the time series, in number of minutes.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">&quot;context_length&quot;</span></code>: The number past time series values (prior to <code class="docutils literal notranslate"><span class="pre">initialization_timestamp</span></code>) to use as context.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">&quot;prediction_length&quot;</span></code>: The number of future time series values (on and after <code class="docutils literal notranslate"><span class="pre">initialization_timestamp</span></code>) to predict.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;context_length&quot;</span></code>: The number past time series values to use as context.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;prediction_length&quot;</span></code>: The number of future time series values to predict.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&quot;quantile_levels&quot;</span></code>: The quantiles to be predicted at each future time step.</p></li>
 </ul>
 <p>The <code class="docutils literal notranslate"><span class="pre">context</span></code> object is automatically generated at runtime and does not need to be provided.</p>
