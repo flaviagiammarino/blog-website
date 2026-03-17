@@ -44,13 +44,13 @@ a faster, more accurate, and more memory-efficient Chronos model that can also b
 Chronos-Bolt is available in AutoGluon-TimeSeries, Amazon SageMaker JumpStart and Amazon Bedrock.
 
 In the rest of this post, we will walk through a practical example of using Chronos-Bolt with time series data
-stored in ClickHouse. We will create a Bedrock endpoint, then build a Lambda function that invokes the Bedrock
+stored in ClickHouse. We will deploy Chronos-Bolt to a Bedrock endpoint, then build a Lambda function that invokes the Bedrock
 endpoint with context data queried from ClickHouse and returns the forecasts.
 
 2. Solution
 ***************************************************************************************************************
 
-In this particular example, we will work with the 15-minute time series of the Italian electricity system's
+In this example, we work with the 15-minute time series of the Italian electricity system's
 total demand, which we downloaded from `Terna's data portal <https://dati.terna.it/en/download-center#/load/total-load>`__
 and stored in a table in ClickHouse which we called ``total_load_data``.
 However, as we are performing zero-shot forecasting without domain-specific tuning,
@@ -134,7 +134,7 @@ or directly from the Bedrock console.
 
 We now build a Lambda function for invoking the Bedrock endpoint with time series data stored in ClickHouse.
 
-The Lambda function connects to ClickHouse using `ClickHouse Connect <https://clickhouse.com/docs/integrations/python>`__
+The Lambda function connects to the ClickHouse database using `ClickHouse Connect <https://clickhouse.com/docs/integrations/python>`__
 and loads the context data using the ``query_df`` method, which returns the query output in a Pandas DataFrame.
 After that, the Lambda function invokes the Bedrock endpoint with the context data.
 
@@ -145,7 +145,7 @@ together with the corresponding timestamps.
 2.2.1 Create the Docker image
 ---------------------------------------------------------------------------------------------------------------
 
-In order to create the Lambda function's Docker image in Elastic Container Registry (ECR), we need the following files:
+To create the Lambda function's Docker image in Elastic Container Registry (ECR), we need the following files:
 
 - ``app.py``: The Python code of the Lambda function.
 - ``requirements.txt``: The list of dependencies that need to be installed in the Docker container.
@@ -291,7 +291,7 @@ The ``context`` object is automatically generated at runtime and does not need t
 
 The ``requirements.txt`` file with the list of dependencies is as follows:
 
-::
+.. code-block:: text
 
    boto3==1.34.84
    clickhouse_connect==0.8.18
@@ -308,7 +308,7 @@ The ``requirements.txt`` file with the list of dependencies is as follows:
 
 The standard ``Dockerfile`` using the Python 3.12 AWS base image for Lambda is also provided for reference:
 
-.. code:: bash
+.. code-block:: docker
 
    FROM amazon/aws-lambda-python:3.12
 

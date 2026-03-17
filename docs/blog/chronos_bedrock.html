@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Zero-shot time series forecasting with Chronos using Amazon Bedrock and ClickHouse - flaviagiammarino.com</title><link rel="shortcut icon" href="../_static/favicon.ico"/><link rel="index" title="Index" href="../genindex.html" /><link rel="next" title="Forecasting inflation with AutoML in Amazon SageMaker Autopilot" href="inflation_autopilot.html" /><link rel="prev" title="&lt;no title&gt;" href="../index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Zero-shot time series forecasting with Chronos using Amazon Bedrock and ClickHouse - flaviagiammarino.com</title><link rel="shortcut icon" href="../_static/favicon.ico"/><link rel="index" title="Index" href="../genindex.html" /><link rel="next" title="Building a time series forecasting assistant with Amazon Bedrock and LibreChat" href="forecasting_assistant.html" /><link rel="prev" title="&lt;no title&gt;" href="../index.html" />
       <link rel="canonical" href="https://flaviagiammarino.com/blog/chronos_bedrock.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
@@ -11,7 +11,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=78791002" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=9124e3bc" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -95,7 +95,7 @@ data-aria-dark="Switch to auto color mode">
     </li>
       
     <li>
-      <a style="font-size: 90%" href="category/time-series-foundation-models.html">Time Series Foundation Models (1)</a>
+      <a style="font-size: 90%" href="category/time-series-foundation-models.html">Time Series Foundation Models (2)</a>
     </li>
      
   </ul>
@@ -107,11 +107,11 @@ data-aria-dark="Switch to auto color mode">
   </h3>
   <ul class="ablog-cloud">
      
-    <li class="ablog-cloud ablog-cloud-1">
+    <li class="ablog-cloud ablog-cloud-3">
       <a style="font-size: 90%" href="tag/amazon-bedrock.html">Amazon Bedrock</a>
     </li>
       
-    <li class="ablog-cloud ablog-cloud-1">
+    <li class="ablog-cloud ablog-cloud-3">
       <a style="font-size: 90%" href="tag/amazon-chronos.html">Amazon Chronos</a>
     </li>
       
@@ -119,12 +119,8 @@ data-aria-dark="Switch to auto color mode">
       <a style="font-size: 90%" href="tag/amazon-sagemaker.html">Amazon SageMaker</a>
     </li>
       
-    <li class="ablog-cloud ablog-cloud-1">
+    <li class="ablog-cloud ablog-cloud-3">
       <a style="font-size: 90%" href="tag/large-language-models.html">Large Language Models</a>
-    </li>
-      
-    <li class="ablog-cloud ablog-cloud-1">
-      <a style="font-size: 90%" href="tag/machine-learning.html">Machine Learning</a>
     </li>
       
     <li class="ablog-cloud ablog-cloud-5">
@@ -141,6 +137,10 @@ data-aria-dark="Switch to auto color mode">
   <ul>
      
     <li>
+      <a style="font-size: 90%" href="2026.html">2026 (1)</a>
+    </li>
+      
+    <li>
       <a style="font-size: 90%" href="2025.html">2025 (2)</a>
     </li>
      
@@ -154,7 +154,7 @@ data-aria-dark="Switch to auto color mode">
   <ul>
      
     <li>
-      <a style="font-size: 90%" href="author/flavia-giammarino.html">Flavia Giammarino (2)</a>
+      <a style="font-size: 90%" href="author/flavia-giammarino.html">Flavia Giammarino (3)</a>
     </li>
      
   </ul>
@@ -218,12 +218,12 @@ zero-shot forecasts, without any task-specific adjustments.</p>
 a faster, more accurate, and more memory-efficient Chronos model that can also be used on CPU.
 Chronos-Bolt is available in AutoGluon-TimeSeries, Amazon SageMaker JumpStart and Amazon Bedrock.</p>
 <p>In the rest of this post, we will walk through a practical example of using Chronos-Bolt with time series data
-stored in ClickHouse. We will create a Bedrock endpoint, then build a Lambda function that invokes the Bedrock
+stored in ClickHouse. We will deploy Chronos-Bolt to a Bedrock endpoint, then build a Lambda function that invokes the Bedrock
 endpoint with context data queried from ClickHouse and returns the forecasts.</p>
 </section>
 <section id="solution">
 <h2>2. Solution<a class="headerlink" href="#solution" title="Link to this heading">¶</a></h2>
-<p>In this particular example, we will work with the 15-minute time series of the Italian electricity system’s
+<p>In this example, we work with the 15-minute time series of the Italian electricity system’s
 total demand, which we downloaded from <a class="reference external" href="https://dati.terna.it/en/download-center#/load/total-load">Terna’s data portal</a>
 and stored in a table in ClickHouse which we called <code class="docutils literal notranslate"><span class="pre">total_load_data</span></code>.
 However, as we are performing zero-shot forecasting without domain-specific tuning,
@@ -297,7 +297,7 @@ or directly from the Bedrock console.</p>
 <section id="create-the-lambda-function-for-invoking-the-bedrock-endpoint-with-clickhouse-data">
 <h3>2.2 Create the Lambda function for invoking the Bedrock endpoint with ClickHouse data<a class="headerlink" href="#create-the-lambda-function-for-invoking-the-bedrock-endpoint-with-clickhouse-data" title="Link to this heading">¶</a></h3>
 <p>We now build a Lambda function for invoking the Bedrock endpoint with time series data stored in ClickHouse.</p>
-<p>The Lambda function connects to ClickHouse using <a class="reference external" href="https://clickhouse.com/docs/integrations/python">ClickHouse Connect</a>
+<p>The Lambda function connects to the ClickHouse database using <a class="reference external" href="https://clickhouse.com/docs/integrations/python">ClickHouse Connect</a>
 and loads the context data using the <code class="docutils literal notranslate"><span class="pre">query_df</span></code> method, which returns the query output in a Pandas DataFrame.
 After that, the Lambda function invokes the Bedrock endpoint with the context data.</p>
 <p>The Bedrock endpoint response includes the predicted mean and the predicted quantiles of the time series
@@ -305,7 +305,7 @@ at each future time step, which the Lambda function returns to the user in JSON 
 together with the corresponding timestamps.</p>
 <section id="create-the-docker-image">
 <h4>2.2.1 Create the Docker image<a class="headerlink" href="#create-the-docker-image" title="Link to this heading">¶</a></h4>
-<p>In order to create the Lambda function’s Docker image in Elastic Container Registry (ECR), we need the following files:</p>
+<p>To create the Lambda function’s Docker image in Elastic Container Registry (ECR), we need the following files:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">app.py</span></code>: The Python code of the Lambda function.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code>: The list of dependencies that need to be installed in the Docker container.</p></li>
@@ -439,9 +439,9 @@ together with the corresponding timestamps.</p>
 <span class="pre" style="font-weight:600">requirements.txt</span>
 </code>
 </p><p>The <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> file with the list of dependencies is as follows:</p>
-<div class="highlight-python3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">boto3</span><span class="o">==</span><span class="mf">1.34.84</span>
-</span><span data-line="2"><span class="n">clickhouse_connect</span><span class="o">==</span><span class="mf">0.8.18</span>
-</span><span data-line="3"><span class="n">pandas</span><span class="o">==</span><span class="mf">2.3.1</span>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span data-line="1">boto3==1.34.84
+</span><span data-line="2">clickhouse_connect==0.8.18
+</span><span data-line="3">pandas==2.3.1
 </span></pre></div>
 </div>
 <p>
@@ -450,15 +450,15 @@ together with the corresponding timestamps.</p>
 <span class="pre" style="font-weight:600">Dockerfile</span>
 </code>
 </p><p>The standard <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> using the Python 3.12 AWS base image for Lambda is also provided for reference:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span data-line="1">FROM<span class="w"> </span>amazon/aws-lambda-python:3.12
+<div class="highlight-docker notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">FROM</span><span class="w"> </span><span class="s">amazon/aws-lambda-python:3.12</span>
 </span><span data-line="2">
-</span><span data-line="3">COPY<span class="w"> </span>requirements.txt<span class="w">  </span>.
+</span><span data-line="3"><span class="k">COPY</span><span class="w"> </span>requirements.txt<span class="w">  </span>.
 </span><span data-line="4">
-</span><span data-line="5">RUN<span class="w"> </span>pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt<span class="w"> </span>--target<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">LAMBDA_TASK_ROOT</span><span class="si">}</span><span class="s2">&quot;</span>
+</span><span data-line="5"><span class="k">RUN</span><span class="w"> </span>pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt<span class="w"> </span>--target<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">LAMBDA_TASK_ROOT</span><span class="si">}</span><span class="s2">&quot;</span>
 </span><span data-line="6">
-</span><span data-line="7">COPY<span class="w"> </span>app.py<span class="w"> </span><span class="si">${</span><span class="nv">LAMBDA_TASK_ROOT</span><span class="si">}</span>
+</span><span data-line="7"><span class="k">COPY</span><span class="w"> </span>app.py<span class="w"> </span><span class="si">${</span><span class="nv">LAMBDA_TASK_ROOT</span><span class="si">}</span>
 </span><span data-line="8">
-</span><span data-line="9">CMD<span class="w"> </span><span class="o">[</span><span class="s2">&quot;app.handler&quot;</span><span class="o">]</span>
+</span><span data-line="9"><span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;app.handler&quot;</span><span class="p">]</span>
 </span></pre></div>
 </div>
 </section>
@@ -731,10 +731,10 @@ Fast and accurate zero-shot forecasting with Chronos-Bolt and AutoGluon.
         <span>Previous</span><div class="title">Home</div></div>
     </a>
   </div><div class="navigation-next">
-    <a href="inflation_autopilot.html">
+    <a href="forecasting_assistant.html">
       <div class="page-info">
         <span>Next</span>
-        <div class="title">Forecasting inflation with AutoML in Amazon SageMaker Autopilot</div>
+        <div class="title">Building a time series forecasting assistant with Amazon Bedrock and LibreChat</div>
       </div>
       <i class="i-lucide chevron-right"></i>
     </a>
