@@ -134,7 +134,7 @@ The forecasting MCP server runs as a Docker container on port 8002.
     </code>
     </p>
 
-.. note::
+.. important::
 
    Make sure to replace ``"<bedrock-endpoint-arn>"`` with your own Bedrock endpoint ARN before deploying.
 
