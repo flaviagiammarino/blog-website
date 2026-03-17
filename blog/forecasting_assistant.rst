@@ -27,7 +27,7 @@ Building a time series forecasting assistant with Amazon Bedrock and LibreChat
 
 Most forecasting systems expose their outputs through dashboards or reports, which limits interaction to predefined queries
 that were anticipated at development time. A conversational interface allows users to generate forecasts interactively by
-exploring the underlying data, selecting specific time series and adjusting prediction horizons.
+exploring the underlying data, selecting specific time series and adjusting forecast parameters such as quantile levels and prediction horizon.
 
 In this post, we show how to build a conversational time series forecasting assistant using Amazon Bedrock, ClickHouse, and LibreChat.
 The solution is built around the `Model Context Protocol (MCP) <https://modelcontextprotocol.io>`__ and relies on three servers:
