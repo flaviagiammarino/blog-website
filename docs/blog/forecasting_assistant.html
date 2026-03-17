@@ -272,7 +272,7 @@ The ClickHouse MCP server runs as a Docker container on port 8001.</p>
 <h4>2.1.2 Create the forecasting MCP server<a class="headerlink" href="#create-the-forecasting-mcp-server" title="Link to this heading">¶</a></h4>
 <p>After that, we create the forecasting MCP server, which exposes a <code class="docutils literal notranslate"><span class="pre">generate_forecasts</span></code> tool that takes a list
 of historical values, a prediction length, and a list of quantile levels, and returns probabilistic time series
-forecasts by invoking the Chronos Bedrock endpoint via <code class="docutils literal notranslate"><span class="pre">boto3</span></code>. For instructions on deploying Chronos on Bedrock,
+forecasts by invoking the Chronos’ Bedrock endpoint via <code class="docutils literal notranslate"><span class="pre">boto3</span></code>. For instructions on deploying Chronos on Bedrock,
 we refer to <a class="reference external" href="https://flaviagiammarino.com/blog/chronos_bedrock.html#create-the-bedrock-endpoint">our previous blog post</a>.</p>
 <p>The server is built using the <a class="reference external" href="https://github.com/jlowin/fastmcp">FastMCP</a> library, configured in
 <code class="docutils literal notranslate"><span class="pre">docker-compose.override.yml</span></code>, and registered in the list of MCP servers in <code class="docutils literal notranslate"><span class="pre">librechat.yaml</span></code>.

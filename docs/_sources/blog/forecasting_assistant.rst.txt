@@ -118,7 +118,7 @@ The ClickHouse MCP server runs as a Docker container on port 8001.
 
 After that, we create the forecasting MCP server, which exposes a ``generate_forecasts`` tool that takes a list
 of historical values, a prediction length, and a list of quantile levels, and returns probabilistic time series
-forecasts by invoking the Chronos Bedrock endpoint via ``boto3``. For instructions on deploying Chronos on Bedrock,
+forecasts by invoking the Chronos' Bedrock endpoint via ``boto3``. For instructions on deploying Chronos on Bedrock,
 we refer to `our previous blog post <https://flaviagiammarino.com/blog/chronos_bedrock.html#create-the-bedrock-endpoint>`__.
 
 The server is built using the `FastMCP <https://github.com/jlowin/fastmcp>`__ library, configured in
