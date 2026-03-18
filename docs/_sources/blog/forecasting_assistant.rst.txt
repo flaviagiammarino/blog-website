@@ -196,7 +196,7 @@ We also register the forecasting MCP server in ``librechat.yaml`` to run on port
         type: sse
         url: http://host.docker.internal:8002/sse
 
-The code used for building the Docker image of the forecasting MCP server (``server.py``, ``Dockerfile``, and ``requirements.txt``) is reported below.
+The code used for building the Docker image of the forecasting MCP server - ``server.py``, ``Dockerfile``, and ``requirements.txt`` - is reported below.
 
 .. raw:: html
 
@@ -348,7 +348,7 @@ We also register the data visualization MCP server in ``librechat.yaml`` to run 
         type: sse
         url: http://host.docker.internal:8003/sse
 
-The code used for building the Docker image of the data visualization MCP server (``server.py``, ``Dockerfile``, and ``requirements.txt``) is reported below.
+The code used for building the Docker image of the data visualization MCP server - ``server.py``, ``Dockerfile``, and ``requirements.txt`` - is reported below.
 
 .. raw:: html
 
