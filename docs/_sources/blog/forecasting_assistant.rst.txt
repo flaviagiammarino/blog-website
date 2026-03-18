@@ -37,7 +37,7 @@ deployed on Amazon Bedrock, and an additional custom MCP server that generates i
 We use LibreChat as the chat UI, with Claude Sonnet 4.6 on Amazon Bedrock as the orchestrating model.
 
 For simplicity, this demonstration uses artificially generated sales data for three products.
-However, as Amazon Chronos performs zero-shot forecasting without domain-specific tuning, this solution can be applied
+However, as Amazon Chronos performs zero-shot forecasting without fine-tuning, this solution can be applied
 to any time series dataset. In the rest of the post, we walk through the implementation of the three MCP servers and
 the assistant configuration. We also illustrate a typical conversation with the assistant, which is shown in the video below;
 the transcript is reported at the end of this post.
