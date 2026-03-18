@@ -262,35 +262,89 @@ and <code class="docutils literal notranslate"><span class="pre">sales</span></c
 </div><section id="set-up-the-mcp-servers">
 <h3>2.1 Set up the MCP servers<a class="headerlink" href="#set-up-the-mcp-servers" title="Link to this heading">¶</a></h3>
 <p>We start by cloning the <a class="reference external" href="https://github.com/danny-avila/LibreChat">LibreChat GitHub repository</a> and configuring
-Claude Sonnet 4.6 on Amazon Bedrock as the underlying model. This requires providing AWS credentials in the
-<code class="docutils literal notranslate"><span class="pre">.env</span></code> file and the inference profile ARN in <code class="docutils literal notranslate"><span class="pre">librechat.yaml</span></code>, as outlined in the
-<a class="reference external" href="https://www.librechat.ai/docs/configuration/pre_configured_ai/bedrock">LibreChat AWS Bedrock documentation</a>.</p>
+Claude Sonnet 4.6 on Amazon Bedrock as the underlying model. We use the <code class="docutils literal notranslate"><span class="pre">eu.anthropic.claude-sonnet-4-6</span></code>
+cross-region inference profile in <code class="docutils literal notranslate"><span class="pre">eu-west-1</span></code>. As outlined in the <a class="reference external" href="https://www.librechat.ai/docs/configuration/pre_configured_ai/bedrock">LibreChat documentation</a>,
+we update the following environment variables in the <code class="docutils literal notranslate"><span class="pre">.env</span></code> file:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span data-line="1">BEDROCK_AWS_DEFAULT_REGION=eu-west-1
+</span><span data-line="2">BEDROCK_AWS_MODELS=eu.anthropic.claude-sonnet-4-6
+</span><span data-line="3">BEDROCK_AWS_ACCESS_KEY_ID=&lt;AWS_ACCESS_KEY_ID&gt;
+</span><span data-line="4">BEDROCK_AWS_SECRET_ACCESS_KEY=&lt;AWS_SECRET_ACCESS_KEY&gt;
+</span></pre></div>
+</div>
+<p>We also include the model’s inference profile ARN in <code class="docutils literal notranslate"><span class="pre">librechat.yaml</span></code>:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="nt">endpoints</span><span class="p">:</span>
+</span><span data-line="2"><span class="w">  </span><span class="nt">bedrock</span><span class="p">:</span>
+</span><span data-line="3"><span class="w">    </span><span class="nt">inferenceProfiles</span><span class="p">:</span>
+</span><span data-line="4"><span class="w">      </span><span class="s">&quot;eu.anthropic.claude-sonnet-4-6&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;arn:aws:bedrock:eu-west-1:&lt;AWS_ACCOUNT_ID&gt;:inference-profile/eu.anthropic.claude-sonnet-4-6&quot;</span>
+</span></pre></div>
+</div>
 <section id="configure-the-clickhouse-mcp-server">
 <h4>2.1.1 Configure the ClickHouse MCP server<a class="headerlink" href="#configure-the-clickhouse-mcp-server" title="Link to this heading">¶</a></h4>
-<p>Next, we configure the ClickHouse MCP server by creating a <code class="docutils literal notranslate"><span class="pre">docker-compose.override.yml</span></code> file with our
-ClickHouse host and credentials, and registering it in the list of MCP servers in <code class="docutils literal notranslate"><span class="pre">librechat.yaml</span></code>, as described
-in the <a class="reference external" href="https://clickhouse.com/docs/use-cases/AI/MCP/librechat">ClickHouse documentation</a>.
-The ClickHouse MCP server runs as a Docker container on port 8001.</p>
+<p>Next, we configure the ClickHouse MCP server. Following <a class="reference external" href="https://clickhouse.com/docs/use-cases/AI/MCP/librechat">ClickHouse documentation</a>,
+we create a <code class="docutils literal notranslate"><span class="pre">docker-compose.override.yml</span></code> file and add the following configuration to it:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="nt">services</span><span class="p">:</span>
+</span><span data-line="2"><span class="w">  </span><span class="nt">api</span><span class="p">:</span>
+</span><span data-line="3"><span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+</span><span data-line="4"><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./librechat.yaml:/app/librechat.yaml</span>
+</span><span data-line="5"><span class="w">  </span><span class="nt">mcp-clickhouse</span><span class="p">:</span>
+</span><span data-line="6"><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mcp/clickhouse</span>
+</span><span data-line="7"><span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mcp-clickhouse</span>
+</span><span data-line="8"><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+</span><span data-line="9"><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8001:8000</span>
+</span><span data-line="10"><span class="w">    </span><span class="nt">extra_hosts</span><span class="p">:</span>
+</span><span data-line="11"><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;host.docker.internal:host-gateway&quot;</span>
+</span><span data-line="12"><span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+</span><span data-line="13"><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CLICKHOUSE_HOST=&lt;CLICKHOUSE_HOST&gt;</span>
+</span><span data-line="14"><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CLICKHOUSE_USER=&lt;CLICKHOUSE_USER&gt;</span>
+</span><span data-line="15"><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CLICKHOUSE_PASSWORD=&lt;CLICKHOUSE_PASSWORD&gt;</span>
+</span><span data-line="16"><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CLICKHOUSE_MCP_SERVER_TRANSPORT=sse</span>
+</span><span data-line="17"><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CLICKHOUSE_MCP_BIND_HOST=0.0.0.0</span>
+</span></pre></div>
+</div>
+<p>We also register the ClickHouse MCP server in <code class="docutils literal notranslate"><span class="pre">librechat.yaml</span></code> to run on port 8001:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="nt">mcpServers</span><span class="p">:</span>
+</span><span data-line="2"><span class="w">  </span><span class="nt">clickhouse-playground</span><span class="p">:</span>
+</span><span data-line="3"><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sse</span>
+</span><span data-line="4"><span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://host.docker.internal:8001/sse</span>
+</span></pre></div>
+</div>
 </section>
 <section id="create-the-forecasting-mcp-server">
 <h4>2.1.2 Create the forecasting MCP server<a class="headerlink" href="#create-the-forecasting-mcp-server" title="Link to this heading">¶</a></h4>
-<p>After that, we create the forecasting MCP server, which exposes a <code class="docutils literal notranslate"><span class="pre">generate_forecasts</span></code> tool that takes a list
-of historical values, a prediction length, and a list of quantile levels, and returns probabilistic time series
-forecasts by invoking Chronos Bedrock endpoint via <code class="docutils literal notranslate"><span class="pre">boto3</span></code>. For instructions on deploying Chronos on Bedrock,
-we refer to <a class="reference external" href="https://flaviagiammarino.com/blog/chronos_bedrock.html#create-the-bedrock-endpoint">our previous blog post</a>.</p>
-<p>The server is built using the <a class="reference external" href="https://github.com/jlowin/fastmcp">FastMCP</a> library, configured in
-<code class="docutils literal notranslate"><span class="pre">docker-compose.override.yml</span></code>, and registered in the list of MCP servers in <code class="docutils literal notranslate"><span class="pre">librechat.yaml</span></code>.
-The forecasting MCP server runs as a Docker container on port 8002.</p>
+<p>After that, we create the forecasting MCP server using the <a class="reference external" href="https://github.com/jlowin/fastmcp">FastMCP</a> library.
+The server exposes a <code class="docutils literal notranslate"><span class="pre">generate_forecasts</span></code> tool that takes a list of historical values, a prediction length, and a
+list of quantile levels, and returns probabilistic time series forecasts by invoking the Chronos Bedrock endpoint
+via <code class="docutils literal notranslate"><span class="pre">boto3</span></code>. For instructions on deploying Chronos on Bedrock, we refer to
+<a class="reference external" href="https://flaviagiammarino.com/blog/chronos_bedrock.html#create-the-bedrock-endpoint">our previous blog post</a>.</p>
+<p>We configure the forecasting MCP server in the <code class="docutils literal notranslate"><span class="pre">docker-compose.override.yml</span></code> file
+that we previously created for configuring the ClickHouse MCP server:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="nt">services</span><span class="p">:</span>
+</span><span data-line="2"><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">&lt;clickhouse-mcp-configuration&gt;</span><span class="w"> </span><span class="c1"># Added in Section 2.1.1</span>
+</span><span data-line="3"><span class="w">  </span><span class="nt">chronos-forecasting</span><span class="p">:</span>
+</span><span data-line="4"><span class="w">    </span><span class="nt">build</span><span class="p">:</span>
+</span><span data-line="5"><span class="w">      </span><span class="nt">context</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./chronos-forecasting</span>
+</span><span data-line="6"><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+</span><span data-line="7"><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8002:8002&quot;</span>
+</span><span data-line="8"><span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+</span><span data-line="9"><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AWS_DEFAULT_REGION=eu-west-1</span>
+</span><span data-line="10"><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AWS_ACCESS_KEY_ID=&lt;AWS_ACCESS_KEY_ID&gt;</span>
+</span><span data-line="11"><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AWS_SECRET_ACCESS_KEY=&lt;AWS_SECRET_ACCESS_KEY&gt;</span>
+</span></pre></div>
+</div>
+<p>We also register the forecasting MCP server in <code class="docutils literal notranslate"><span class="pre">librechat.yaml</span></code> to run on port 8002:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="nt">mcpServers</span><span class="p">:</span>
+</span><span data-line="2"><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">&lt;clickhouse-mcp-server&gt;</span><span class="w"> </span><span class="c1"># Added in Section 2.1.1</span>
+</span><span data-line="3"><span class="w">  </span><span class="nt">chronos-forecasting</span><span class="p">:</span>
+</span><span data-line="4"><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sse</span>
+</span><span data-line="5"><span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://host.docker.internal:8002/sse</span>
+</span></pre></div>
+</div>
 <p>
 <span style="font-weight:600">2.1.2.1</span>
 <code class="docutils literal notranslate">
 <span class="pre" style="font-weight:600">server.py</span>
 </code>
-</p><div class="admonition important">
-<p class="admonition-title">Important</p>
-<p>Make sure to replace <code class="docutils literal notranslate"><span class="pre">&quot;&lt;bedrock-endpoint-arn&gt;&quot;</span></code> with your own Bedrock endpoint ARN before deploying.</p>
-</div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+</p><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 </span><span data-line="2"><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
 </span><span data-line="3"><span class="kn">from</span><span class="w"> </span><span class="nn">mcp.server.fastmcp</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastMCP</span>
 </span><span data-line="4">
@@ -332,7 +386,7 @@ The forecasting MCP server runs as a Docker container on port 8002.</p>
 </span><span data-line="40">
 </span><span data-line="41">    <span class="c1"># Invoke the Bedrock endpoint</span>
 </span><span data-line="42">    <span class="n">response</span> <span class="o">=</span> <span class="n">bedrock_runtime_client</span><span class="o">.</span><span class="n">invoke_model</span><span class="p">(</span>
-</span><span data-line="43">        <span class="n">modelId</span><span class="o">=</span><span class="s2">&quot;&lt;bedrock-endpoint-arn&gt;&quot;</span><span class="p">,</span>
+</span><span data-line="43">        <span class="n">modelId</span><span class="o">=</span><span class="s2">&quot;&lt;bedrock-endpoint-arn&gt;&quot;</span><span class="p">,</span> <span class="c1"># Replace with your own Bedrock endpoint ARN</span>
 </span><span data-line="44">        <span class="n">body</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
 </span><span data-line="45">            <span class="s2">&quot;inputs&quot;</span><span class="p">:</span> <span class="p">[{</span>
 </span><span data-line="46">                <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="n">target</span>
@@ -380,20 +434,41 @@ The forecasting MCP server runs as a Docker container on port 8002.</p>
 </div>
 </section>
 <section id="create-the-data-visualization-mcp-server">
-<h4>2.1.3 Create the data visualization MCP server<a class="headerlink" href="#create-the-data-visualization-mcp-server" title="Link to this heading">¶</a></h4>
+<span id="visualization-mcp"></span><h4>2.1.3 Create the data visualization MCP server<a class="headerlink" href="#create-the-data-visualization-mcp-server" title="Link to this heading">¶</a></h4>
 <p>The data visualization MCP server exposes a <code class="docutils literal notranslate"><span class="pre">visualize_data</span></code> tool that generates interactive Plotly charts
 from historical data and forecast outputs. Charts are saved as self-contained HTML files and served over HTTP
 on port 8004. The tool returns the URL of the interactive HTML chart, that LibreChat renders directly in the
 <a class="reference external" href="https://www.librechat.ai/docs/features/artifacts">Artifacts</a> panel.</p>
-<p>Like the forecasting server, it is built using FastMCP, configured in <code class="docutils literal notranslate"><span class="pre">docker-compose.override.yml</span></code>,
-and registered in the list of MCP servers in <code class="docutils literal notranslate"><span class="pre">librechat.yaml</span></code>.
-The data visualization MCP server runs as a Docker container on port 8003.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The data visualization MCP server is not strictly necessary, as the AI model can generate the charts directly.
+<p>The data visualization MCP server is not strictly necessary, as the model can generate the charts directly.
 However, a dedicated server ensures consistent styling and reproducible outputs, which cannot be guaranteed
-when the AI model generates the charts on its own. This is particularly desirable when using the assistant
+when the model generates the charts on its own. This is particularly desirable when using the assistant
 for reporting purposes.</p>
+</div>
+<p>Like the forecasting server, the data visualization server is built using FastMCP.
+As we did for the forecasting server, we configure it in <code class="docutils literal notranslate"><span class="pre">docker-compose.override.yml</span></code>:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="nt">services</span><span class="p">:</span>
+</span><span data-line="2"><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">&lt;clickhouse-mcp-configuration&gt;</span><span class="w"> </span><span class="c1"># Added in Section 2.1.1</span>
+</span><span data-line="3"><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">&lt;forecasting-mcp-configuration&gt;</span><span class="w"> </span><span class="c1"># Added in Section 2.1.2</span>
+</span><span data-line="4"><span class="w">  </span><span class="nt">data-visualization</span><span class="p">:</span>
+</span><span data-line="5"><span class="w">    </span><span class="nt">build</span><span class="p">:</span>
+</span><span data-line="6"><span class="w">      </span><span class="nt">context</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./data-visualization</span>
+</span><span data-line="7"><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
+</span><span data-line="8"><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8003:8003&quot;</span>
+</span><span data-line="9"><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8004:8004&quot;</span>
+</span><span data-line="10"><span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
+</span><span data-line="11"><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./plots:/plots</span>
+</span></pre></div>
+</div>
+<p>We also register the data visualization MCP server in <code class="docutils literal notranslate"><span class="pre">librechat.yaml</span></code> to run on port 8003:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="nt">mcpServers</span><span class="p">:</span>
+</span><span data-line="2"><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">&lt;clickhouse-mcp-server&gt;</span><span class="w"> </span><span class="c1"># Added in Section 2.1.1</span>
+</span><span data-line="3"><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">&lt;forecasting-mcp-server&gt;</span><span class="w"> </span><span class="c1"># Added in Section 2.1.2</span>
+</span><span data-line="4"><span class="w">  </span><span class="nt">data-visualization</span><span class="p">:</span>
+</span><span data-line="5"><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sse</span>
+</span><span data-line="6"><span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://host.docker.internal:8003/sse</span>
+</span></pre></div>
 </div>
 <p>
 <span style="font-weight:600">2.1.3.1</span>

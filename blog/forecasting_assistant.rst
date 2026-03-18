@@ -104,29 +104,96 @@ and ``sales``, which records hourly units sold per product.
 ===============================================================================================================
 
 We start by cloning the `LibreChat GitHub repository <https://github.com/danny-avila/LibreChat>`__ and configuring
-Claude Sonnet 4.6 on Amazon Bedrock as the underlying model. This requires providing AWS credentials in the
-``.env`` file and the inference profile ARN in ``librechat.yaml``, as outlined in the
-`LibreChat AWS Bedrock documentation <https://www.librechat.ai/docs/configuration/pre_configured_ai/bedrock>`__.
+Claude Sonnet 4.6 on Amazon Bedrock as the underlying model. We use the ``eu.anthropic.claude-sonnet-4-6``
+cross-region inference profile in ``eu-west-1``. As outlined in the `LibreChat documentation <https://www.librechat.ai/docs/configuration/pre_configured_ai/bedrock>`__,
+we update the following environment variables in the ``.env`` file:
+
+.. code-block:: text
+
+    BEDROCK_AWS_DEFAULT_REGION=eu-west-1
+    BEDROCK_AWS_MODELS=eu.anthropic.claude-sonnet-4-6
+    BEDROCK_AWS_ACCESS_KEY_ID=<AWS_ACCESS_KEY_ID>
+    BEDROCK_AWS_SECRET_ACCESS_KEY=<AWS_SECRET_ACCESS_KEY>
+
+We also include the model's inference profile ARN in ``librechat.yaml``:
+
+.. code-block:: yaml
+
+    endpoints:
+      bedrock:
+        inferenceProfiles:
+          "eu.anthropic.claude-sonnet-4-6": "arn:aws:bedrock:eu-west-1:<AWS_ACCOUNT_ID>:inference-profile/eu.anthropic.claude-sonnet-4-6"
 
 2.1.1 Configure the ClickHouse MCP server
 ---------------------------------------------------------------------------------------------------------------
 
-Next, we configure the ClickHouse MCP server by creating a ``docker-compose.override.yml`` file with our
-ClickHouse host and credentials, and registering it in the list of MCP servers in ``librechat.yaml``, as described
-in the `ClickHouse documentation <https://clickhouse.com/docs/use-cases/AI/MCP/librechat>`__.
-The ClickHouse MCP server runs as a Docker container on port 8001.
+Next, we configure the ClickHouse MCP server. Following `ClickHouse documentation <https://clickhouse.com/docs/use-cases/AI/MCP/librechat>`__,
+we create a ``docker-compose.override.yml`` file and add the following configuration to it:
+
+.. code-block:: yaml
+
+    services:
+      api:
+        volumes:
+          - ./librechat.yaml:/app/librechat.yaml
+      mcp-clickhouse:
+        image: mcp/clickhouse
+        container_name: mcp-clickhouse
+        ports:
+          - 8001:8000
+        extra_hosts:
+          - "host.docker.internal:host-gateway"
+        environment:
+          - CLICKHOUSE_HOST=<CLICKHOUSE_HOST>
+          - CLICKHOUSE_USER=<CLICKHOUSE_USER>
+          - CLICKHOUSE_PASSWORD=<CLICKHOUSE_PASSWORD>
+          - CLICKHOUSE_MCP_SERVER_TRANSPORT=sse
+          - CLICKHOUSE_MCP_BIND_HOST=0.0.0.0
+
+We also register the ClickHouse MCP server in ``librechat.yaml`` to run on port 8001:
+
+.. code-block:: yaml
+
+    mcpServers:
+      clickhouse-playground:
+        type: sse
+        url: http://host.docker.internal:8001/sse
 
 2.1.2 Create the forecasting MCP server
 ---------------------------------------------------------------------------------------------------------------
 
-After that, we create the forecasting MCP server, which exposes a ``generate_forecasts`` tool that takes a list
-of historical values, a prediction length, and a list of quantile levels, and returns probabilistic time series
-forecasts by invoking Chronos Bedrock endpoint via ``boto3``. For instructions on deploying Chronos on Bedrock,
-we refer to `our previous blog post <https://flaviagiammarino.com/blog/chronos_bedrock.html#create-the-bedrock-endpoint>`__.
+After that, we create the forecasting MCP server using the `FastMCP <https://github.com/jlowin/fastmcp>`__ library.
+The server exposes a ``generate_forecasts`` tool that takes a list of historical values, a prediction length, and a
+list of quantile levels, and returns probabilistic time series forecasts by invoking the Chronos Bedrock endpoint
+via ``boto3``. For instructions on deploying Chronos on Bedrock, we refer to
+`our previous blog post <https://flaviagiammarino.com/blog/chronos_bedrock.html#create-the-bedrock-endpoint>`__.
 
-The server is built using the `FastMCP <https://github.com/jlowin/fastmcp>`__ library, configured in
-``docker-compose.override.yml``, and registered in the list of MCP servers in ``librechat.yaml``.
-The forecasting MCP server runs as a Docker container on port 8002.
+We configure the forecasting MCP server in the ``docker-compose.override.yml`` file
+that we previously created for configuring the ClickHouse MCP server:
+
+.. code-block:: yaml
+
+    services:
+      <clickhouse-mcp-configuration> # Added in Section 2.1.1
+      chronos-forecasting:
+        build:
+          context: ./chronos-forecasting
+        ports:
+          - "8002:8002"
+        environment:
+          - AWS_DEFAULT_REGION=eu-west-1
+          - AWS_ACCESS_KEY_ID=<AWS_ACCESS_KEY_ID>
+          - AWS_SECRET_ACCESS_KEY=<AWS_SECRET_ACCESS_KEY>
+
+We also register the forecasting MCP server in ``librechat.yaml`` to run on port 8002:
+
+.. code-block:: yaml
+
+    mcpServers:
+      <clickhouse-mcp-server> # Added in Section 2.1.1
+      chronos-forecasting:
+        type: sse
+        url: http://host.docker.internal:8002/sse
 
 .. raw:: html
 
@@ -136,10 +203,6 @@ The forecasting MCP server runs as a Docker container on port 8002.
     <span class="pre" style="font-weight:600">server.py</span>
     </code>
     </p>
-
-.. important::
-
-   Make sure to replace ``"<bedrock-endpoint-arn>"`` with your own Bedrock endpoint ARN before deploying.
 
 .. code:: python
 
@@ -185,7 +248,7 @@ The forecasting MCP server runs as a Docker container on port 8002.
 
         # Invoke the Bedrock endpoint
         response = bedrock_runtime_client.invoke_model(
-            modelId="<bedrock-endpoint-arn>",
+            modelId="<bedrock-endpoint-arn>", # Replace with your own Bedrock endpoint ARN
             body=json.dumps({
                 "inputs": [{
                     "target": target
@@ -240,6 +303,8 @@ The forecasting MCP server runs as a Docker container on port 8002.
     COPY server.py .
     CMD ["python", "server.py"]
 
+.. _visualization-mcp:
+
 2.1.3 Create the data visualization MCP server
 ---------------------------------------------------------------------------------------------------------------
 
@@ -248,16 +313,40 @@ from historical data and forecast outputs. Charts are saved as self-contained HT
 on port 8004. The tool returns the URL of the interactive HTML chart, that LibreChat renders directly in the
 `Artifacts <https://www.librechat.ai/docs/features/artifacts>`__ panel.
 
-Like the forecasting server, it is built using FastMCP, configured in ``docker-compose.override.yml``,
-and registered in the list of MCP servers in ``librechat.yaml``.
-The data visualization MCP server runs as a Docker container on port 8003.
-
 .. note::
 
-    The data visualization MCP server is not strictly necessary, as the AI model can generate the charts directly.
+    The data visualization MCP server is not strictly necessary, as the model can generate the charts directly.
     However, a dedicated server ensures consistent styling and reproducible outputs, which cannot be guaranteed
-    when the AI model generates the charts on its own. This is particularly desirable when using the assistant
+    when the model generates the charts on its own. This is particularly desirable when using the assistant
     for reporting purposes.
+
+Like the forecasting server, the data visualization server is built using FastMCP.
+As we did for the forecasting server, we configure it in ``docker-compose.override.yml``:
+
+.. code-block:: yaml
+
+    services:
+      <clickhouse-mcp-configuration> # Added in Section 2.1.1
+      <forecasting-mcp-configuration> # Added in Section 2.1.2
+      data-visualization:
+        build:
+          context: ./data-visualization
+        ports:
+          - "8003:8003"
+          - "8004:8004"
+        volumes:
+          - ./plots:/plots
+
+We also register the data visualization MCP server in ``librechat.yaml`` to run on port 8003:
+
+.. code-block:: yaml
+
+    mcpServers:
+      <clickhouse-mcp-server> # Added in Section 2.1.1
+      <forecasting-mcp-server> # Added in Section 2.1.2
+      data-visualization:
+        type: sse
+        url: http://host.docker.internal:8003/sse
 
 .. raw:: html
 
