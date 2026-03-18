@@ -202,10 +202,10 @@ data-aria-dark="Switch to auto color mode">
 ><section id="overview">
 <h2>1. Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
 <p>Most forecasting systems expose their outputs through dashboards or reports, which limits interaction to predefined
-queries that were anticipated at development time. In this post, we show how to address this limitation by building
-a conversational time series forecasting assistant using ClickHouse, Amazon Bedrock, and LibreChat, which allows
-users to generate forecasts interactively by exploring the underlying data, selecting specific time series,
-and adjusting forecast parameters such as quantile levels and prediction horizons.</p>
+queries that were anticipated at development time. In this post, we demonstrate how to overcome this limitation by building
+a conversational time series forecasting assistant using ClickHouse, Amazon Bedrock, and LibreChat. The assistant allows
+users to explore the underlying data, select specific time series, and adjust forecast parameters - such as quantile levels
+and prediction horizons - through natural language.</p>
 <p>The solution is built around the <a class="reference external" href="https://modelcontextprotocol.io">Model Context Protocol (MCP)</a> and relies on three servers:
 the <a class="reference external" href="https://github.com/ClickHouse/mcp-clickhouse">ClickHouse MCP server</a> for retrieving the time series,
 a custom MCP server that generates probabilistic time series forecasts using Amazon Chronos <a class="reference external" href="#references">[1, 2]</a>
