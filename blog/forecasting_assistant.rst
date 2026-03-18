@@ -43,6 +43,7 @@ the assistant configuration. We also illustrate a typical conversation with the 
 the transcript is reported at the end of this post.
 
 .. raw:: html
+
     <video width="100%" controls style="border-radius: 0.5rem; mask-image: radial-gradient(white, white); -webkit-mask-image: -webkit-radial-gradient(white, white);">
         <source src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/forecasting-assistant/video.mp4" type="video/mp4">
         A conversation with a time series forecasting assistant built using Amazon Bedrock and LibreChat.
