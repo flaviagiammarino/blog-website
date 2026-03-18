@@ -26,9 +26,9 @@ Building a time series forecasting assistant with Amazon Bedrock and LibreChat
 ***************************************************************************************************************
 
 Most forecasting systems expose their outputs through dashboards or reports, which limits interaction to predefined
-queries that were anticipated at development time. In this post, we demonstrate how to overcome this limitation by building
+queries that were anticipated at development time. In this post, we address this limitation by building
 a conversational time series forecasting assistant using ClickHouse, Amazon Bedrock, and LibreChat. The assistant allows
-users to explore the underlying data, select specific time series, and adjust forecast parameters - such as quantile levels
+the user to explore the underlying data, select specific time series, and adjust forecast parameters - such as quantile levels
 and prediction horizons - through natural language.
 
 The solution is built around the `Model Context Protocol (MCP) <https://modelcontextprotocol.io>`__ and relies on three servers:
@@ -121,7 +121,7 @@ The ClickHouse MCP server runs as a Docker container on port 8001.
 
 After that, we create the forecasting MCP server, which exposes a ``generate_forecasts`` tool that takes a list
 of historical values, a prediction length, and a list of quantile levels, and returns probabilistic time series
-forecasts by invoking Chronos' Bedrock endpoint via ``boto3``. For instructions on deploying Chronos on Bedrock,
+forecasts by invoking Chronos Bedrock endpoint via ``boto3``. For instructions on deploying Chronos on Bedrock,
 we refer to `our previous blog post <https://flaviagiammarino.com/blog/chronos_bedrock.html#create-the-bedrock-endpoint>`__.
 
 The server is built using the `FastMCP <https://github.com/jlowin/fastmcp>`__ library, configured in
