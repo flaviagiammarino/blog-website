@@ -340,14 +340,11 @@ that we previously created for configuring the ClickHouse MCP server:</p>
 </span></pre></div>
 </div>
 <p>Below are the <code class="docutils literal notranslate"><span class="pre">server.py</span></code>, <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code>, and <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> used to build the Docker image for the forecasting MCP server.</p>
-<blockquote>
-<div><p>&lt;p&gt;
-&lt;code class=”docutils literal notranslate”&gt;
-&lt;span class=”pre” style=”font-weight:600”&gt;server.py&lt;/span&gt;
-&lt;/code&gt;
-&lt;/p&gt;</p>
-</div></blockquote>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<p>
+<code class="docutils literal notranslate">
+<span class="pre" style="font-weight:600">server.py</span>
+</code>
+</p><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 </span><span data-line="2"><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
 </span><span data-line="3"><span class="kn">from</span><span class="w"> </span><span class="nn">mcp.server.fastmcp</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastMCP</span>
 </span><span data-line="4">

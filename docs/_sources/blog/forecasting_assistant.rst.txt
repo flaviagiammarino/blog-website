@@ -197,6 +197,8 @@ We also register the forecasting MCP server in ``librechat.yaml`` to run on port
 
 Below are the ``server.py``, ``Dockerfile``, and ``requirements.txt`` used to build the Docker image for the forecasting MCP server.
 
+.. raw:: html
+
     <p>
     <code class="docutils literal notranslate">
     <span class="pre" style="font-weight:600">server.py</span>
