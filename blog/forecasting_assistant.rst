@@ -195,10 +195,9 @@ We also register the forecasting MCP server in ``librechat.yaml`` to run on port
         type: sse
         url: http://host.docker.internal:8002/sse
 
-.. raw:: html
+Below are the ``server.py``, ``Dockerfile``, and ``requirements.txt`` used to build the Docker image for the forecasting MCP server.
 
     <p>
-    <span style="font-weight:600">2.1.2.1</span>
     <code class="docutils literal notranslate">
     <span class="pre" style="font-weight:600">server.py</span>
     </code>
@@ -274,7 +273,6 @@ We also register the forecasting MCP server in ``librechat.yaml`` to run on port
 .. raw:: html
 
     <p>
-    <span style="font-weight:600">2.1.2.2</span>
     <code class="docutils literal notranslate">
     <span class="pre" style="font-weight:600">requirements.txt</span>
     </code>
@@ -288,7 +286,6 @@ We also register the forecasting MCP server in ``librechat.yaml`` to run on port
 .. raw:: html
 
     <p>
-    <span style="font-weight:600">2.1.2.3</span>
     <code class="docutils literal notranslate">
     <span class="pre" style="font-weight:600">Dockerfile</span>
     </code>
@@ -348,10 +345,11 @@ We also register the data visualization MCP server in ``librechat.yaml`` to run 
         type: sse
         url: http://host.docker.internal:8003/sse
 
+Below are the ``server.py``, ``Dockerfile``, and ``requirements.txt`` used to build the Docker image for the data visualization MCP server.
+
 .. raw:: html
 
     <p>
-    <span style="font-weight:600">2.1.3.1</span>
     <code class="docutils literal notranslate">
     <span class="pre" style="font-weight:600">server.py</span>
     </code>
@@ -634,7 +632,6 @@ We also register the data visualization MCP server in ``librechat.yaml`` to run 
 .. raw:: html
 
     <p>
-    <span style="font-weight:600">2.1.3.2</span>
     <code class="docutils literal notranslate">
     <span class="pre" style="font-weight:600">requirements.txt</span>
     </code>
@@ -648,7 +645,6 @@ We also register the data visualization MCP server in ``librechat.yaml`` to run 
 .. raw:: html
 
     <p>
-    <span style="font-weight:600">2.1.3.3</span>
     <code class="docutils literal notranslate">
     <span class="pre" style="font-weight:600">Dockerfile</span>
     </code>
