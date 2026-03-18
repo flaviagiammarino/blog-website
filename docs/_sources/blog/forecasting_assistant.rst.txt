@@ -25,13 +25,14 @@ Building a time series forecasting assistant with Amazon Bedrock and LibreChat
 1. Overview
 ***************************************************************************************************************
 
-Most forecasting systems expose their outputs through dashboards or reports, which limits interaction to predefined
-queries that were anticipated at development time. In this post, we address this limitation by building
+Most forecasting systems expose their outputs through dashboards or reports, limiting both interaction and visibility
+to predefined queries anticipated at development time. In this post, we address this limitation by building
 a conversational time series forecasting assistant using ClickHouse, Amazon Bedrock, and LibreChat. The assistant allows
-the user to explore the underlying data, select specific time series, and adjust forecast parameters - such as quantile levels
+exploring the underlying data, selecting specific time series, and adjusting forecast parameters - such as quantile levels
 and prediction horizons - through natural language.
 
-The solution is built around the `Model Context Protocol (MCP) <https://modelcontextprotocol.io>`__ and relies on three servers:
+The solution is built around the `Model Context Protocol (MCP) <https://modelcontextprotocol.io>`__,
+which defines a common interface for connecting language models to external tools and services, and relies on three servers:
 the `ClickHouse MCP server <https://github.com/ClickHouse/mcp-clickhouse>`__ for retrieving the time series,
 a custom MCP server that generates probabilistic time series forecasts using Amazon Chronos `[1, 2] <#references>`_
 deployed on Amazon Bedrock, and an additional custom MCP server that creates interactive Plotly charts of the time series and their forecasts.
@@ -314,9 +315,9 @@ on port 8004. The tool returns the URL of the interactive HTML chart, that Libre
 
 .. note::
 
-    The data visualization MCP server is not strictly necessary, as the model can generate the charts directly.
+    The data visualization MCP server is not strictly necessary, as the language model can generate the charts directly.
     However, a dedicated server ensures consistent styling and reproducible outputs, which cannot be guaranteed
-    when the model generates the charts on its own. This is particularly desirable when using the assistant
+    when the language model generates the charts on its own. This is particularly desirable when using the assistant
     for reporting purposes.
 
 Like the forecasting server, the data visualization server is built using FastMCP.
