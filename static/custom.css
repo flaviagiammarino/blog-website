@@ -9,6 +9,23 @@
 .heading {
     font-weight: 400 !important;
     color: var(--sy-c-light) !important;
+    font-size: 1.6em !important;
+}
+
+.sub-heading {
+    font-size: 1.5em !important;
+}
+
+.post-info{
+    display:inline-block;
+    vertical-align:middle;
+    margin-left:3px;
+    margin-top:-1px;
+    font-size: 0.9em !important;
+}
+
+.title{
+    font-size: 0.9em !important;
 }
 
 h1, h2, h3, h4, h5, h6 {
