@@ -183,6 +183,7 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#chat-with-the-assistant">2.3 Chat with the assistant</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#references">References</a></li>
 </ul>
 
         </div></div>
@@ -206,7 +207,7 @@ exploring the underlying data, selecting specific time series and adjusting fore
 <p>In this post, we show how to build a conversational time series forecasting assistant using Amazon Bedrock, ClickHouse, and LibreChat.
 The solution is built around the <a class="reference external" href="https://modelcontextprotocol.io">Model Context Protocol (MCP)</a> and relies on three servers:
 the <a class="reference external" href="https://github.com/ClickHouse/mcp-clickhouse">ClickHouse MCP server</a>, which we use for retrieving the time series,
-a custom MCP server that generates probabilistic time series forecasts using <a class="reference external" href="https://doi.org/10.48550/arXiv.2403.07815">Amazon Chronos</a>
+a custom MCP server that generates probabilistic time series forecasts using Amazon Chronos (<a class="reference external" href="#references">[1]</a>, <a class="reference external" href="#references">[2]</a>)
 deployed on Amazon Bedrock, and an additional custom MCP server that generates interactive Plotly charts of the time series and their forecasts.
 We use LibreChat as the chat UI, with Claude Sonnet 4.6 on Amazon Bedrock as the orchestrating model.</p>
 <p>For simplicity, this demonstration uses artificially generated sales data for three products.
@@ -7912,6 +7913,15 @@ http://localhost:8004/plot_32abcfb962dc412f8909d2f8283c5067.html
 </div>
 </div><p>You can download the full code from our <a class="reference external" href="https://github.com/flaviagiammarino/machine-learning-blog/tree/main/forecasting_assistant/">GitHub repository</a>.</p>
 </section>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">¶</a></h2>
+<p>[1] Ansari, A.F., Stella, L., Turkmen, C., Zhang, X., Mercado, P., Shen, H., Shchur, O., Rangapuram, S.S., Arango, S.P., Kapoor, S. and Zschiegner, J., (2024).
+Chronos: Learning the language of time series. <em>arXiv preprint</em>,
+<a class="reference external" href="https://doi.org/10.48550/arXiv.2403.07815">doi: 10.48550/arXiv.2403.07815</a>.</p>
+<p>[2] Ansari, A.F., Turkmen, C., Shchur, O., and Stella, L. (2024).
+Fast and accurate zero-shot forecasting with Chronos-Bolt and AutoGluon.
+<a class="reference external" href="https://aws.amazon.com/blogs/machine-learning/fast-and-accurate-zero-shot-forecasting-with-chronos-bolt-and-autogluon/">AWS Blogs - Artificial Intelligence</a>.</p>
 </section>
 </section>
 

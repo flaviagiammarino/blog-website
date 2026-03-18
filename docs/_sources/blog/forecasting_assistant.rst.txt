@@ -32,7 +32,7 @@ exploring the underlying data, selecting specific time series and adjusting fore
 In this post, we show how to build a conversational time series forecasting assistant using Amazon Bedrock, ClickHouse, and LibreChat.
 The solution is built around the `Model Context Protocol (MCP) <https://modelcontextprotocol.io>`__ and relies on three servers:
 the `ClickHouse MCP server <https://github.com/ClickHouse/mcp-clickhouse>`__, which we use for retrieving the time series,
-a custom MCP server that generates probabilistic time series forecasts using `Amazon Chronos <https://doi.org/10.48550/arXiv.2403.07815>`__
+a custom MCP server that generates probabilistic time series forecasts using Amazon Chronos (`[1] <#references>`_, `[2] <#references>`_)
 deployed on Amazon Bedrock, and an additional custom MCP server that generates interactive Plotly charts of the time series and their forecasts.
 We use LibreChat as the chat UI, with Claude Sonnet 4.6 on Amazon Bedrock as the orchestrating model.
 
@@ -7800,3 +7800,14 @@ forecasts in a single chart.
     </div>
 
 You can download the full code from our `GitHub repository <https://github.com/flaviagiammarino/machine-learning-blog/tree/main/forecasting_assistant/>`__.
+
+References
+***************************************************************************************************************
+
+[1] Ansari, A.F., Stella, L., Turkmen, C., Zhang, X., Mercado, P., Shen, H., Shchur, O., Rangapuram, S.S., Arango, S.P., Kapoor, S. and Zschiegner, J., (2024).
+Chronos: Learning the language of time series. *arXiv preprint*,
+`doi: 10.48550/arXiv.2403.07815 <https://doi.org/10.48550/arXiv.2403.07815>`__.
+
+[2] Ansari, A.F., Turkmen, C., Shchur, O., and Stella, L. (2024).
+Fast and accurate zero-shot forecasting with Chronos-Bolt and AutoGluon.
+`AWS Blogs - Artificial Intelligence <https://aws.amazon.com/blogs/machine-learning/fast-and-accurate-zero-shot-forecasting-with-chronos-bolt-and-autogluon/>`__.
