@@ -215,13 +215,7 @@ However, as Amazon Chronos performs zero-shot forecasting without fine-tuning, t
 to any time series dataset. In the rest of the post, we walk through the implementation of the three MCP servers and
 the assistant configuration. We also illustrate a typical conversation with the assistant, which is shown in the video below;
 the transcript is reported at the end of this post.</p>
-<div style="display: block; height: 700px; width: 100%">
-<video width="100%" controls style="border-radius: 0.5rem; mask-image: radial-gradient(white, white); -webkit-mask-image: -webkit-radial-gradient(white, white);">
-    <source src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/forecasting-assistant/video.mp4" type="video/mp4">
-    A conversation with a time series forecasting assistant built using Amazon Bedrock and LibreChat.
-    The assistant retrieves the data from ClickHouse and uses Amazon Chronos deployed on Amazon Bedrock to generate forecasts.
-</video>
-</div></section>
+</section>
 <section id="solution">
 <h2>2. Solution<a class="headerlink" href="#solution" title="Link to this heading">¶</a></h2>
 <p>For this example, we use synthetic hourly sales data for three products: Product A, Product B and Product C.

@@ -43,14 +43,11 @@ the assistant configuration. We also illustrate a typical conversation with the 
 the transcript is reported at the end of this post.
 
 .. raw:: html
-
-    <div style="display: block; height: 700px; width: 100%">
-    <video width="100%" controls style="border-radius: 0.5rem; mask-image: radial-gradient(white, white); -webkit-mask-image: -webkit-radial-gradient(white, white);">
+    <video width="100%" height="669px" controls style="border-radius: 0.5rem; mask-image: radial-gradient(white, white); -webkit-mask-image: -webkit-radial-gradient(white, white);">
         <source src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/forecasting-assistant/video.mp4" type="video/mp4">
         A conversation with a time series forecasting assistant built using Amazon Bedrock and LibreChat.
         The assistant retrieves the data from ClickHouse and uses Amazon Chronos deployed on Amazon Bedrock to generate forecasts.
     </video>
-    </div>
 
 2. Solution
 ***************************************************************************************************************
