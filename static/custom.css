@@ -12,6 +12,11 @@
     box-shadow: 0 2px 8px var(--sy-c-border);
 }
 
+.card: hover {
+    border-color:var(--sy-c-accent);
+    box-shadow: 0 2px 8px var(--sy-c-accent);
+}
+
 .heading {
     font-weight: 400 !important;
     color: var(--sy-c-light) !important;
