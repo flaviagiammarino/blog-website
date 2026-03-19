@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Building a time series forecasting assistant with Amazon Bedrock and LibreChat - flaviagiammarino.com</title><link rel="shortcut icon" href="../_static/favicon.ico"/><link rel="index" title="Index" href="../genindex.html" /><link rel="next" title="Zero-shot time series forecasting with Chronos using Amazon Bedrock and ClickHouse" href="chronos_bedrock.html" /><link rel="prev" title="&lt;no title&gt;" href="../index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Building a time series forecasting assistant with Amazon Bedrock and LibreChat - flaviagiammarino.com</title><link rel="shortcut icon" href="../_static/favicon.ico"/><link rel="index" title="Index" href="../genindex.html" /><link rel="next" title="Zero-shot time series forecasting with Chronos using Amazon Bedrock and ClickHouse" href="chronos_bedrock.html" /><link rel="prev" title="&lt;no title&gt;" href="../blog.html" />
       <link rel="canonical" href="https://flaviagiammarino.com/blog/forecasting_assistant.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
@@ -10,8 +10,9 @@
     <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=d48c410d" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
     <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=2c1a67d9" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=e6ae7399" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -61,7 +62,10 @@
       <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../search.html" method="get">
   <input type="text" name="q" placeholder="Search" />
   <kbd>/</kbd>
-</form><div class="sy-head-socials"></div></div>
+</form><div class="sy-head-socials">
+  <a href="https://github.com/flaviagiammarino" aria-label="GitHub">
+    <iconify-icon icon="simple-icons:github"></iconify-icon>
+  </a></div></div>
     </div>
     <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
 data-aria-auto="Switch to light color mode"
@@ -203,9 +207,9 @@ data-aria-dark="Switch to auto color mode">
 <h2>1. Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
 <p>Most forecasting systems expose their outputs through dashboards and reports, limiting the user’s interaction and visibility
 to predefined queries anticipated at development time. In this post, we address this limitation by building
-a conversational time series forecasting assistant using ClickHouse, Amazon Bedrock, and LibreChat. The assistant allows
-the user to explore the underlying data, select specific time series, and adjust forecast parameters - such as quantile levels
-and prediction horizons - through natural language.</p>
+a conversational time series forecasting assistant using ClickHouse, Amazon Bedrock, and <a class="reference external" href="https://www.librechat.ai/">LibreChat</a>.
+The assistant allows the user to explore the underlying data, select specific time series, and adjust forecast parameters - such as
+quantile levels and prediction horizons - through natural language.</p>
 <p>The solution is built around the <a class="reference external" href="https://modelcontextprotocol.io">Model Context Protocol (MCP)</a>,
 which defines a common interface for connecting language models to external tools and services, and relies on three servers:
 the <a class="reference external" href="https://github.com/ClickHouse/mcp-clickhouse">ClickHouse MCP server</a> for retrieving the time series,
@@ -8004,10 +8008,10 @@ Fast and accurate zero-shot forecasting with Chronos-Bolt and AutoGluon.
   </svg>
   <span>Back to top</span>
 </button><div class="navigation flex print:hidden"><div class="navigation-prev">
-    <a href="../index.html">
+    <a href="../blog.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
-        <span>Previous</span><div class="title">Home</div></div>
+        <span>Previous</span><div class="title">&lt;no title&gt;</div></div>
     </a>
   </div><div class="navigation-next">
     <a href="chronos_bedrock.html">
@@ -8025,7 +8029,7 @@ Fast and accurate zero-shot forecasting with Chronos-Bolt and AutoGluon.
 <footer class="sy-foot">
   <div class="sy-foot-inner sy-container mx-auto">
     <div class="sy-foot-reserved md:flex justify-between items-center">
-      <div class="sy-foot-copyright"><p>Copyright © 2025, Flavia Giammarino.</p>
+      <div class="sy-foot-copyright"><p>Copyright © 2026, Flavia Giammarino.</p>
   
   <p>
     Made with
@@ -8035,7 +8039,16 @@ Fast and accurate zero-shot forecasting with Chronos-Bolt and AutoGluon.
     <a href="https://shibuya.lepture.com">Shibuya theme</a>.
   </p>
 </div>
-      <div class="sy-foot-socials"></div>
+      <div class="sy-foot-socials">
+<a href="https://github.com/flaviagiammarino" aria-label="GitHub">
+  <iconify-icon icon="simple-icons:github"></iconify-icon>
+</a>
+<a href="https://youtube.com/@FlaviaGiammarino" aria-label="YouTube">
+  <iconify-icon icon="simple-icons:youtube"></iconify-icon>
+</a>
+<a href="https://www.linkedin.com/in/flaviagiammarino" aria-label="LinkedIn">
+  <iconify-icon icon="simple-icons:linkedin"></iconify-icon>
+</a></div>
     </div>
   </div>
 </footer>
@@ -8044,6 +8057,7 @@ Fast and accurate zero-shot forecasting with Chronos-Bolt and AutoGluon.
       <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
       <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
       <script src="../_static/copybutton.js?v=f281be69"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
       <script src="../_static/shibuya.js?v=e730760c"></script>
       <script src="../_static/custom.js"></script></body>
 </html>

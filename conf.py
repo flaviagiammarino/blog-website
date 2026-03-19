@@ -10,7 +10,7 @@ project = ''
 author = 'Flavia Giammarino'
 release = '2025-08-25'
 language = 'en'
-copyright = 'Copyright © 2025, Flavia Giammarino.'
+copyright = 'Copyright © 2026, Flavia Giammarino.'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -30,6 +30,7 @@ extensions = [
     "sphinx_automodapi.automodapi",
     'sphinx_sitemap',
     'sphinx_copybutton',
+    'sphinx_design',
     'myst_parser',
     'sphinx.ext.mathjax',
     'ablog',
@@ -85,6 +86,10 @@ html_theme_options = {
     "globaltoc_expand_depth": 1,
     "light_logo": "_static/icon-light.png",
     "dark_logo": "_static/icon-dark.png",
+    "github_url": "https://github.com/flaviagiammarino",
+    "youtube_url": "https://youtube.com/@FlaviaGiammarino",
+    "linkedin_url": "https://www.linkedin.com/in/flaviagiammarino",
+    # "twitter_url": "https://twitter.com/lepture"
 }
 
 html_sidebars = {

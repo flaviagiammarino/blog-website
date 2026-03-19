@@ -24,6 +24,26 @@
     font-size: 0.9em !important;
 }
 
+.blog-info-container{
+    display: flex;
+}
+
+.blog-info{
+    display:inline-block;
+    vertical-align:top;
+    width:50%;
+}
+
+@media (max-width: 1200px){
+   .blog-info-container{
+        display: block !important;
+    }
+    .blog-info{
+        display:block !important;
+        width:100% !important;
+    }
+}
+
 .title{
     font-size: 0.9em !important;
 }

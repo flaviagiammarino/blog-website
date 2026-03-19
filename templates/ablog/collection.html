@@ -5,73 +5,6 @@
     {% include "components/meta-opengraph.html" %}
     {% include "components/alternate-links.html" %}
     {% include "components/google_analytics.html" %}
-    <style>
-        .blog-info-container{
-            display: flex;
-        }
-        .blog-info{
-            display:inline-block;
-            vertical-align:top;
-            width:50%;
-        }
-        @media (max-width: 768px){
-           .blog-info-container{
-                display: block !important;
-            }
-            .blog-info{
-                display:block !important;
-                width:100% !important;
-            }
-        }
-    </style>
-
-{%- if collection.name == "Flavia Giammarino" -%}
-    <script type="application/ld+json">
-        {
-          "@context": "https://schema.org",
-          "@type": "ProfilePage",
-          "mainEntity": {
-            "@type": "Person",
-            "name": "Flavia Giammarino",
-            "alumniOf": {
-                "@type": "CollegeOrUniversity",
-                "name": "The London School of Economics and Political Science",
-                "sameAs": "https://www.lse.ac.uk"
-            },
-            "knowsAbout": [
-              {
-                "@type": "Thing",
-                "name": "Machine Learning",
-                "sameAs": "https://en.wikipedia.org/wiki/Machine_learning"
-              }, {
-                "@type": "Thing",
-                "name": "Time Series",
-                "sameAs": "https://en.wikipedia.org/wiki/Time_series"
-              }
-            ],
-            "homeLocation": {
-                "@type": "Place",
-                "address": {
-                    "@type": "PostalAddress",
-                    "addressCountry": "IT"
-                }
-            },
-            "sameAs": [
-                "https://www.wikidata.org/wiki/Q102394084",
-                "https://github.com/flaviagiammarino",
-                "https://huggingface.co/flaviagiammarino",
-                "https://scholar.google.com/citations?user=fGy6rYEAAAAJ",
-                "https://orcid.org/0000-0002-3189-8373",
-                "https://loop.frontiersin.org/people/3212763",
-                "https://www.semanticscholar.org/author/Flavia-Giammarino/118841216",
-                "https://ssrn.com/author=1058151",
-                "https://www.linkedin.com/in/flaviagiammarino"
-            ]
-          }
-        }
-        </script>
-{%- endif -%}
-
 {%- endblock -%}
 
 {%- if meta and meta.dark_code == "true" -%}
@@ -111,23 +44,23 @@
     </aside>
 
     <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
-    <button class="rside-close js-menu xl:hidden" aria-label="Close right sidebar" type="button" aria-controls="rside" aria-expanded="false">
-      <i class="i-lucide close"></i>
-    </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4">
-        <div class="localtoc" style="font-size: 90%;">
-            <h3 style="color: var(--sy-c-light);">
-                {{ header }} {{ collection }}
-            </h3>
-            <ul>
-            {% for post in collection %}
-                <li>
-                <a class="reference internal" href="{{ postlink(post) }}">{{ post.title }}</a>
-                </li>
-            {% endfor %}
-            </ul>
+        <button class="rside-close js-menu xl:hidden" aria-label="Close right sidebar" type="button" aria-controls="rside" aria-expanded="false">
+          <i class="i-lucide close"></i>
+        </button>
+        <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4">
+            <div class="localtoc" style="font-size: 90%;">
+                <h3 style="color: var(--sy-c-light);">
+                    {{ header }} {{ collection }}
+                </h3>
+                <ul>
+                {% for post in collection %}
+                    <li>
+                    <a class="reference internal" href="{{ postlink(post) }}">{{ post.title }}</a>
+                    </li>
+                {% endfor %}
+                </ul>
+            </div>
         </div>
-    </div>
   </aside>
 
   <main class="sy-main w-full max-sm:max-w-full print:pt-6">
@@ -144,38 +77,31 @@
                 {% endif %}
             </span>
            </h1>
-
             {% for post in collection %}
                 <div>
-                <h2>
+                <h2 class="sub-heading">
                   <a href="{{ postlink(post) }}">{{ post.title }}</a>
                 </h2>
-
                     <div class="blog-info-container">
-
                         <div class="blog-info">
-
                             <div style="display:flex;margin-bottom:1em;">
-                                <svg style="display:inline-block;vertical-align:middle;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-icon lucide-calendar"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
-                                <div style="display:inline-block;;vertical-align:middle;margin-left:3px;margin-top:-1px;">
+                                <svg style="display:inline-block;vertical-align:middle;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-calendar-icon lucide-calendar"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
+                                <div class="post-info">
                                     {{ post.date.strftime(ablog.post_date_format) }}
                                 </div>
                             </div>
-
-                        </div>
-
-                        <div class="blog-info">
-
                             <div style="display:flex;margin-bottom:1em;">
-                                <svg style="display:inline-block;vertical-align:middle;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
-                                <div style="display:inline-block;;vertical-align:middle;margin-left:3px;margin-top:-1px;">
+                                <svg style="display:inline-block;vertical-align:middle;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-bookmark-icon lucide-bookmark"><path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z"/></svg>
+                                <div class="post-info">
                                     {{ post.category[0] }}
                                 </div>
                             </div>
+                        </div>
 
+                        <div class="blog-info">
                             <div style="display:flex;margin-bottom:1em;">
-                                <svg style="display:inline-block;vertical-align:middle;" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tags-icon lucide-tags"><path d="M13.172 2a2 2 0 0 1 1.414.586l6.71 6.71a2.4 2.4 0 0 1 0 3.408l-4.592 4.592a2.4 2.4 0 0 1-3.408 0l-6.71-6.71A2 2 0 0 1 6 9.172V3a1 1 0 0 1 1-1z"/><path d="M2 7v6.172a2 2 0 0 0 .586 1.414l6.71 6.71a2.4 2.4 0 0 0 3.191.193"/><circle cx="10.5" cy="6.5" r=".5" fill="currentColor"/></svg>
-                                <div style="display:inline-block;;vertical-align:middle;margin-left:3px;margin-top:-1px;">
+                                <svg style="display:inline-block;vertical-align:middle;" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-tags-icon lucide-tags"><path d="M13.172 2a2 2 0 0 1 1.414.586l6.71 6.71a2.4 2.4 0 0 1 0 3.408l-4.592 4.592a2.4 2.4 0 0 1-3.408 0l-6.71-6.71A2 2 0 0 1 6 9.172V3a1 1 0 0 1 1-1z"/><path d="M2 7v6.172a2 2 0 0 0 .586 1.414l6.71 6.71a2.4 2.4 0 0 0 3.191.193"/><circle cx="10.5" cy="6.5" r=".5" fill="currentColor"/></svg>
+                                <div class="post-info">
                                     {% for tag in post.tags %}
                                         {% if loop.last %}
                                             <span>{{ tag }}</span>
@@ -184,25 +110,21 @@
                                         {% endif %}
                                      {% endfor %}
                                 </div>
-
                             </div>
-
                         </div>
-
                     </div>
-                    <img src="{{ post.image_src }}" alt="{{ post.image_alt }}" style="margin: 1em 0em 1em 0em;">
-                {{ post.to_html(collection.docname) }}
-                <p>
-                  <a href="{{ postlink(post) }}"><em>{{ _("Read more ...") }}</em></a>
-                </p>
+                    <img src="{{ post.image_src }}" alt="{{ post.image_alt }}" style="margin: 1em 0em 1em 0em; width:100%">
                     {% if not loop.last %}
                     <hr>
                     {% endif %}
               </div>
               {% endfor %}
+
+            {% block content %}{{ body }}{% endblock %}
+
         </article>
         {%- include "components/back-to-top.html" -%}
-<!--        {%- include "components/navigation.html" -%}-->
+        {%- include "components/navigation.html" -%}
         {%- include "partials/page-bottom.html" -%}
       </div>
     </div>
