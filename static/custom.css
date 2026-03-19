@@ -14,7 +14,6 @@
 
 .card:hover {
     border-color:var(--accent-a3);
-    box-shadow: 0 2px 8px var(--accent-a9);
 }
 
 .heading {
