@@ -13,8 +13,8 @@
 }
 
 .card:hover {
-    border-color:var(--sy-c-accent);
-    box-shadow: 0 2px 8px var(--sy-c-accent);
+    border-color:var(--accent-a3);
+    box-shadow: 0 2px 8px var(--accent-a9);
 }
 
 .heading {
