@@ -6,6 +6,12 @@
     display: none !important;
 }
 
+.card {
+    background:var(--sy-c-surface);
+    border-color:var(--sy-c-border);
+    box-shadow: 0 2px 8px var(--sy-c-border);
+}
+
 .heading {
     font-weight: 400 !important;
     color: var(--sy-c-light) !important;
