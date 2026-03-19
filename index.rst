@@ -1,7 +1,9 @@
 :layout: home
 
 .. toctree::
-   :hidden:
-   :glob:
+    :hidden:
 
-   */*
+    blog/forecasting_assistant
+    blog/chronos_bedrock
+    blog/inflation_autopilot
+
