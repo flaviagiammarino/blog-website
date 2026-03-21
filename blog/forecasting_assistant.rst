@@ -250,7 +250,7 @@ The code used for building the Docker image of the forecasting MCP server is rep
 
         # Invoke the Bedrock endpoint
         response = bedrock_runtime_client.invoke_model(
-            modelId="<bedrock-endpoint-arn>", # Replace with your own Bedrock endpoint ARN
+            modelId="<bedrock-endpoint-arn>",
             body=json.dumps({
                 "inputs": [{
                     "target": target

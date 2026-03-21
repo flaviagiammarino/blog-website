@@ -391,7 +391,7 @@ that we previously created for configuring the ClickHouse MCP server:</p>
 </span><span data-line="40">
 </span><span data-line="41">    <span class="c1"># Invoke the Bedrock endpoint</span>
 </span><span data-line="42">    <span class="n">response</span> <span class="o">=</span> <span class="n">bedrock_runtime_client</span><span class="o">.</span><span class="n">invoke_model</span><span class="p">(</span>
-</span><span data-line="43">        <span class="n">modelId</span><span class="o">=</span><span class="s2">&quot;&lt;bedrock-endpoint-arn&gt;&quot;</span><span class="p">,</span> <span class="c1"># Replace with your own Bedrock endpoint ARN</span>
+</span><span data-line="43">        <span class="n">modelId</span><span class="o">=</span><span class="s2">&quot;&lt;bedrock-endpoint-arn&gt;&quot;</span><span class="p">,</span>
 </span><span data-line="44">        <span class="n">body</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
 </span><span data-line="45">            <span class="s2">&quot;inputs&quot;</span><span class="p">:</span> <span class="p">[{</span>
 </span><span data-line="46">                <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="n">target</span>
