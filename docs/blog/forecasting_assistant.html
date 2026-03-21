@@ -7988,7 +7988,11 @@ http://localhost:8004/plot_32abcfb962dc412f8909d2f8283c5067.html
 </div>
 
 </div>
-</div><p>You can download the full code from our <a class="reference external" href="https://github.com/flaviagiammarino/machine-learning-blog/tree/main/forecasting_assistant/">GitHub repository</a>.</p>
+</div><p>The assistant consistently followed all instructions throughout the conversation, correctly selecting and sequencing the available tools.
+One limitation worth noting is that rather than joining the <code class="docutils literal notranslate"><span class="pre">sales</span></code> and <code class="docutils literal notranslate"><span class="pre">products</span></code> tables to resolve product names, the assistant
+memorized the product IDs from the <code class="docutils literal notranslate"><span class="pre">products</span></code> table and used them directly in subsequent queries. This worked correctly in this case,
+but may not generalize reliably to datasets with a larger number of entities.</p>
+<p>You can download the full code from our <a class="reference external" href="https://github.com/flaviagiammarino/machine-learning-blog/tree/main/forecasting_assistant/">GitHub repository</a>.</p>
 </section>
 </section>
 <section id="references">

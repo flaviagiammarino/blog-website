@@ -7888,6 +7888,11 @@ forecasts in a single chart.
     </div>
     </div>
 
+The assistant consistently followed all instructions throughout the conversation, correctly selecting and sequencing the available tools.
+One limitation worth noting is that rather than joining the ``sales`` and ``products`` tables to resolve product names, the assistant
+memorized the product IDs from the ``products`` table and used them directly in subsequent queries. This worked correctly in this case,
+but may not generalize reliably to datasets with a larger number of entities.
+
 You can download the full code from our `GitHub repository <https://github.com/flaviagiammarino/machine-learning-blog/tree/main/forecasting_assistant/>`__.
 
 References
