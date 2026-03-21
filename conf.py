@@ -88,8 +88,8 @@ html_theme_options = {
     "dark_logo": "_static/icon-dark.png",
     "github_url": "https://github.com/flaviagiammarino",
     "youtube_url": "https://youtube.com/@FlaviaGiammarino",
-    # "linkedin_url": "https://www.linkedin.com/in/flaviagiammarino",
-    # "twitter_url": "https://twitter.com/lepture"
+    "linkedin_url": "https://www.linkedin.com/in/flaviagiammarino",
+    "twitter_url": "https://x.com/Flavia_G_ML"
 }
 
 html_sidebars = {
