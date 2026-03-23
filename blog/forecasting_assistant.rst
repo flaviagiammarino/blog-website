@@ -303,8 +303,6 @@ The code used for building the Docker image of the forecasting MCP server is rep
     COPY server.py .
     CMD ["python", "server.py"]
 
-.. _visualization-mcp:
-
 2.1.3 Create the data visualization MCP server
 ---------------------------------------------------------------------------------------------------------------
 
