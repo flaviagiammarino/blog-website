@@ -34,12 +34,12 @@ quantile levels and prediction horizons - through natural language.
 The solution is built around the `Model Context Protocol (MCP) <https://modelcontextprotocol.io>`__,
 which defines a common interface for connecting language models to external tools and services, and relies on three servers:
 the `ClickHouse MCP server <https://github.com/ClickHouse/mcp-clickhouse>`__ for retrieving the time series,
-a custom MCP server that generates probabilistic time series forecasts using Amazon Chronos `[1, 2] <#references>`_
+a custom MCP server that generates probabilistic time series forecasts using Chronos `[1, 2] <#references>`_
 deployed on Amazon Bedrock, and an additional custom MCP server that creates interactive Plotly charts of the time series and their forecasts.
 We use LibreChat as the chat UI, with Claude Sonnet 4.6 on Amazon Bedrock as the orchestrating model.
 
 For simplicity, this demonstration uses artificially generated sales data for three products.
-However, as Amazon Chronos performs zero-shot forecasting without fine-tuning, this solution can be applied
+However, as Chronos performs zero-shot forecasting without fine-tuning, this solution can be applied
 to any time series dataset. In the rest of the post, we walk through the implementation of the three MCP servers and
 the assistant configuration. We also illustrate a typical conversation with the assistant, which is shown in the video below;
 the transcript is reported at the end of this post.
