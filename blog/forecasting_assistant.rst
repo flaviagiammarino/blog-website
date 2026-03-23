@@ -315,9 +315,9 @@ on port 8004. The tool returns the URL of the interactive HTML chart, that Libre
 
 .. note::
 
-    The data visualization MCP server is not strictly necessary, as the model can generate the charts directly.
+    The data visualization MCP server is not strictly necessary, as the language model can generate the charts directly.
     However, a dedicated server ensures consistent styling and reproducible outputs, which cannot be guaranteed
-    when the model generates the charts on its own. This is particularly desirable when using the assistant
+    when the language model generates the charts on its own. This is particularly desirable when using the assistant
     for reporting purposes.
 
 Like the forecasting server, the data visualization server is built using FastMCP.
