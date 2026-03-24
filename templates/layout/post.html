@@ -8,12 +8,22 @@
   <meta name="keywords" content="{{ post.keywords  }}">
   <script type="application/ld+json">
     {
-        "@context": "https://schema.org",
-        "@type": "BlogPosting",
-        "headline": "{{post.title}}",
-        "image": "{{post.image_src}}",
-        "thumbnail": "{{post.image_src}}",
-        "datePublished": "{{post.date}}.0000000Z"
+      "@context": "https://schema.org",
+      "@type": "BlogPosting",
+      "headline": "{{post.title}}",
+      "image": "{{post.image_src}}",
+      "thumbnailUrl": "{{post.image_src}}",
+      "datePublished": "{{post.date}}.0000000Z",
+      "author": {
+        "@type": "Person",
+        "name": "Flavia Giammarino",
+        "url": "https://flaviagiammarino.com"
+      },
+      "description": "{{post.excerpt}}",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "{{post.url}}"
+      }
     }
   </script>
   {% include "components/meta-opengraph.html" %}
