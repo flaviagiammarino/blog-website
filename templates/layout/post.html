@@ -3,10 +3,13 @@
 {% set post = ablog[pagename] %}
 
 {%- block extrahead -%}
-  <meta name="description" content="{{post.description}}">
-  <meta name="thumbnail" content="{{post.image_src}}">
-  <meta name="keywords" content="{{ post.keywords  }}">
-  <script type="application/ld+json">
+    <meta name="description" content="{{post.description}}">
+    <meta name="keywords" content="{{post.keywords}}">
+    <meta property="og:title" content="{{post.title}}">
+    <meta property="og:description" content="{{post.description}}">
+    <meta property="og:image" content="{{post.image_src}}">
+    <meta property="og:type" content="article">
+    <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "BlogPosting",
@@ -14,18 +17,24 @@
       "image": "{{post.image_src}}",
       "thumbnailUrl": "{{post.image_src}}",
       "datePublished": "{{post.date}}.0000000Z",
+      "dateModified": "{{post.last_updated}}.0000000Z",
       "author": {
         "@type": "Person",
         "name": "Flavia Giammarino",
         "url": "https://flaviagiammarino.com"
       },
-      "description": "{{post.excerpt}}",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Flavia Giammarino"
+      },
+      "description": "{{post.description}}",
+      "keywords": "{{post.keywords}}",
       "mainEntityOfPage": {
         "@type": "WebPage",
         "@id": "{{post.url}}"
       }
     }
-  </script>
+    </script>
   {% include "components/meta-opengraph.html" %}
   {% include "components/alternate-links.html" %}
   {% include "components/google_analytics.html" %}
