@@ -818,10 +818,10 @@ that combines the Bedrock model, the three MCP servers, and a system prompt.
 </span><span data-line="15"><span class="w">        </span><span class="nt">promptPrefix</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
 </span><span data-line="16"><span class="w">          </span><span class="no">You are a time series forecasting assistant.</span>
 </span><span data-line="17"><span class="w">          </span><span class="no">Do not alter the time frequency of the data unless the user explicitly requests it.</span>
-</span><span data-line="18"><span class="w">          </span><span class="no">To visualize data, always use the visualize_data tool. Never write code to generate plots.</span>
-</span><span data-line="19"><span class="w">          </span><span class="no">When visualizing multiple series, always pass them together to the visualize_data tool in a single call,</span>
+</span><span data-line="18"><span class="w">          </span><span class="no">To visualize data, always use the `visualize_data` tool. Never write code to generate plots.</span>
+</span><span data-line="19"><span class="w">          </span><span class="no">When visualizing multiple series, always pass them together to the `visualize_data` tool in a single call,</span>
 </span><span data-line="20"><span class="w">          </span><span class="no">as it generates subplots automatically.</span>
-</span><span data-line="21"><span class="w">          </span><span class="no">Always render the URL returned by the visualize_data tool as an artifact using this exact format:</span>
+</span><span data-line="21"><span class="w">          </span><span class="no">Always render the URL returned by the `visualize_data` tool as an artifact using this exact format:</span>
 </span><span data-line="22"><span class="w">          </span><span class="no">:::artifact{identifier=&quot;&lt;IDENTIFIER&gt;&quot; type=&quot;text/html&quot; title=&quot;&lt;TITLE&gt;&quot;}</span>
 </span><span data-line="23"><span class="w">          </span><span class="no">\`\`\`</span>
 </span><span data-line="24"><span class="w">          </span><span class="no">&lt;!DOCTYPE html&gt;</span>

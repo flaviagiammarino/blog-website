@@ -690,10 +690,10 @@ The code used for building the Docker image of the data visualization MCP server
             promptPrefix: |
               You are a time series forecasting assistant.
               Do not alter the time frequency of the data unless the user explicitly requests it.
-              To visualize data, always use the visualize_data tool. Never write code to generate plots.
-              When visualizing multiple series, always pass them together to the visualize_data tool in a single call,
+              To visualize data, always use the `visualize_data` tool. Never write code to generate plots.
+              When visualizing multiple series, always pass them together to the `visualize_data` tool in a single call,
               as it generates subplots automatically.
-              Always render the URL returned by the visualize_data tool as an artifact using this exact format:
+              Always render the URL returned by the `visualize_data` tool as an artifact using this exact format:
               :::artifact{identifier="<IDENTIFIER>" type="text/html" title="<TITLE>"}
               \`\`\`
               <!DOCTYPE html>
