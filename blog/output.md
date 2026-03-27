@@ -1,258 +1,68 @@
-<!DOCTYPE html>
-<html lang="en" data-accent-color="violet" data-content_root="../">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Building a time series forecasting assistant with Amazon Bedrock and LibreChat - flaviagiammarino.com</title><link rel="shortcut icon" href="../_static/favicon.ico"/><link rel="index" title="Index" href="../genindex.html" /><link rel="next" title="Zero-shot time series forecasting with Chronos using Amazon Bedrock and ClickHouse" href="chronos_bedrock.html" /><link rel="prev" title="&lt;no title&gt;" href="../blog.html" />
-      <link rel="canonical" href="https://flaviagiammarino.com/blog/forecasting_assistant.html" /><script>
-    function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
-    setColorMode(localStorage._theme||"auto");
-  </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=397bb51e" />
-    <link rel="stylesheet" type="text/css" href="../_static/shibuya.css?v=d48c410d" />
-    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
-    <link media="print" rel="stylesheet" type="text/css" href="../_static/print.css?v=20ff2c19" />
-    <link rel="stylesheet" type="text/css" href="../_static/custom.css?v=6c2338a7" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
-:root {
-  --sy-f-text: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
-  --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
-}
-</style>
-    <meta name="description" content="Build a time series forecasting assistant with ClickHouse, Amazon Bedrock, and LibreChat">
-    <meta name="keywords" content="Time Series Forecasting, Large Language Models, Amazon Chronos, Amazon Bedrock, LibreChat, ClickHouse">
-    <meta property="og:title" content="Building a time series forecasting assistant with Amazon Bedrock and LibreChat">
-    <meta property="og:description" content="Build a time series forecasting assistant with ClickHouse, Amazon Bedrock, and LibreChat">
-    <meta property="og:image" content="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/forecasting-assistant/architecture_diagram.png">
-    <meta property="og:type" content="article">
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "BlogPosting",
-      "headline": "Building a time series forecasting assistant with Amazon Bedrock and LibreChat",
-      "image": "https://machine-learning-blog.s3.eu-west-2.amazonaws.com/forecasting-assistant/architecture_diagram.png",
-      "thumbnailUrl": "https://machine-learning-blog.s3.eu-west-2.amazonaws.com/forecasting-assistant/architecture_diagram.png",
-      "datePublished": "2026-03-15 00:00:00.0000000Z",
-      "dateModified": ".0000000Z",
-      "author": {
-        "@type": "Person",
-        "name": "Flavia Giammarino",
-        "url": "https://flaviagiammarino.com"
-      },
-      "publisher": {
-        "@type": "Organization",
-        "name": "Flavia Giammarino"
-      },
-      "description": "Build a time series forecasting assistant with ClickHouse, Amazon Bedrock, and LibreChat",
-      "keywords": "Time Series Forecasting, Large Language Models, Amazon Chronos, Amazon Bedrock, LibreChat, ClickHouse",
-      "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": ""
-      }
-    }
-    </script>
-  <meta property="og:type" content="website"/>
-<meta property="og:url" content="https://flaviagiammarino.com/blog/forecasting_assistant.html"/>
-<meta property="og:title" content="Building a time series forecasting assistant with Amazon Bedrock and LibreChat"/>
-<meta name="twitter:card" content="summary"/>
-  
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-LPMJ6R8T4C"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+layout
 
-  gtag('config', 'G-LPMJ6R8T4C');
-</script></head>
-<body><div class="sy-head">
-  <div class="sy-head-blur"></div>
-  <div class="sy-head-inner sy-container mx-auto">
-    <a class="sy-head-brand" href="../index.html">
-      <img class="light-logo" src="../_static/icon-light.png" alt="" height="28" loading="lazy" />
-      <img class="dark-logo" src="../_static/icon-dark.png" alt="" height="28" loading="lazy" />
-      <strong></strong>
-    </a>
-    <div class="sy-head-nav" id="head-nav">
-      <nav class="sy-head-links"></nav>
-      <div class="sy-head-extra flex items-center print:hidden"><form class="searchbox flex items-center" action="../search.html" method="get">
-  <input type="text" name="q" placeholder="Search" />
-  <kbd>/</kbd>
-</form><div class="sy-head-socials">
-  <a href="https://github.com/flaviagiammarino" aria-label="GitHub">
-    <iconify-icon icon="simple-icons:github"></iconify-icon>
-  </a>
-<a href="https://x.com/Flavia_G_ML" aria-label="X (Twitter)">
-  <iconify-icon icon="prime:twitter"></iconify-icon>
-</a></div></div>
-    </div>
-    <div class="sy-head-actions flex items-center shrink-0 print:hidden"><button class="js-theme theme-switch flex items-center"
-data-aria-auto="Switch to light color mode"
-data-aria-light="Switch to dark color mode"
-data-aria-dark="Switch to auto color mode">
-<i class="i-lucide theme-icon"></i>
-</button><button class="md:hidden flex items-center js-menu" aria-label="Menu" type="button" aria-controls="head-nav" aria-expanded="false">
-        <div class="hamburger">
-          <span class="hamburger_1"></span>
-          <span class="hamburger_2 -translate-x-2"></span>
-          <span class="hamburger_3 -translate-x-1"></span>
-        </div>
-      </button>
-    </div>
-  </div>
-</div>
-<div class="sy-page sy-container flex mx-auto">
-    <aside id="lside" class="sy-lside md:w-72 md:shrink-0 print:hidden">
-        <button class="rside-close js-menu xl:hidden" aria-label="Close left sidebar" type="button" aria-controls="lside" aria-expanded="false">
-            <i class="i-lucide close"></i>
-        </button>
-        <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4">
-<div class="ablog-sidebar-item ablog__categories">
-  <h3 style="color: var(--sy-c-light);">
-    <a href="category.html">Categories</a>
-  </h3>
-  <ul>
-     
-    <li>
-      <a style="font-size: 90%" href="category/automl.html">AutoML (1)</a>
-    </li>
-      
-    <li>
-      <a style="font-size: 90%" href="category/time-series-foundation-models.html">Time Series Foundation Models (2)</a>
-    </li>
-     
-  </ul>
-</div>
+:   post
 
-<div class="ablog-sidebar-item ablog__tagcloud">
-  <h3 style="color: var(--sy-c-light);">
-      <a href="tag.html">Tags</a>
-  </h3>
-  <ul class="ablog-cloud">
-     
-    <li class="ablog-cloud ablog-cloud-3">
-      <a style="font-size: 90%" href="tag/amazon-bedrock.html">Amazon Bedrock</a>
-    </li>
-      
-    <li class="ablog-cloud ablog-cloud-3">
-      <a style="font-size: 90%" href="tag/amazon-chronos.html">Amazon Chronos</a>
-    </li>
-      
-    <li class="ablog-cloud ablog-cloud-1">
-      <a style="font-size: 90%" href="tag/amazon-sagemaker.html">Amazon SageMaker</a>
-    </li>
-      
-    <li class="ablog-cloud ablog-cloud-3">
-      <a style="font-size: 90%" href="tag/large-language-models.html">Large Language Models</a>
-    </li>
-      
-    <li class="ablog-cloud ablog-cloud-5">
-      <a style="font-size: 90%" href="tag/time-series-forecasting.html">Time Series Forecasting</a>
-    </li>
-     
-  </ul>
-</div>
+::: {.post tags="Time Series Forecasting, Large Language Models, Amazon Chronos, Amazon Bedrock" category="Time Series Foundation Models" author="Flavia" description="Build a time series forecasting assistant with ClickHouse, Amazon Bedrock, and LibreChat" keywords="Time Series Forecasting, Large Language Models, Amazon Chronos, Amazon Bedrock, LibreChat, ClickHouse" image_src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/forecasting-assistant/architecture_diagram.png" image_alt="Architecture diagram showing a user interacting with LibreChat, which routes requests to Claude Sonnet 4.6 on Amazon Bedrock to query a ClickHouse database and generate forecasts using Chronos on Amazon Bedrock." excerpt="1"}
+March 15, 2026
+:::
 
-<div class="ablog-sidebar-item ablog__archives">
-  <h3 style="color: var(--sy-c-light);">
-    <a href="archive.html">Archives</a>
-  </h3>
-  <ul>
-     
-    <li>
-      <a style="font-size: 90%" href="2026.html">2026 (1)</a>
-    </li>
-      
-    <li>
-      <a style="font-size: 90%" href="2025.html">2025 (2)</a>
-    </li>
-     
-  </ul>
-</div>
+# Building a time series forecasting assistant with Amazon Bedrock and LibreChat
 
-<div class="ablog-sidebar-item ablog__authors">
-  <h3 style="color: var(--sy-c-light);">
-    <a href="author.html">Authors</a>
-  </h3>
-  <ul>
-     
-    <li>
-      <a style="font-size: 90%" href="author/flavia-giammarino.html">Flavia Giammarino (3)</a>
-    </li>
-     
-  </ul>
-</div>
-</div>
-    </aside>
-
-    <aside id="rside" class="sy-rside pb-3 w-64 shrink-0 order-last">
-    <button class="rside-close js-menu xl:hidden" aria-label="Close right sidebar" type="button" aria-controls="rside" aria-expanded="false">
-      <i class="i-lucide close"></i>
-    </button>
-    <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4"><div class="localtoc" style="font-size: 90%;">
-            <h3 style="color: var(--sy-c-light);">
-                On this page
-            </h3>
-            <ul>
-<li><a class="reference internal" href="#overview">1. Overview</a></li>
-<li><a class="reference internal" href="#solution">2. Solution</a><ul>
-<li><a class="reference internal" href="#set-up-the-mcp-servers">2.1 Set up the MCP servers</a><ul>
-<li><a class="reference internal" href="#configure-the-clickhouse-mcp-server">2.1.1 Configure the ClickHouse MCP server</a></li>
-<li><a class="reference internal" href="#create-the-forecasting-mcp-server">2.1.2 Create the forecasting MCP server</a></li>
-<li><a class="reference internal" href="#create-the-data-visualization-mcp-server">2.1.3 Create the data visualization MCP server</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#configure-the-assistant">2.2 Configure the assistant</a></li>
-<li><a class="reference internal" href="#chat-with-the-assistant">2.3 Chat with the assistant</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#references">References</a></li>
-</ul>
-
-        </div></div>
-  </aside>
-
-  <main class="sy-main w-full max-sm:max-w-full print:pt-6">
-    <div class="flex flex-col break-words justify-between">
-      <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
-        <article class="yue" role="main">
-          <section id="building-a-time-series-forecasting-assistant-with-amazon-bedrock-and-librechat">
-<h1>Building a time series forecasting assistant with Amazon Bedrock and LibreChat<a class="headerlink" href="#building-a-time-series-forecasting-assistant-with-amazon-bedrock-and-librechat" title="Link to this heading">¶</a></h1>
+```{=html}
 <img
     src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/forecasting-assistant/architecture_diagram.png"
     style="width:100%"
     alt="Architecture diagram showing a user interacting with LibreChat, which routes requests to Claude Sonnet 4.6 on Amazon Bedrock to query a ClickHouse database and generate forecasts using Chronos on Amazon Bedrock."
-><section id="overview">
-<h2>1. Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
-<p>Most forecasting systems expose their outputs through dashboards and reports, limiting the user’s interaction and visibility
-to predefined queries anticipated at development time. In this post, we address this limitation by building
-a conversational time series forecasting assistant using ClickHouse, Amazon Bedrock, and <a class="reference external" href="https://www.librechat.ai/">LibreChat</a>.
-The assistant allows the user to explore the underlying data, select specific time series, and adjust forecast parameters - such as
-quantile levels and prediction horizons - through natural language.</p>
-<p>The solution is built around the <a class="reference external" href="https://modelcontextprotocol.io">Model Context Protocol (MCP)</a>,
-which defines a common interface for connecting language models to external tools and services, and relies on three servers:
-the <a class="reference external" href="https://github.com/ClickHouse/mcp-clickhouse">ClickHouse MCP server</a> for retrieving the time series,
-a custom MCP server that generates probabilistic time series forecasts using Chronos <a class="reference external" href="#references">[1, 2]</a>
-deployed on Amazon Bedrock, and an additional custom MCP server that creates interactive Plotly charts of the time series and their forecasts.
-We use LibreChat as the chat UI, with Claude Sonnet 4.6 on Amazon Bedrock as the orchestrating model.</p>
-<p>For simplicity, this demonstration uses artificially generated sales data for three products.
-However, as Chronos performs zero-shot forecasting without fine-tuning, this solution can be applied
-to any time series dataset. In the rest of the post, we walk through the implementation of the three MCP servers and
-the assistant configuration. We also illustrate a typical conversation with the assistant, which is shown in the video below;
-the transcript is reported at the end of this post.</p>
+>
+```
+## 1. Overview
+
+Most forecasting systems expose their outputs through dashboards and
+reports, limiting the user\'s interaction and visibility to predefined
+queries anticipated at development time. In this post, we address this
+limitation by building a conversational time series forecasting
+assistant using ClickHouse, Amazon Bedrock, and
+[LibreChat](https://www.librechat.ai/). The assistant allows the user to
+explore the underlying data, select specific time series, and adjust
+forecast parameters - such as quantile levels and prediction horizons -
+through natural language.
+
+The solution is built around the [Model Context Protocol
+(MCP)](https://modelcontextprotocol.io), which defines a common
+interface for connecting language models to external tools and services,
+and relies on three servers: the [ClickHouse MCP
+server](https://github.com/ClickHouse/mcp-clickhouse) for retrieving the
+time series, a custom MCP server that generates probabilistic time
+series forecasts using Chronos [\[1, 2\]](#references) deployed on
+Amazon Bedrock, and an additional custom MCP server that creates
+interactive Plotly charts of the time series and their forecasts. We use
+LibreChat as the chat UI, with Claude Sonnet 4.6 on Amazon Bedrock as
+the orchestrating model.
+
+For simplicity, this demonstration uses artificially generated sales
+data for three products. However, as Chronos performs zero-shot
+forecasting without fine-tuning, this solution can be applied to any
+time series dataset. In the rest of the post, we walk through the
+implementation of the three MCP servers and the assistant configuration.
+We also illustrate a typical conversation with the assistant, which is
+shown in the video below; the transcript is reported at the end of this
+post.
+
+```{=html}
 <video width="100%" controls style="border-radius: 0.5rem; mask-image: radial-gradient(white, white); -webkit-mask-image: -webkit-radial-gradient(white, white);">
     <source src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/forecasting-assistant/video.mp4" type="video/mp4">
     A conversation with a time series forecasting assistant built using Amazon Bedrock and LibreChat.
     The assistant retrieves the data from ClickHouse and uses Amazon Chronos deployed on Amazon Bedrock to generate forecasts.
-</video></section>
-<section id="solution">
-<h2>2. Solution<a class="headerlink" href="#solution" title="Link to this heading">¶</a></h2>
-<p>For this example, we use synthetic hourly sales data for three products: Product A, Product B and Product C.
-The time series span 90 days, and are stored in two ClickHouse tables: <code class="docutils literal notranslate"><span class="pre">products</span></code>, which maps product IDs to names,
-and <code class="docutils literal notranslate"><span class="pre">sales</span></code>, which records hourly units sold per product.</p>
+</video>
+```
+## 2. Solution
+
+For this example, we use synthetic hourly sales data for three products:
+Product A, Product B and Product C. The time series span 90 days, and
+are stored in two ClickHouse tables: `products`, which maps product IDs
+to names, and `sales`, which records hourly units sold per product.
+
+```{=html}
 <div style="margin: 2em 0em 2em 0em">
 
 <img
@@ -269,7 +79,10 @@ and <code class="docutils literal notranslate"><span class="pre">sales</span></c
 <span>ClickHouse table.</span>
 </p>
 
-</div><div style="margin: 2em 0em 2em 0em">
+</div>
+```
+```{=html}
+<div style="margin: 2em 0em 2em 0em">
 
 <img
     src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/forecasting-assistant/sales.png"
@@ -286,563 +99,635 @@ and <code class="docutils literal notranslate"><span class="pre">sales</span></c
 <span>ClickHouse table.</span>
 </p>
 
-</div><section id="set-up-the-mcp-servers">
-<h3>2.1 Set up the MCP servers<a class="headerlink" href="#set-up-the-mcp-servers" title="Link to this heading">¶</a></h3>
-<p>We start by cloning the <a class="reference external" href="https://github.com/danny-avila/LibreChat">LibreChat GitHub repository</a> and configuring
-Claude Sonnet 4.6 on Amazon Bedrock as the underlying model. We use the <code class="docutils literal notranslate"><span class="pre">eu.anthropic.claude-sonnet-4-6</span></code>
-cross-region inference profile in <code class="docutils literal notranslate"><span class="pre">eu-west-1</span></code>. As outlined in the <a class="reference external" href="https://www.librechat.ai/docs/configuration/pre_configured_ai/bedrock">LibreChat documentation</a>,
-we update the following environment variables in the <code class="docutils literal notranslate"><span class="pre">.env</span></code> file:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span data-line="1">BEDROCK_AWS_DEFAULT_REGION=eu-west-1
-</span><span data-line="2">BEDROCK_AWS_MODELS=eu.anthropic.claude-sonnet-4-6
-</span><span data-line="3">BEDROCK_AWS_ACCESS_KEY_ID=&lt;AWS_ACCESS_KEY_ID&gt;
-</span><span data-line="4">BEDROCK_AWS_SECRET_ACCESS_KEY=&lt;AWS_SECRET_ACCESS_KEY&gt;
-</span></pre></div>
 </div>
-<p>We also include the model’s inference profile ARN in <code class="docutils literal notranslate"><span class="pre">librechat.yaml</span></code>:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="nt">endpoints</span><span class="p">:</span>
-</span><span data-line="2"><span class="w">  </span><span class="nt">bedrock</span><span class="p">:</span>
-</span><span data-line="3"><span class="w">    </span><span class="nt">inferenceProfiles</span><span class="p">:</span>
-</span><span data-line="4"><span class="w">      </span><span class="s">&quot;eu.anthropic.claude-sonnet-4-6&quot;</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="s">&quot;arn:aws:bedrock:eu-west-1:&lt;AWS_ACCOUNT_ID&gt;:inference-profile/eu.anthropic.claude-sonnet-4-6&quot;</span>
-</span></pre></div>
-</div>
-<section id="configure-the-clickhouse-mcp-server">
-<h4>2.1.1 Configure the ClickHouse MCP server<a class="headerlink" href="#configure-the-clickhouse-mcp-server" title="Link to this heading">¶</a></h4>
-<p>Next, we configure the ClickHouse MCP server. Following <a class="reference external" href="https://clickhouse.com/docs/use-cases/AI/MCP/librechat">ClickHouse documentation</a>,
-we create a <code class="docutils literal notranslate"><span class="pre">docker-compose.override.yml</span></code> file and add the following configuration to it:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="nt">services</span><span class="p">:</span>
-</span><span data-line="2"><span class="w">  </span><span class="nt">api</span><span class="p">:</span>
-</span><span data-line="3"><span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
-</span><span data-line="4"><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./librechat.yaml:/app/librechat.yaml</span>
-</span><span data-line="5"><span class="w">  </span><span class="nt">mcp-clickhouse</span><span class="p">:</span>
-</span><span data-line="6"><span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mcp/clickhouse</span>
-</span><span data-line="7"><span class="w">    </span><span class="nt">container_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mcp-clickhouse</span>
-</span><span data-line="8"><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
-</span><span data-line="9"><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8001:8000</span>
-</span><span data-line="10"><span class="w">    </span><span class="nt">extra_hosts</span><span class="p">:</span>
-</span><span data-line="11"><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;host.docker.internal:host-gateway&quot;</span>
-</span><span data-line="12"><span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
-</span><span data-line="13"><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CLICKHOUSE_HOST=&lt;CLICKHOUSE_HOST&gt;</span>
-</span><span data-line="14"><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CLICKHOUSE_USER=&lt;CLICKHOUSE_USER&gt;</span>
-</span><span data-line="15"><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CLICKHOUSE_PASSWORD=&lt;CLICKHOUSE_PASSWORD&gt;</span>
-</span><span data-line="16"><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CLICKHOUSE_MCP_SERVER_TRANSPORT=sse</span>
-</span><span data-line="17"><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CLICKHOUSE_MCP_BIND_HOST=0.0.0.0</span>
-</span></pre></div>
-</div>
-<p>We also register the ClickHouse MCP server in <code class="docutils literal notranslate"><span class="pre">librechat.yaml</span></code> to run on port 8001:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="nt">mcpServers</span><span class="p">:</span>
-</span><span data-line="2"><span class="w">  </span><span class="nt">clickhouse-playground</span><span class="p">:</span>
-</span><span data-line="3"><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sse</span>
-</span><span data-line="4"><span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://host.docker.internal:8001/sse</span>
-</span></pre></div>
-</div>
-</section>
-<section id="create-the-forecasting-mcp-server">
-<h4>2.1.2 Create the forecasting MCP server<a class="headerlink" href="#create-the-forecasting-mcp-server" title="Link to this heading">¶</a></h4>
-<p>After that, we create the forecasting MCP server using the <a class="reference external" href="https://github.com/jlowin/fastmcp">FastMCP</a> library.
-The server exposes a <code class="docutils literal notranslate"><span class="pre">generate_forecasts</span></code> tool that takes a list of historical values, a prediction length, and a
-list of quantile levels, and returns probabilistic time series forecasts by invoking the Chronos endpoint
-via <code class="docutils literal notranslate"><span class="pre">boto3</span></code>. For instructions on deploying Chronos on Bedrock, we refer to
-<a class="reference external" href="https://flaviagiammarino.com/blog/chronos_bedrock.html#create-the-bedrock-endpoint">our previous blog post</a>.</p>
-<p>We configure the forecasting MCP server in the <code class="docutils literal notranslate"><span class="pre">docker-compose.override.yml</span></code> file
-that we previously created for configuring the ClickHouse MCP server:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="nt">services</span><span class="p">:</span>
-</span><span data-line="2"><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">&lt;clickhouse-mcp-configuration&gt;</span><span class="w"> </span><span class="c1"># Added in Section 2.1.1</span>
-</span><span data-line="3"><span class="w">  </span><span class="nt">chronos-forecasting</span><span class="p">:</span>
-</span><span data-line="4"><span class="w">    </span><span class="nt">build</span><span class="p">:</span>
-</span><span data-line="5"><span class="w">      </span><span class="nt">context</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./chronos-forecasting</span>
-</span><span data-line="6"><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
-</span><span data-line="7"><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8002:8002&quot;</span>
-</span><span data-line="8"><span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
-</span><span data-line="9"><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AWS_DEFAULT_REGION=eu-west-1</span>
-</span><span data-line="10"><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AWS_ACCESS_KEY_ID=&lt;AWS_ACCESS_KEY_ID&gt;</span>
-</span><span data-line="11"><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AWS_SECRET_ACCESS_KEY=&lt;AWS_SECRET_ACCESS_KEY&gt;</span>
-</span></pre></div>
-</div>
-<p>We also register the forecasting MCP server in <code class="docutils literal notranslate"><span class="pre">librechat.yaml</span></code> to run on port 8002:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="nt">mcpServers</span><span class="p">:</span>
-</span><span data-line="2"><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">&lt;clickhouse-mcp-server&gt;</span><span class="w"> </span><span class="c1"># Added in Section 2.1.1</span>
-</span><span data-line="3"><span class="w">  </span><span class="nt">chronos-forecasting</span><span class="p">:</span>
-</span><span data-line="4"><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sse</span>
-</span><span data-line="5"><span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://host.docker.internal:8002/sse</span>
-</span></pre></div>
-</div>
-<p>The code used for building the Docker image of the forecasting MCP server is reported below.</p>
+```
+### 2.1 Set up the MCP servers
+
+We start by cloning the [LibreChat GitHub
+repository](https://github.com/danny-avila/LibreChat) and configuring
+Claude Sonnet 4.6 on Amazon Bedrock as the underlying model. We use the
+`eu.anthropic.claude-sonnet-4-6` cross-region inference profile in
+`eu-west-1`. As outlined in the [LibreChat
+documentation](https://www.librechat.ai/docs/configuration/pre_configured_ai/bedrock),
+we update the following environment variables in the `.env` file:
+
+``` text
+BEDROCK_AWS_DEFAULT_REGION=eu-west-1
+BEDROCK_AWS_MODELS=eu.anthropic.claude-sonnet-4-6
+BEDROCK_AWS_ACCESS_KEY_ID=<AWS_ACCESS_KEY_ID>
+BEDROCK_AWS_SECRET_ACCESS_KEY=<AWS_SECRET_ACCESS_KEY>
+```
+
+We also include the model\'s inference profile ARN in `librechat.yaml`:
+
+``` yaml
+endpoints:
+  bedrock:
+    inferenceProfiles:
+      "eu.anthropic.claude-sonnet-4-6": "arn:aws:bedrock:eu-west-1:<AWS_ACCOUNT_ID>:inference-profile/eu.anthropic.claude-sonnet-4-6"
+```
+
+#### 2.1.1 Configure the ClickHouse MCP server
+
+Next, we configure the ClickHouse MCP server. Following [ClickHouse
+documentation](https://clickhouse.com/docs/use-cases/AI/MCP/librechat),
+we create a `docker-compose.override.yml` file and add the following
+configuration to it:
+
+``` yaml
+services:
+  api:
+    volumes:
+      - ./librechat.yaml:/app/librechat.yaml
+  mcp-clickhouse:
+    image: mcp/clickhouse
+    container_name: mcp-clickhouse
+    ports:
+      - 8001:8000
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - CLICKHOUSE_HOST=<CLICKHOUSE_HOST>
+      - CLICKHOUSE_USER=<CLICKHOUSE_USER>
+      - CLICKHOUSE_PASSWORD=<CLICKHOUSE_PASSWORD>
+      - CLICKHOUSE_MCP_SERVER_TRANSPORT=sse
+      - CLICKHOUSE_MCP_BIND_HOST=0.0.0.0
+```
+
+We also register the ClickHouse MCP server in `librechat.yaml` to run on
+port 8001:
+
+``` yaml
+mcpServers:
+  clickhouse-playground:
+    type: sse
+    url: http://host.docker.internal:8001/sse
+```
+
+#### 2.1.2 Create the forecasting MCP server
+
+After that, we create the forecasting MCP server using the
+[FastMCP](https://github.com/jlowin/fastmcp) library. The server exposes
+a `generate_forecasts` tool that takes a list of historical values, a
+prediction length, and a list of quantile levels, and returns
+probabilistic time series forecasts by invoking the Chronos endpoint via
+`boto3`. For instructions on deploying Chronos on Bedrock, we refer to
+[our previous blog
+post](https://flaviagiammarino.com/blog/chronos_bedrock.html#create-the-bedrock-endpoint).
+
+We configure the forecasting MCP server in the
+`docker-compose.override.yml` file that we previously created for
+configuring the ClickHouse MCP server:
+
+``` yaml
+services:
+  <clickhouse-mcp-configuration> # Added in Section 2.1.1
+  chronos-forecasting:
+    build:
+      context: ./chronos-forecasting
+    ports:
+      - "8002:8002"
+    environment:
+      - AWS_DEFAULT_REGION=eu-west-1
+      - AWS_ACCESS_KEY_ID=<AWS_ACCESS_KEY_ID>
+      - AWS_SECRET_ACCESS_KEY=<AWS_SECRET_ACCESS_KEY>
+```
+
+We also register the forecasting MCP server in `librechat.yaml` to run
+on port 8002:
+
+``` yaml
+mcpServers:
+  <clickhouse-mcp-server> # Added in Section 2.1.1
+  chronos-forecasting:
+    type: sse
+    url: http://host.docker.internal:8002/sse
+```
+
+The code used for building the Docker image of the forecasting MCP
+server is reported below.
+
+```{=html}
 <p>
 <code class="docutils literal notranslate">
 <span class="pre" style="font-weight:600">server.py</span>
 </code>
-</p><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
-</span><span data-line="2"><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
-</span><span data-line="3"><span class="kn">from</span><span class="w"> </span><span class="nn">mcp.server.fastmcp</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastMCP</span>
-</span><span data-line="4">
-</span><span data-line="5"><span class="c1"># Create the FastMCP server</span>
-</span><span data-line="6"><span class="n">mcp</span> <span class="o">=</span> <span class="n">FastMCP</span><span class="p">(</span>
-</span><span data-line="7">    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;chronos-forecasting&quot;</span><span class="p">,</span>
-</span><span data-line="8">    <span class="n">host</span><span class="o">=</span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span>
-</span><span data-line="9">    <span class="n">port</span><span class="o">=</span><span class="mi">8002</span>
-</span><span data-line="10"><span class="p">)</span>
-</span><span data-line="11">
-</span><span data-line="12"><span class="c1"># Register the tool with the FastMCP server</span>
-</span><span data-line="13"><span class="nd">@mcp</span><span class="o">.</span><span class="n">tool</span><span class="p">()</span>
-</span><span data-line="14"><span class="k">def</span><span class="w"> </span><span class="nf">generate_forecasts</span><span class="p">(</span>
-</span><span data-line="15">    <span class="n">target</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
-</span><span data-line="16">    <span class="n">prediction_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-</span><span data-line="17">    <span class="n">quantile_levels</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
-</span><span data-line="18"><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-</span><span data-line="19"><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span data-line="20"><span class="sd">    Generate probabilistic time series forecasts using Chronos on Amazon Bedrock.</span>
-</span><span data-line="21">
-</span><span data-line="22"><span class="sd">    Parameters:</span>
-</span><span data-line="23"><span class="sd">    ===============================================================================</span>
-</span><span data-line="24"><span class="sd">    target: list of float.</span>
-</span><span data-line="25"><span class="sd">        The historical time series values used as context.</span>
-</span><span data-line="26">
-</span><span data-line="27"><span class="sd">    prediction_length: int.</span>
-</span><span data-line="28"><span class="sd">        The number of future time steps to predict.</span>
-</span><span data-line="29">
-</span><span data-line="30"><span class="sd">    quantile_levels: list of float.</span>
-</span><span data-line="31"><span class="sd">        The quantiles to be predicted at each future time step.</span>
-</span><span data-line="32">
-</span><span data-line="33"><span class="sd">    Returns:</span>
-</span><span data-line="34"><span class="sd">    ===============================================================================</span>
-</span><span data-line="35"><span class="sd">    dict</span>
-</span><span data-line="36"><span class="sd">        Dictionary with predicted mean and quantiles at each future time step.</span>
-</span><span data-line="37"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span data-line="38">    <span class="c1"># Create the Bedrock client</span>
-</span><span data-line="39">    <span class="n">bedrock_runtime_client</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s2">&quot;bedrock-runtime&quot;</span><span class="p">)</span>
-</span><span data-line="40">
-</span><span data-line="41">    <span class="c1"># Invoke the Bedrock endpoint</span>
-</span><span data-line="42">    <span class="n">response</span> <span class="o">=</span> <span class="n">bedrock_runtime_client</span><span class="o">.</span><span class="n">invoke_model</span><span class="p">(</span>
-</span><span data-line="43">        <span class="n">modelId</span><span class="o">=</span><span class="s2">&quot;&lt;bedrock-endpoint-arn&gt;&quot;</span><span class="p">,</span>
-</span><span data-line="44">        <span class="n">body</span><span class="o">=</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">({</span>
-</span><span data-line="45">            <span class="s2">&quot;inputs&quot;</span><span class="p">:</span> <span class="p">[{</span>
-</span><span data-line="46">                <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="n">target</span>
-</span><span data-line="47">            <span class="p">}],</span>
-</span><span data-line="48">            <span class="s2">&quot;parameters&quot;</span><span class="p">:</span> <span class="p">{</span>
-</span><span data-line="49">                <span class="s2">&quot;prediction_length&quot;</span><span class="p">:</span> <span class="n">prediction_length</span><span class="p">,</span>
-</span><span data-line="50">                <span class="s2">&quot;quantile_levels&quot;</span><span class="p">:</span> <span class="n">quantile_levels</span>
-</span><span data-line="51">            <span class="p">}</span>
-</span><span data-line="52">        <span class="p">})</span>
-</span><span data-line="53">    <span class="p">)</span>
-</span><span data-line="54">
-</span><span data-line="55">    <span class="c1"># Extract the forecasts</span>
-</span><span data-line="56">    <span class="n">forecasts</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s2">&quot;body&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">read</span><span class="p">())</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;predictions&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-</span><span data-line="57">
-</span><span data-line="58">    <span class="c1"># Return the forecasts</span>
-</span><span data-line="59">    <span class="k">return</span> <span class="n">forecasts</span>
-</span><span data-line="60">
-</span><span data-line="61">
-</span><span data-line="62"><span class="c1"># Run the FastMCP server with SSE transport</span>
-</span><span data-line="63"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-</span><span data-line="64">    <span class="n">mcp</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">transport</span><span class="o">=</span><span class="s2">&quot;sse&quot;</span><span class="p">)</span>
-</span></pre></div>
-</div>
+</p>
+```
+``` python
+import json
+import boto3
+from mcp.server.fastmcp import FastMCP
+
+# Create the FastMCP server
+mcp = FastMCP(
+    name="chronos-forecasting",
+    host="0.0.0.0",
+    port=8002
+)
+
+# Register the tool with the FastMCP server
+@mcp.tool()
+def generate_forecasts(
+    target: list[float],
+    prediction_length: int,
+    quantile_levels: list[float]
+) -> dict:
+    """
+    Generate probabilistic time series forecasts using Chronos on Amazon Bedrock.
+
+    Parameters:
+    ===============================================================================
+    target: list of float.
+        The historical time series values used as context.
+
+    prediction_length: int.
+        The number of future time steps to predict.
+
+    quantile_levels: list of float.
+        The quantiles to be predicted at each future time step.
+
+    Returns:
+    ===============================================================================
+    dict
+        Dictionary with predicted mean and quantiles at each future time step.
+    """
+    # Create the Bedrock client
+    bedrock_runtime_client = boto3.client("bedrock-runtime")
+
+    # Invoke the Bedrock endpoint
+    response = bedrock_runtime_client.invoke_model(
+        modelId="<bedrock-endpoint-arn>",
+        body=json.dumps({
+            "inputs": [{
+                "target": target
+            }],
+            "parameters": {
+                "prediction_length": prediction_length,
+                "quantile_levels": quantile_levels
+            }
+        })
+    )
+
+    # Extract the forecasts
+    forecasts = json.loads(response["body"].read()).get("predictions")[0]
+
+    # Return the forecasts
+    return forecasts
+
+
+# Run the FastMCP server with SSE transport
+if __name__ == "__main__":
+    mcp.run(transport="sse")
+```
+
+```{=html}
 <p>
 <code class="docutils literal notranslate">
 <span class="pre" style="font-weight:600">requirements.txt</span>
 </code>
-</p><div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span data-line="1">mcp
-</span><span data-line="2">boto3
-</span></pre></div>
-</div>
+</p>
+```
+``` text
+mcp
+boto3
+```
+
+```{=html}
 <p>
 <code class="docutils literal notranslate">
 <span class="pre" style="font-weight:600">Dockerfile</span>
 </code>
-</p><div class="highlight-docker notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">FROM</span><span class="w"> </span><span class="s">python:3.12-slim</span>
-</span><span data-line="2"><span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
-</span><span data-line="3"><span class="k">COPY</span><span class="w"> </span>requirements.txt<span class="w"> </span>.
-</span><span data-line="4"><span class="k">RUN</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
-</span><span data-line="5"><span class="k">COPY</span><span class="w"> </span>server.py<span class="w"> </span>.
-</span><span data-line="6"><span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;python&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;server.py&quot;</span><span class="p">]</span>
-</span></pre></div>
-</div>
-</section>
-<section id="create-the-data-visualization-mcp-server">
-<h4>2.1.3 Create the data visualization MCP server<a class="headerlink" href="#create-the-data-visualization-mcp-server" title="Link to this heading">¶</a></h4>
-<p>The data visualization MCP server exposes a <code class="docutils literal notranslate"><span class="pre">visualize_data</span></code> tool that generates interactive Plotly charts
-from historical data and forecast outputs. Charts are saved as self-contained HTML files and served over HTTP
-on port 8004. The tool returns the URL of the interactive HTML chart, that LibreChat renders directly in the
-<a class="reference external" href="https://www.librechat.ai/docs/features/artifacts">Artifacts</a> panel.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The data visualization MCP server is not strictly necessary, as the language model can generate the charts directly.
-However, a dedicated server ensures consistent styling and reproducible outputs, which cannot be guaranteed
-when the language model generates the charts on its own. This is particularly desirable when using the assistant
-for reporting purposes.</p>
-</div>
-<p>Like the forecasting server, the data visualization server is built using FastMCP.
-As we did for the forecasting server, we configure it in <code class="docutils literal notranslate"><span class="pre">docker-compose.override.yml</span></code>:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="nt">services</span><span class="p">:</span>
-</span><span data-line="2"><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">&lt;clickhouse-mcp-configuration&gt;</span><span class="w"> </span><span class="c1"># Added in Section 2.1.1</span>
-</span><span data-line="3"><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">&lt;forecasting-mcp-configuration&gt;</span><span class="w"> </span><span class="c1"># Added in Section 2.1.2</span>
-</span><span data-line="4"><span class="w">  </span><span class="nt">data-visualization</span><span class="p">:</span>
-</span><span data-line="5"><span class="w">    </span><span class="nt">build</span><span class="p">:</span>
-</span><span data-line="6"><span class="w">      </span><span class="nt">context</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./data-visualization</span>
-</span><span data-line="7"><span class="w">    </span><span class="nt">ports</span><span class="p">:</span>
-</span><span data-line="8"><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8003:8003&quot;</span>
-</span><span data-line="9"><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;8004:8004&quot;</span>
-</span><span data-line="10"><span class="w">    </span><span class="nt">volumes</span><span class="p">:</span>
-</span><span data-line="11"><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">./plots:/plots</span>
-</span></pre></div>
-</div>
-<p>We also register the data visualization MCP server in <code class="docutils literal notranslate"><span class="pre">librechat.yaml</span></code> to run on port 8003:</p>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="nt">mcpServers</span><span class="p">:</span>
-</span><span data-line="2"><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">&lt;clickhouse-mcp-server&gt;</span><span class="w"> </span><span class="c1"># Added in Section 2.1.1</span>
-</span><span data-line="3"><span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">&lt;forecasting-mcp-server&gt;</span><span class="w"> </span><span class="c1"># Added in Section 2.1.2</span>
-</span><span data-line="4"><span class="w">  </span><span class="nt">data-visualization</span><span class="p">:</span>
-</span><span data-line="5"><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sse</span>
-</span><span data-line="6"><span class="w">    </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://host.docker.internal:8003/sse</span>
-</span></pre></div>
-</div>
-<p>The code used for building the Docker image of the data visualization MCP server is reported below.</p>
+</p>
+```
+``` docker
+FROM python:3.12-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY server.py .
+CMD ["python", "server.py"]
+```
+
+#### 2.1.3 Create the data visualization MCP server
+
+The data visualization MCP server exposes a `visualize_data` tool that
+generates interactive Plotly charts from historical data and forecast
+outputs. Charts are saved as self-contained HTML files and served over
+HTTP on port 8004. The tool returns the URL of the interactive HTML
+chart, that LibreChat renders directly in the
+[Artifacts](https://www.librechat.ai/docs/features/artifacts) panel.
+
+::: note
+::: title
+Note
+:::
+
+The data visualization MCP server is not strictly necessary, as the
+language model can generate the charts directly. However, a dedicated
+server ensures consistent styling and reproducible outputs, which cannot
+be guaranteed when the language model generates the charts on its own.
+This is particularly desirable when using the assistant for reporting
+purposes.
+:::
+
+Like the forecasting server, the data visualization server is built
+using FastMCP. As we did for the forecasting server, we configure it in
+`docker-compose.override.yml`:
+
+``` yaml
+services:
+  <clickhouse-mcp-configuration> # Added in Section 2.1.1
+  <forecasting-mcp-configuration> # Added in Section 2.1.2
+  data-visualization:
+    build:
+      context: ./data-visualization
+    ports:
+      - "8003:8003"
+      - "8004:8004"
+    volumes:
+      - ./plots:/plots
+```
+
+We also register the data visualization MCP server in `librechat.yaml`
+to run on port 8003:
+
+``` yaml
+mcpServers:
+  <clickhouse-mcp-server> # Added in Section 2.1.1
+  <forecasting-mcp-server> # Added in Section 2.1.2
+  data-visualization:
+    type: sse
+    url: http://host.docker.internal:8003/sse
+```
+
+The code used for building the Docker image of the data visualization
+MCP server is reported below.
+
+```{=html}
 <p>
 <code class="docutils literal notranslate">
 <span class="pre" style="font-weight:600">server.py</span>
 </code>
-</p><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-</span><span data-line="2"><span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
-</span><span data-line="3"><span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
-</span><span data-line="4"><span class="kn">import</span><span class="w"> </span><span class="nn">http.server</span>
-</span><span data-line="5"><span class="kn">import</span><span class="w"> </span><span class="nn">functools</span>
-</span><span data-line="6"><span class="kn">import</span><span class="w"> </span><span class="nn">plotly.graph_objects</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">go</span>
-</span><span data-line="7"><span class="kn">from</span><span class="w"> </span><span class="nn">plotly.subplots</span><span class="w"> </span><span class="kn">import</span> <span class="n">make_subplots</span>
-</span><span data-line="8"><span class="kn">from</span><span class="w"> </span><span class="nn">mcp.server.fastmcp</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastMCP</span>
-</span><span data-line="9">
-</span><span data-line="10"><span class="c1"># Create the FastMCP server</span>
-</span><span data-line="11"><span class="n">mcp</span> <span class="o">=</span> <span class="n">FastMCP</span><span class="p">(</span>
-</span><span data-line="12">    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;data-visualization&quot;</span><span class="p">,</span>
-</span><span data-line="13">    <span class="n">host</span><span class="o">=</span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span>
-</span><span data-line="14">    <span class="n">port</span><span class="o">=</span><span class="mi">8003</span>
-</span><span data-line="15"><span class="p">)</span>
-</span><span data-line="16">
-</span><span data-line="17"><span class="c1"># Register the tool with the FastMCP server</span>
-</span><span data-line="18"><span class="nd">@mcp</span><span class="o">.</span><span class="n">tool</span><span class="p">()</span>
-</span><span data-line="19"><span class="k">def</span><span class="w"> </span><span class="nf">visualize_data</span><span class="p">(</span>
-</span><span data-line="20">    <span class="n">inputs</span><span class="p">:</span> <span class="nb">dict</span>
-</span><span data-line="21"><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-</span><span data-line="22"><span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-</span><span data-line="23"><span class="sd">    Plot one or more time series with optional forecasts and return</span>
-</span><span data-line="24"><span class="sd">    the URL of the interactive HTML chart.</span>
-</span><span data-line="25">
-</span><span data-line="26"><span class="sd">    Parameters</span>
-</span><span data-line="27"><span class="sd">    ===============================================================================</span>
-</span><span data-line="28"><span class="sd">    inputs : dict</span>
-</span><span data-line="29"><span class="sd">        A dictionary with the following keys:</span>
-</span><span data-line="30">
-</span><span data-line="31"><span class="sd">        &quot;data&quot; (required) : dict</span>
-</span><span data-line="32"><span class="sd">            A dictionary where each key is a series name and each value is the</span>
-</span><span data-line="33"><span class="sd">            raw output of a ClickHouse query, with the following fields:</span>
-</span><span data-line="34"><span class="sd">                - &quot;columns&quot; : list of strings, must contain &quot;timestamp&quot; and one value column</span>
-</span><span data-line="35"><span class="sd">                - &quot;rows&quot;    : list of [timestamp_str, float] pairs</span>
-</span><span data-line="36">
-</span><span data-line="37"><span class="sd">            Example:</span>
-</span><span data-line="38"><span class="sd">            {</span>
-</span><span data-line="39"><span class="sd">                &quot;series_1&quot;: {</span>
-</span><span data-line="40"><span class="sd">                    &quot;columns&quot;: [&quot;timestamp&quot;, &quot;&lt;VALUE&gt;&quot;],</span>
-</span><span data-line="41"><span class="sd">                    &quot;rows&quot;: [</span>
-</span><span data-line="42"><span class="sd">                        [&quot;2026-01-01&quot;, 1.0],</span>
-</span><span data-line="43"><span class="sd">                        [&quot;2026-01-02&quot;, 2.0]</span>
-</span><span data-line="44"><span class="sd">                    ]</span>
-</span><span data-line="45"><span class="sd">                },</span>
-</span><span data-line="46"><span class="sd">                &quot;series_2&quot;: {</span>
-</span><span data-line="47"><span class="sd">                    &quot;columns&quot;: [&quot;timestamp&quot;, &quot;&lt;VALUE&gt;&quot;],</span>
-</span><span data-line="48"><span class="sd">                    &quot;rows&quot;: [</span>
-</span><span data-line="49"><span class="sd">                        [&quot;2026-01-03&quot;, 3.0],</span>
-</span><span data-line="50"><span class="sd">                        [&quot;2026-01-04&quot;, 4.0]</span>
-</span><span data-line="51"><span class="sd">                    ]</span>
-</span><span data-line="52"><span class="sd">                },</span>
-</span><span data-line="53"><span class="sd">            }</span>
-</span><span data-line="54">
-</span><span data-line="55"><span class="sd">        &quot;forecasts&quot; (optional) : dict</span>
-</span><span data-line="56"><span class="sd">            Forecasts for the same time series in &quot;data&quot;. Each key is a series</span>
-</span><span data-line="57"><span class="sd">            name matching a key in &quot;data&quot;, and each value is a dictionary with</span>
-</span><span data-line="58"><span class="sd">            the following fields:</span>
-</span><span data-line="59"><span class="sd">                - &quot;timestamp&quot;  : list of strings representing datetimes</span>
-</span><span data-line="60"><span class="sd">                - &quot;mean&quot;       : list of floats (mean forecast)</span>
-</span><span data-line="61"><span class="sd">                - &quot;&lt;quantile&gt;&quot; : list of floats for each quantile level, e.g.</span>
-</span><span data-line="62"><span class="sd">                                 &quot;0.05&quot; and &quot;0.95&quot; for a 90% prediction interval.</span>
-</span><span data-line="63">
-</span><span data-line="64"><span class="sd">            Example:</span>
-</span><span data-line="65"><span class="sd">            {</span>
-</span><span data-line="66"><span class="sd">                &quot;series_1&quot;: {</span>
-</span><span data-line="67"><span class="sd">                    &quot;timestamp&quot;: [&quot;2026-01-01&quot;, &quot;2026-01-02&quot;],</span>
-</span><span data-line="68"><span class="sd">                    &quot;mean&quot;: [1.0, 2.0],</span>
-</span><span data-line="69"><span class="sd">                    &quot;0.1&quot;: [0.5, 1.5],</span>
-</span><span data-line="70"><span class="sd">                    &quot;0.5&quot;: [1.0, 2.0],</span>
-</span><span data-line="71"><span class="sd">                    &quot;0.9&quot;: [1.5, 2.5],</span>
-</span><span data-line="72"><span class="sd">                },</span>
-</span><span data-line="73"><span class="sd">                &quot;series_2&quot;: {</span>
-</span><span data-line="74"><span class="sd">                    &quot;timestamp&quot;: [&quot;2026-01-03&quot;, &quot;2026-01-04&quot;],</span>
-</span><span data-line="75"><span class="sd">                    &quot;mean&quot;: [3.0, 4.0],</span>
-</span><span data-line="76"><span class="sd">                    &quot;0.1&quot;: [2.5, 3.5],</span>
-</span><span data-line="77"><span class="sd">                    &quot;0.5&quot;: [3.0, 4.0],</span>
-</span><span data-line="78"><span class="sd">                    &quot;0.9&quot;: [3.5, 4.5],</span>
-</span><span data-line="79"><span class="sd">                },</span>
-</span><span data-line="80"><span class="sd">            }</span>
-</span><span data-line="81">
-</span><span data-line="82"><span class="sd">    Returns</span>
-</span><span data-line="83"><span class="sd">    ===============================================================================</span>
-</span><span data-line="84"><span class="sd">    str</span>
-</span><span data-line="85"><span class="sd">        The URL of the interactive HTML chart.</span>
-</span><span data-line="86"><span class="sd">    &quot;&quot;&quot;</span>
-</span><span data-line="87">    <span class="c1"># Extract the data and forecasts</span>
-</span><span data-line="88">    <span class="n">data</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="s2">&quot;data&quot;</span><span class="p">]</span>
-</span><span data-line="89">    <span class="n">forecasts</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;forecasts&quot;</span><span class="p">,</span> <span class="p">{})</span>
-</span><span data-line="90">
-</span><span data-line="91">    <span class="c1"># Parse the data</span>
-</span><span data-line="92">    <span class="n">parsed_data</span> <span class="o">=</span> <span class="p">{}</span>
-</span><span data-line="93">    <span class="k">for</span> <span class="n">series</span><span class="p">,</span> <span class="n">query_result</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-</span><span data-line="94">        <span class="n">value_col</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">query_result</span><span class="p">[</span><span class="s2">&quot;columns&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">c</span> <span class="o">!=</span> <span class="s2">&quot;timestamp&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-</span><span data-line="95">        <span class="n">idx</span> <span class="o">=</span> <span class="n">query_result</span><span class="p">[</span><span class="s2">&quot;columns&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span>
-</span><span data-line="96">        <span class="n">parsed_data</span><span class="p">[</span><span class="n">series</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-</span><span data-line="97">            <span class="s2">&quot;timestamp&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="n">idx</span><span class="p">(</span><span class="s2">&quot;timestamp&quot;</span><span class="p">)]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">query_result</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">]],</span>
-</span><span data-line="98">            <span class="s2">&quot;values&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="n">idx</span><span class="p">(</span><span class="n">value_col</span><span class="p">)]</span> <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">query_result</span><span class="p">[</span><span class="s2">&quot;rows&quot;</span><span class="p">]]</span>
-</span><span data-line="99">        <span class="p">}</span>
-</span><span data-line="100">
-</span><span data-line="101">    <span class="c1"># Create the figure</span>
-</span><span data-line="102">    <span class="n">fig</span> <span class="o">=</span> <span class="n">make_subplots</span><span class="p">(</span>
-</span><span data-line="103">        <span class="n">rows</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span>
-</span><span data-line="104">        <span class="n">subplot_titles</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-</span><span data-line="105">    <span class="p">)</span>
-</span><span data-line="106">
-</span><span data-line="107">    <span class="c1"># Update the figure layout</span>
-</span><span data-line="108">    <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
-</span><span data-line="109">        <span class="n">height</span><span class="o">=</span><span class="mi">250</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span>
-</span><span data-line="110">        <span class="n">paper_bgcolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
-</span><span data-line="111">        <span class="n">plot_bgcolor</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span>
-</span><span data-line="112">        <span class="n">margin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">50</span><span class="p">),</span>
-</span><span data-line="113">        <span class="n">hovermode</span><span class="o">=</span><span class="s2">&quot;x unified&quot;</span><span class="p">,</span>
-</span><span data-line="114">        <span class="n">hoverlabel</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-</span><span data-line="115">            <span class="n">namelength</span><span class="o">=-</span><span class="mi">1</span>
-</span><span data-line="116">        <span class="p">),</span>
-</span><span data-line="117">        <span class="n">legend</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-</span><span data-line="118">            <span class="n">font</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-</span><span data-line="119">                <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#24292f&quot;</span><span class="p">,</span>
-</span><span data-line="120">                <span class="n">size</span><span class="o">=</span><span class="mi">12</span>
-</span><span data-line="121">            <span class="p">),</span>
-</span><span data-line="122">        <span class="p">)</span>
-</span><span data-line="123">    <span class="p">)</span>
-</span><span data-line="124">
-</span><span data-line="125">    <span class="c1"># Update the subplots titles</span>
-</span><span data-line="126">    <span class="n">fig</span><span class="o">.</span><span class="n">update_annotations</span><span class="p">(</span>
-</span><span data-line="127">        <span class="n">font</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-</span><span data-line="128">            <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#24292f&quot;</span><span class="p">,</span>
-</span><span data-line="129">            <span class="n">size</span><span class="o">=</span><span class="mi">14</span>
-</span><span data-line="130">        <span class="p">),</span>
-</span><span data-line="131">    <span class="p">)</span>
-</span><span data-line="132">
-</span><span data-line="133">    <span class="c1"># Generate the subplots</span>
-</span><span data-line="134">    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">series</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-</span><span data-line="135">        <span class="c1"># Plot the forecasts</span>
-</span><span data-line="136">        <span class="k">if</span> <span class="n">series</span> <span class="ow">in</span> <span class="n">forecasts</span><span class="p">:</span>
-</span><span data-line="137">            <span class="c1"># Extract the predicted quantiles</span>
-</span><span data-line="138">            <span class="n">q</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">forecasts</span><span class="p">[</span><span class="n">series</span><span class="p">]</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;mean&quot;</span><span class="p">,</span> <span class="s2">&quot;timestamp&quot;</span><span class="p">)])</span>
-</span><span data-line="139">
-</span><span data-line="140">            <span class="c1"># Extract the lower and upper bound of the prediction interval</span>
-</span><span data-line="141">            <span class="n">q_min</span><span class="p">,</span> <span class="n">q_max</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-</span><span data-line="142">
-</span><span data-line="143">            <span class="c1"># Plot the upper bound of the prediction interval</span>
-</span><span data-line="144">            <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span>
-</span><span data-line="145">                <span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
-</span><span data-line="146">                    <span class="n">x</span><span class="o">=</span><span class="n">forecasts</span><span class="p">[</span><span class="n">series</span><span class="p">][</span><span class="s2">&quot;timestamp&quot;</span><span class="p">],</span>
-</span><span data-line="147">                    <span class="n">y</span><span class="o">=</span><span class="n">forecasts</span><span class="p">[</span><span class="n">series</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">q_max</span><span class="p">)],</span>
-</span><span data-line="148">                    <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Predicted Q</span><span class="si">{</span><span class="n">q_max</span><span class="si">:</span><span class="s2">,.1%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-</span><span data-line="149">                    <span class="n">hovertemplate</span><span class="o">=</span><span class="s2">&quot;%</span><span class="si">{fullData.name}</span><span class="s2">: %</span><span class="si">{y:,.0f}</span><span class="s2">&lt;extra&gt;&lt;/extra&gt;&quot;</span><span class="p">,</span>
-</span><span data-line="150">                    <span class="n">showlegend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-</span><span data-line="151">                    <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;lines&quot;</span><span class="p">,</span>
-</span><span data-line="152">                    <span class="n">line</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-</span><span data-line="153">                        <span class="n">width</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-</span><span data-line="154">                        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#c2e5ff&quot;</span><span class="p">,</span>
-</span><span data-line="155">                    <span class="p">),</span>
-</span><span data-line="156">                <span class="p">),</span>
-</span><span data-line="157">                <span class="n">row</span><span class="o">=</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
-</span><span data-line="158">                <span class="n">col</span><span class="o">=</span><span class="mi">1</span>
-</span><span data-line="159">            <span class="p">)</span>
-</span><span data-line="160">
-</span><span data-line="161">            <span class="c1"># Plot the lower bound of the prediction interval</span>
-</span><span data-line="162">            <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span>
-</span><span data-line="163">                <span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
-</span><span data-line="164">                    <span class="n">x</span><span class="o">=</span><span class="n">forecasts</span><span class="p">[</span><span class="n">series</span><span class="p">][</span><span class="s2">&quot;timestamp&quot;</span><span class="p">],</span>
-</span><span data-line="165">                    <span class="n">y</span><span class="o">=</span><span class="n">forecasts</span><span class="p">[</span><span class="n">series</span><span class="p">][</span><span class="nb">str</span><span class="p">(</span><span class="n">q_min</span><span class="p">)],</span>
-</span><span data-line="166">                    <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Predicted Q</span><span class="si">{</span><span class="n">q_min</span><span class="si">:</span><span class="s2">,.1%</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-</span><span data-line="167">                    <span class="n">hovertemplate</span><span class="o">=</span><span class="s2">&quot;%</span><span class="si">{fullData.name}</span><span class="s2">: %</span><span class="si">{y:,.0f}</span><span class="s2">&lt;extra&gt;&lt;/extra&gt;&quot;</span><span class="p">,</span>
-</span><span data-line="168">                    <span class="n">showlegend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-</span><span data-line="169">                    <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;lines&quot;</span><span class="p">,</span>
-</span><span data-line="170">                    <span class="n">line</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-</span><span data-line="171">                        <span class="n">width</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-</span><span data-line="172">                        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#c2e5ff&quot;</span><span class="p">,</span>
-</span><span data-line="173">                    <span class="p">),</span>
-</span><span data-line="174">                    <span class="n">fillcolor</span><span class="o">=</span><span class="s2">&quot;#c2e5ff&quot;</span><span class="p">,</span>
-</span><span data-line="175">                    <span class="n">fill</span><span class="o">=</span><span class="s2">&quot;tonexty&quot;</span><span class="p">,</span>
-</span><span data-line="176">                <span class="p">),</span>
-</span><span data-line="177">                <span class="n">row</span><span class="o">=</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
-</span><span data-line="178">                <span class="n">col</span><span class="o">=</span><span class="mi">1</span>
-</span><span data-line="179">            <span class="p">)</span>
-</span><span data-line="180">
-</span><span data-line="181">            <span class="c1"># Plot the predicted median if available, otherwise fall back to the predicted mean</span>
-</span><span data-line="182">            <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span>
-</span><span data-line="183">                <span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
-</span><span data-line="184">                    <span class="n">x</span><span class="o">=</span><span class="n">forecasts</span><span class="p">[</span><span class="n">series</span><span class="p">][</span><span class="s2">&quot;timestamp&quot;</span><span class="p">],</span>
-</span><span data-line="185">                    <span class="n">y</span><span class="o">=</span><span class="n">forecasts</span><span class="p">[</span><span class="n">series</span><span class="p">][</span><span class="s2">&quot;0.5&quot;</span> <span class="k">if</span> <span class="mf">0.5</span> <span class="ow">in</span> <span class="n">q</span> <span class="k">else</span> <span class="s2">&quot;mean&quot;</span><span class="p">],</span>
-</span><span data-line="186">                    <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Predicted </span><span class="si">{</span><span class="s1">&#39;Median&#39;</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="mf">0.5</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">&#39;Mean&#39;</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
-</span><span data-line="187">                    <span class="n">hovertemplate</span><span class="o">=</span><span class="s2">&quot;%</span><span class="si">{fullData.name}</span><span class="s2">: %</span><span class="si">{y:,.0f}</span><span class="s2">&lt;extra&gt;&lt;/extra&gt;&quot;</span><span class="p">,</span>
-</span><span data-line="188">                    <span class="n">showlegend</span><span class="o">=</span><span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span>
-</span><span data-line="189">                    <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;lines&quot;</span><span class="p">,</span>
-</span><span data-line="190">                    <span class="n">line</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-</span><span data-line="191">                        <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#0588f0&quot;</span><span class="p">,</span>
-</span><span data-line="192">                        <span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
-</span><span data-line="193">                        <span class="n">dash</span><span class="o">=</span><span class="s2">&quot;dot&quot;</span>
-</span><span data-line="194">                    <span class="p">)</span>
-</span><span data-line="195">                <span class="p">),</span>
-</span><span data-line="196">                <span class="n">row</span><span class="o">=</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
-</span><span data-line="197">                <span class="n">col</span><span class="o">=</span><span class="mi">1</span>
-</span><span data-line="198">            <span class="p">)</span>
-</span><span data-line="199">
-</span><span data-line="200">        <span class="c1"># Plot the data</span>
-</span><span data-line="201">        <span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span>
-</span><span data-line="202">            <span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
-</span><span data-line="203">                <span class="n">x</span><span class="o">=</span><span class="n">parsed_data</span><span class="p">[</span><span class="n">series</span><span class="p">][</span><span class="s2">&quot;timestamp&quot;</span><span class="p">],</span>
-</span><span data-line="204">                <span class="n">y</span><span class="o">=</span><span class="n">parsed_data</span><span class="p">[</span><span class="n">series</span><span class="p">][</span><span class="s2">&quot;values&quot;</span><span class="p">],</span>
-</span><span data-line="205">                <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Historical Data&quot;</span><span class="p">,</span>
-</span><span data-line="206">                <span class="n">hovertemplate</span><span class="o">=</span><span class="s2">&quot;%</span><span class="si">{fullData.name}</span><span class="s2">: %</span><span class="si">{y:,.0f}</span><span class="s2">&lt;extra&gt;&lt;/extra&gt;&quot;</span><span class="p">,</span>
-</span><span data-line="207">                <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;lines&quot;</span><span class="p">,</span>
-</span><span data-line="208">                <span class="n">showlegend</span><span class="o">=</span><span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span>
-</span><span data-line="209">                <span class="n">line</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-</span><span data-line="210">                    <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#838383&quot;</span><span class="p">,</span>
-</span><span data-line="211">                    <span class="n">width</span><span class="o">=</span><span class="mi">1</span>
-</span><span data-line="212">                <span class="p">)</span>
-</span><span data-line="213">            <span class="p">),</span>
-</span><span data-line="214">            <span class="n">row</span><span class="o">=</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
-</span><span data-line="215">            <span class="n">col</span><span class="o">=</span><span class="mi">1</span>
-</span><span data-line="216">        <span class="p">)</span>
-</span><span data-line="217">
-</span><span data-line="218">        <span class="c1"># Update the subplot&#39;s x-axis</span>
-</span><span data-line="219">        <span class="n">fig</span><span class="o">.</span><span class="n">update_xaxes</span><span class="p">(</span>
-</span><span data-line="220">            <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;date&quot;</span><span class="p">,</span>
-</span><span data-line="221">            <span class="n">tickformat</span><span class="o">=</span><span class="s2">&quot;%b </span><span class="si">%d</span><span class="s2"> %Y&lt;br&gt;(</span><span class="si">%a</span><span class="s2">) %H:%M&quot;</span><span class="p">,</span>
-</span><span data-line="222">            <span class="n">tickangle</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-</span><span data-line="223">            <span class="n">mirror</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-</span><span data-line="224">            <span class="n">linecolor</span><span class="o">=</span><span class="s2">&quot;#cecece&quot;</span><span class="p">,</span>
-</span><span data-line="225">            <span class="n">gridcolor</span><span class="o">=</span><span class="s2">&quot;#e8e8e8&quot;</span><span class="p">,</span>
-</span><span data-line="226">            <span class="n">gridwidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-</span><span data-line="227">            <span class="n">tickfont</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-</span><span data-line="228">                <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#24292f&quot;</span><span class="p">,</span>
-</span><span data-line="229">                <span class="n">size</span><span class="o">=</span><span class="mi">10</span>
-</span><span data-line="230">            <span class="p">),</span>
-</span><span data-line="231">            <span class="n">row</span><span class="o">=</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
-</span><span data-line="232">            <span class="n">col</span><span class="o">=</span><span class="mi">1</span>
-</span><span data-line="233">        <span class="p">)</span>
-</span><span data-line="234">
-</span><span data-line="235">        <span class="c1"># Update the subplot&#39;s y-axis</span>
-</span><span data-line="236">        <span class="n">fig</span><span class="o">.</span><span class="n">update_yaxes</span><span class="p">(</span>
-</span><span data-line="237">            <span class="n">tickformat</span><span class="o">=</span><span class="s2">&quot;,.0f&quot;</span><span class="p">,</span>
-</span><span data-line="238">            <span class="n">mirror</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-</span><span data-line="239">            <span class="n">linecolor</span><span class="o">=</span><span class="s2">&quot;#cecece&quot;</span><span class="p">,</span>
-</span><span data-line="240">            <span class="n">gridcolor</span><span class="o">=</span><span class="s2">&quot;#e8e8e8&quot;</span><span class="p">,</span>
-</span><span data-line="241">            <span class="n">gridwidth</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-</span><span data-line="242">            <span class="n">tickfont</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
-</span><span data-line="243">                <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#24292f&quot;</span><span class="p">,</span>
-</span><span data-line="244">                <span class="n">size</span><span class="o">=</span><span class="mi">10</span>
-</span><span data-line="245">            <span class="p">),</span>
-</span><span data-line="246">            <span class="n">row</span><span class="o">=</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
-</span><span data-line="247">            <span class="n">col</span><span class="o">=</span><span class="mi">1</span>
-</span><span data-line="248">        <span class="p">)</span>
-</span><span data-line="249">
-</span><span data-line="250">    <span class="c1"># Save the figure to an HTML file</span>
-</span><span data-line="251">    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s2">&quot;/plots&quot;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-</span><span data-line="252">    <span class="n">filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;plot_</span><span class="si">{</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="si">}</span><span class="s2">.html&quot;</span>
-</span><span data-line="253">    <span class="n">fig</span><span class="o">.</span><span class="n">write_html</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;/plots/</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">full_html</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">include_plotlyjs</span><span class="o">=</span><span class="s2">&quot;cdn&quot;</span><span class="p">)</span>
-</span><span data-line="254">
-</span><span data-line="255">    <span class="c1"># Return the URL of the HTML file</span>
-</span><span data-line="256">    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;http://localhost:8004/</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&quot;</span>
-</span><span data-line="257">
-</span><span data-line="258">
-</span><span data-line="259"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-</span><span data-line="260">    <span class="c1"># Serve the /plots directory over HTTP on port 8004</span>
-</span><span data-line="261">    <span class="k">def</span><span class="w"> </span><span class="nf">_serve_plots</span><span class="p">():</span>
-</span><span data-line="262">        <span class="n">handler</span> <span class="o">=</span> <span class="n">functools</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">http</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">SimpleHTTPRequestHandler</span><span class="p">,</span> <span class="n">directory</span><span class="o">=</span><span class="s2">&quot;/plots&quot;</span><span class="p">)</span>
-</span><span data-line="263">        <span class="k">with</span> <span class="n">http</span><span class="o">.</span><span class="n">server</span><span class="o">.</span><span class="n">HTTPServer</span><span class="p">((</span><span class="s2">&quot;0.0.0.0&quot;</span><span class="p">,</span> <span class="mi">8004</span><span class="p">),</span> <span class="n">handler</span><span class="p">)</span> <span class="k">as</span> <span class="n">httpd</span><span class="p">:</span>
-</span><span data-line="264">            <span class="n">httpd</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span>
-</span><span data-line="265">
-</span><span data-line="266">
-</span><span data-line="267">    <span class="c1"># Start the HTTP server</span>
-</span><span data-line="268">    <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">_serve_plots</span><span class="p">,</span> <span class="n">daemon</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
-</span><span data-line="269">
-</span><span data-line="270">    <span class="c1"># Run the FastMCP server with SSE transport</span>
-</span><span data-line="271">    <span class="n">mcp</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">transport</span><span class="o">=</span><span class="s2">&quot;sse&quot;</span><span class="p">)</span>
-</span></pre></div>
-</div>
+</p>
+```
+``` python
+import os
+import uuid
+import threading
+import http.server
+import functools
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+from mcp.server.fastmcp import FastMCP
+
+# Create the FastMCP server
+mcp = FastMCP(
+    name="data-visualization",
+    host="0.0.0.0",
+    port=8003
+)
+
+# Register the tool with the FastMCP server
+@mcp.tool()
+def visualize_data(
+    inputs: dict
+) -> str:
+    """
+    Plot one or more time series with optional forecasts and return
+    the URL of the interactive HTML chart.
+
+    Parameters
+    ===============================================================================
+    inputs : dict
+        A dictionary with the following keys:
+
+        "data" (required) : dict
+            A dictionary where each key is a series name and each value is the
+            raw output of a ClickHouse query, with the following fields:
+                - "columns" : list of strings, must contain "timestamp" and one value column
+                - "rows"    : list of [timestamp_str, float] pairs
+
+            Example:
+            {
+                "series_1": {
+                    "columns": ["timestamp", "<VALUE>"],
+                    "rows": [
+                        ["2026-01-01", 1.0],
+                        ["2026-01-02", 2.0]
+                    ]
+                },
+                "series_2": {
+                    "columns": ["timestamp", "<VALUE>"],
+                    "rows": [
+                        ["2026-01-03", 3.0],
+                        ["2026-01-04", 4.0]
+                    ]
+                },
+            }
+
+        "forecasts" (optional) : dict
+            Forecasts for the same time series in "data". Each key is a series
+            name matching a key in "data", and each value is a dictionary with
+            the following fields:
+                - "timestamp"  : list of strings representing datetimes
+                - "mean"       : list of floats (mean forecast)
+                - "<quantile>" : list of floats for each quantile level, e.g.
+                                 "0.05" and "0.95" for a 90% prediction interval.
+
+            Example:
+            {
+                "series_1": {
+                    "timestamp": ["2026-01-01", "2026-01-02"],
+                    "mean": [1.0, 2.0],
+                    "0.1": [0.5, 1.5],
+                    "0.5": [1.0, 2.0],
+                    "0.9": [1.5, 2.5],
+                },
+                "series_2": {
+                    "timestamp": ["2026-01-03", "2026-01-04"],
+                    "mean": [3.0, 4.0],
+                    "0.1": [2.5, 3.5],
+                    "0.5": [3.0, 4.0],
+                    "0.9": [3.5, 4.5],
+                },
+            }
+
+    Returns
+    ===============================================================================
+    str
+        The URL of the interactive HTML chart.
+    """
+    # Extract the data and forecasts
+    data = inputs["data"]
+    forecasts = inputs.get("forecasts", {})
+
+    # Parse the data
+    parsed_data = {}
+    for series, query_result in data.items():
+        value_col = [c for c in query_result["columns"] if c != "timestamp"][0]
+        idx = query_result["columns"].index
+        parsed_data[series] = {
+            "timestamp": [row[idx("timestamp")] for row in query_result["rows"]],
+            "values": [row[idx(value_col)] for row in query_result["rows"]]
+        }
+
+    # Create the figure
+    fig = make_subplots(
+        rows=len(data),
+        subplot_titles=list(data.keys())
+    )
+
+    # Update the figure layout
+    fig.update_layout(
+        height=250 * len(data),
+        paper_bgcolor="white",
+        plot_bgcolor="white",
+        margin=dict(t=50, b=50, l=50, r=50),
+        hovermode="x unified",
+        hoverlabel=dict(
+            namelength=-1
+        ),
+        legend=dict(
+            font=dict(
+                color="#24292f",
+                size=12
+            ),
+        )
+    )
+
+    # Update the subplots titles
+    fig.update_annotations(
+        font=dict(
+            color="#24292f",
+            size=14
+        ),
+    )
+
+    # Generate the subplots
+    for i, series in enumerate(data):
+        # Plot the forecasts
+        if series in forecasts:
+            # Extract the predicted quantiles
+            q = sorted([float(k) for k in forecasts[series] if k not in ("mean", "timestamp")])
+
+            # Extract the lower and upper bound of the prediction interval
+            q_min, q_max = q[0], q[-1]
+
+            # Plot the upper bound of the prediction interval
+            fig.add_trace(
+                go.Scatter(
+                    x=forecasts[series]["timestamp"],
+                    y=forecasts[series][str(q_max)],
+                    name=f"Predicted Q{q_max:,.1%}",
+                    hovertemplate="%{fullData.name}: %{y:,.0f}<extra></extra>",
+                    showlegend=False,
+                    mode="lines",
+                    line=dict(
+                        width=0.5,
+                        color="#c2e5ff",
+                    ),
+                ),
+                row=i + 1,
+                col=1
+            )
+
+            # Plot the lower bound of the prediction interval
+            fig.add_trace(
+                go.Scatter(
+                    x=forecasts[series]["timestamp"],
+                    y=forecasts[series][str(q_min)],
+                    name=f"Predicted Q{q_min:,.1%}",
+                    hovertemplate="%{fullData.name}: %{y:,.0f}<extra></extra>",
+                    showlegend=False,
+                    mode="lines",
+                    line=dict(
+                        width=0.5,
+                        color="#c2e5ff",
+                    ),
+                    fillcolor="#c2e5ff",
+                    fill="tonexty",
+                ),
+                row=i + 1,
+                col=1
+            )
+
+            # Plot the predicted median if available, otherwise fall back to the predicted mean
+            fig.add_trace(
+                go.Scatter(
+                    x=forecasts[series]["timestamp"],
+                    y=forecasts[series]["0.5" if 0.5 in q else "mean"],
+                    name=f"Predicted {'Median' if 0.5 in q else 'Mean'}",
+                    hovertemplate="%{fullData.name}: %{y:,.0f}<extra></extra>",
+                    showlegend=i == 0,
+                    mode="lines",
+                    line=dict(
+                        color="#0588f0",
+                        width=1,
+                        dash="dot"
+                    )
+                ),
+                row=i + 1,
+                col=1
+            )
+
+        # Plot the data
+        fig.add_trace(
+            go.Scatter(
+                x=parsed_data[series]["timestamp"],
+                y=parsed_data[series]["values"],
+                name="Historical Data",
+                hovertemplate="%{fullData.name}: %{y:,.0f}<extra></extra>",
+                mode="lines",
+                showlegend=i == 0,
+                line=dict(
+                    color="#838383",
+                    width=1
+                )
+            ),
+            row=i + 1,
+            col=1
+        )
+
+        # Update the subplot's x-axis
+        fig.update_xaxes(
+            type="date",
+            tickformat="%b %d %Y<br>(%a) %H:%M",
+            tickangle=0,
+            mirror=True,
+            linecolor="#cecece",
+            gridcolor="#e8e8e8",
+            gridwidth=0.5,
+            tickfont=dict(
+                color="#24292f",
+                size=10
+            ),
+            row=i + 1,
+            col=1
+        )
+
+        # Update the subplot's y-axis
+        fig.update_yaxes(
+            tickformat=",.0f",
+            mirror=True,
+            linecolor="#cecece",
+            gridcolor="#e8e8e8",
+            gridwidth=0.5,
+            tickfont=dict(
+                color="#24292f",
+                size=10
+            ),
+            row=i + 1,
+            col=1
+        )
+
+    # Save the figure to an HTML file
+    os.makedirs("/plots", exist_ok=True)
+    filename = f"plot_{uuid.uuid4().hex}.html"
+    fig.write_html(f"/plots/{filename}", full_html=True, include_plotlyjs="cdn")
+
+    # Return the URL of the HTML file
+    return f"http://localhost:8004/{filename}"
+
+
+if __name__ == "__main__":
+    # Serve the /plots directory over HTTP on port 8004
+    def _serve_plots():
+        handler = functools.partial(http.server.SimpleHTTPRequestHandler, directory="/plots")
+        with http.server.HTTPServer(("0.0.0.0", 8004), handler) as httpd:
+            httpd.serve_forever()
+
+
+    # Start the HTTP server
+    threading.Thread(target=_serve_plots, daemon=True).start()
+
+    # Run the FastMCP server with SSE transport
+    mcp.run(transport="sse")
+```
+
+```{=html}
 <p>
 <code class="docutils literal notranslate">
 <span class="pre" style="font-weight:600">requirements.txt</span>
 </code>
-</p><div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span data-line="1">mcp
-</span><span data-line="2">plotly
-</span></pre></div>
-</div>
+</p>
+```
+``` text
+mcp
+plotly
+```
+
+```{=html}
 <p>
 <code class="docutils literal notranslate">
 <span class="pre" style="font-weight:600">Dockerfile</span>
 </code>
-</p><div class="highlight-docker notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="k">FROM</span><span class="w"> </span><span class="s">python:3.12-slim</span>
-</span><span data-line="2"><span class="k">WORKDIR</span><span class="w"> </span><span class="s">/app</span>
-</span><span data-line="3"><span class="k">COPY</span><span class="w"> </span>requirements.txt<span class="w"> </span>.
-</span><span data-line="4"><span class="k">RUN</span><span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
-</span><span data-line="5"><span class="k">COPY</span><span class="w"> </span>server.py<span class="w"> </span>.
-</span><span data-line="6"><span class="k">CMD</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;python&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;server.py&quot;</span><span class="p">]</span>
-</span></pre></div>
-</div>
-</section>
-</section>
-<section id="configure-the-assistant">
-<h3>2.2 Configure the assistant<a class="headerlink" href="#configure-the-assistant" title="Link to this heading">¶</a></h3>
+</p>
+```
+``` docker
+FROM python:3.12-slim
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+COPY server.py .
+CMD ["python", "server.py"]
+```
+
+### 2.2 Configure the assistant
+
+```{=html}
 <p>
 Finally, we configure the assistant in <code>librechat.yaml</code> using a
 <a href="https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/model_specs">LibreChat <code>modelSpecs</code> object</a>
 that combines the Bedrock model, the three MCP servers, and a system prompt.
-</p><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="nt">modelSpecs</span><span class="p">:</span>
-</span><span data-line="2"><span class="w">  </span><span class="nt">list</span><span class="p">:</span>
-</span><span data-line="3"><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;forecasting-assistant&quot;</span>
-</span><span data-line="4"><span class="w">      </span><span class="nt">label</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Forecasting</span><span class="nv"> </span><span class="s">Assistant&quot;</span>
-</span><span data-line="5"><span class="w">      </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</span><span data-line="6"><span class="w">      </span><span class="nt">artifacts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</span><span data-line="7"><span class="w">      </span><span class="nt">mcpServers</span><span class="p">:</span>
-</span><span data-line="8"><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;clickhouse-playground&quot;</span>
-</span><span data-line="9"><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;chronos-forecasting&quot;</span>
-</span><span data-line="10"><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;data-visualization&quot;</span>
-</span><span data-line="11"><span class="w">      </span><span class="nt">preset</span><span class="p">:</span>
-</span><span data-line="12"><span class="w">        </span><span class="nt">endpoint</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;bedrock&quot;</span>
-</span><span data-line="13"><span class="w">        </span><span class="nt">model</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;eu.anthropic.claude-sonnet-4-6&quot;</span>
-</span><span data-line="14"><span class="w">        </span><span class="nt">region</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;eu-west-1&quot;</span>
-</span><span data-line="15"><span class="w">        </span><span class="nt">promptPrefix</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-</span><span data-line="16"><span class="w">          </span><span class="no">You are a time series forecasting assistant.</span>
-</span><span data-line="17"><span class="w">          </span><span class="no">Do not alter the time frequency of the data unless the user explicitly requests it.</span>
-</span><span data-line="18"><span class="w">          </span><span class="no">To visualize data, always use the `visualize_data` tool. Never write code to generate plots.</span>
-</span><span data-line="19"><span class="w">          </span><span class="no">When visualizing multiple series, always pass them together to the `visualize_data` tool in a single call,</span>
-</span><span data-line="20"><span class="w">          </span><span class="no">as it generates subplots automatically.</span>
-</span><span data-line="21"><span class="w">          </span><span class="no">Always render the URL returned by the `visualize_data` tool as an artifact using this exact format:</span>
-</span><span data-line="22"><span class="w">          </span><span class="no">:::artifact{identifier=&quot;&lt;IDENTIFIER&gt;&quot; type=&quot;text/html&quot; title=&quot;&lt;TITLE&gt;&quot;}</span>
-</span><span data-line="23"><span class="w">          </span><span class="no">\`\`\`</span>
-</span><span data-line="24"><span class="w">          </span><span class="no">&lt;!DOCTYPE html&gt;</span>
-</span><span data-line="25"><span class="w">          </span><span class="no">&lt;html&gt;</span>
-</span><span data-line="26"><span class="w">          </span><span class="no">&lt;body&gt;</span>
-</span><span data-line="27"><span class="w">            </span><span class="no">&lt;iframe src=&quot;&lt;URL&gt;&quot; width=&quot;100%&quot; height=&quot;800px&quot; frameborder=&quot;0&quot;&gt;&lt;/iframe&gt;</span>
-</span><span data-line="28"><span class="w">          </span><span class="no">&lt;/body&gt;</span>
-</span><span data-line="29"><span class="w">          </span><span class="no">&lt;/html&gt;</span>
-</span><span data-line="30"><span class="w">          </span><span class="no">\`\`\`</span>
-</span><span data-line="31"><span class="w">          </span><span class="no">:::</span>
-</span><span data-line="32"><span class="w">          </span><span class="no">Never return the raw URL and never ask the user to open the URL themselves.</span>
-</span></pre></div>
-</div>
-</section>
-<section id="chat-with-the-assistant">
-<h3>2.3 Chat with the assistant<a class="headerlink" href="#chat-with-the-assistant" title="Link to this heading">¶</a></h3>
-<p>To demonstrate a typical interaction, we walk through a short conversation with the assistant covering data
-exploration, visualization, and forecasting. We start by asking which time series are available in the database,
-then request a plot of Product A’s hourly sales over the most recent week, use that data as context to forecast
-the next 48 hours, and finally repeat the analysis for Products B and C, visualizing all three series and their
-forecasts in a single chart.</p>
+</p>
+```
+``` yaml
+modelSpecs:
+  list:
+    - name: "forecasting-assistant"
+      label: "Forecasting Assistant"
+      default: true
+      artifacts: true
+      mcpServers:
+        - "clickhouse-playground"
+        - "chronos-forecasting"
+        - "data-visualization"
+      preset:
+        endpoint: "bedrock"
+        model: "eu.anthropic.claude-sonnet-4-6"
+        region: "eu-west-1"
+        promptPrefix: |
+          You are a time series forecasting assistant.
+          Do not alter the time frequency of the data unless the user explicitly requests it.
+          To visualize data, always use the `visualize_data` tool. Never write code to generate plots.
+          When visualizing multiple series, always pass them together to the `visualize_data` tool in a single call,
+          as it generates subplots automatically.
+          Always render the URL returned by the `visualize_data` tool as an artifact using this exact format:
+          :::artifact{identifier="<IDENTIFIER>" type="text/html" title="<TITLE>"}
+          \`\`\`
+          <!DOCTYPE html>
+          <html>
+          <body>
+            <iframe src="<URL>" width="100%" height="800px" frameborder="0"></iframe>
+          </body>
+          </html>
+          \`\`\`
+          :::
+          Never return the raw URL and never ask the user to open the URL themselves.
+```
+
+### 2.3 Chat with the assistant
+
+To demonstrate a typical interaction, we walk through a short
+conversation with the assistant covering data exploration,
+visualization, and forecasting. We start by asking which time series are
+available in the database, then request a plot of Product A\'s hourly
+sales over the most recent week, use that data as context to forecast
+the next 48 hours, and finally repeat the analysis for Products B and C,
+visualizing all three series and their forecasts in a single chart.
+
+```{=html}
 <div class="user-container">
 <div class="user-name">User</div>
 <div class="message">
@@ -8010,86 +7895,34 @@ http://localhost:8004/plot_32abcfb962dc412f8909d2f8283c5067.html
 </div>
 
 </div>
-</div><p>The assistant consistently followed all instructions and used the correct tools in the right order.</p>
-<p>One limitation worth noting is that rather than joining the <code class="docutils literal notranslate"><span class="pre">sales</span></code> and <code class="docutils literal notranslate"><span class="pre">products</span></code> tables to resolve product names, the assistant
-memorized the product IDs from the <code class="docutils literal notranslate"><span class="pre">products</span></code> table and used them directly in subsequent queries.
-While this approach worked correctly in this case, it is not robust, as the <code class="docutils literal notranslate"><span class="pre">products</span></code> table may change over time.</p>
-<p>We also note that the model’s thinking is occasionally too verbose. Additionally, in the final turn, the model’s internal
-reasoning refers to “temperature readings” and “temperature curves” despite operating on product sales data - a domain slip
-in extended thinking that did not affect the final output.</p>
-<p>You can download the full code from our <a class="reference external" href="https://github.com/flaviagiammarino/machine-learning-blog/tree/main/forecasting_assistant/">GitHub repository</a>.</p>
-</section>
-</section>
-<section id="references">
-<h2>References<a class="headerlink" href="#references" title="Link to this heading">¶</a></h2>
-<p>[1] Ansari, A.F., Stella, L., Turkmen, C., Zhang, X., Mercado, P., Shen, H., Shchur, O., Rangapuram, S.S., Arango, S.P., Kapoor, S. and Zschiegner, J., (2024).
-Chronos: Learning the language of time series. <em>arXiv preprint</em>,
-<a class="reference external" href="https://doi.org/10.48550/arXiv.2403.07815">doi: 10.48550/arXiv.2403.07815</a>.</p>
-<p>[2] Ansari, A.F., Turkmen, C., Shchur, O., and Stella, L. (2024).
-Fast and accurate zero-shot forecasting with Chronos-Bolt and AutoGluon.
-<a class="reference external" href="https://aws.amazon.com/blogs/machine-learning/fast-and-accurate-zero-shot-forecasting-with-chronos-bolt-and-autogluon/">AWS Blogs - Artificial Intelligence</a>.</p>
-</section>
-</section>
-
-        </article><button class="back-to-top" type="button">
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-    <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
-  </svg>
-  <span>Back to top</span>
-</button><!--<div class="navigation flex print:hidden"><div class="navigation-prev">
-    <a href="../blog.html">
-      <i class="i-lucide chevron-left"></i>
-      <div class="page-info">
-        <span>Previous</span><div class="title">&lt;no title&gt;</div></div>
-    </a>
-  </div><div class="navigation-next">
-    <a href="chronos_bedrock.html">
-      <div class="page-info">
-        <span>Next</span>
-        <div class="title">Zero-shot time series forecasting with Chronos using Amazon Bedrock and ClickHouse</div>
-      </div>
-      <i class="i-lucide chevron-right"></i>
-    </a>
-  </div></div>--></div>
-    </div>
-  </main>
-
 </div>
-<footer class="sy-foot">
-  <div class="sy-foot-inner sy-container mx-auto">
-    <div class="sy-foot-reserved md:flex justify-between items-center">
-      <div class="sy-foot-copyright"><p>Copyright © 2026, Flavia Giammarino.</p>
-  
-  <p>
-    Made with
-    
-    <a href="https://www.sphinx-doc.org/">Sphinx</a> and
-    
-    <a href="https://shibuya.lepture.com">Shibuya theme</a>.
-  </p>
-</div>
-      <div class="sy-foot-socials">
-<a href="https://github.com/flaviagiammarino" aria-label="GitHub">
-  <iconify-icon icon="simple-icons:github"></iconify-icon>
-</a>
-<a href="https://x.com/Flavia_G_ML" aria-label="X (Twitter)">
-  <iconify-icon icon="prime:twitter"></iconify-icon>
-</a>
-<a href="https://youtube.com/@FlaviaGiammarino" aria-label="YouTube">
-  <iconify-icon icon="simple-icons:youtube"></iconify-icon>
-</a>
-<a href="https://www.linkedin.com/in/flaviagiammarino" aria-label="LinkedIn">
-  <iconify-icon icon="simple-icons:linkedin"></iconify-icon>
-</a></div>
-    </div>
-  </div>
-</footer>
-      <script src="../_static/documentation_options.js?v=73411916"></script>
-      <script src="../_static/doctools.js?v=9bcbadda"></script>
-      <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
-      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
-      <script src="../_static/copybutton.js?v=f281be69"></script>
-      <script src="../_static/design-tabs.js?v=f930bc37"></script>
-      <script src="../_static/shibuya.js?v=e730760c"></script>
-      <script src="../_static/custom.js"></script></body>
-</html>
+```
+The assistant consistently followed all instructions and used the
+correct tools in the right order. One limitation worth noting is that
+rather than joining the `sales` and `products` tables to resolve product
+names, the assistant memorized the product IDs from the `products` table
+and used them directly in subsequent queries. While this approach worked
+correctly in this case, it is not robust, as the `products` table may
+change over time.
+
+We also note that the model\'s thinking is occasionally too verbose.
+Additionally, in the final turn, the model\'s internal reasoning refers
+to \"temperature readings\" and \"temperature curves\" despite operating
+on product sales data - a domain slip in extended thinking that did not
+affect the final output.
+
+You can download the full code from our [GitHub
+repository](https://github.com/flaviagiammarino/machine-learning-blog/tree/main/forecasting_assistant/).
+
+## References
+
+\[1\] Ansari, A.F., Stella, L., Turkmen, C., Zhang, X., Mercado, P.,
+Shen, H., Shchur, O., Rangapuram, S.S., Arango, S.P., Kapoor, S. and
+Zschiegner, J., (2024). Chronos: Learning the language of time series.
+*arXiv preprint*, [doi:
+10.48550/arXiv.2403.07815](https://doi.org/10.48550/arXiv.2403.07815).
+
+\[2\] Ansari, A.F., Turkmen, C., Shchur, O., and Stella, L. (2024). Fast
+and accurate zero-shot forecasting with Chronos-Bolt and AutoGluon. [AWS
+Blogs - Artificial
+Intelligence](https://aws.amazon.com/blogs/machine-learning/fast-and-accurate-zero-shot-forecasting-with-chronos-bolt-and-autogluon/).

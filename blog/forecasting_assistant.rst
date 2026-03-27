@@ -7887,6 +7887,7 @@ forecasts in a single chart.
     </div>
 
 The assistant consistently followed all instructions and used the correct tools in the right order.
+
 One limitation worth noting is that rather than joining the ``sales`` and ``products`` tables to resolve product names, the assistant
 memorized the product IDs from the ``products`` table and used them directly in subsequent queries.
 While this approach worked correctly in this case, it is not robust, as the ``products`` table may change over time.
