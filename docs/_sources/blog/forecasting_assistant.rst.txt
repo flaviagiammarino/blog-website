@@ -165,7 +165,7 @@ We also register the ClickHouse MCP server in ``librechat.yaml`` to run on port 
 
 After that, we create the forecasting MCP server using the `FastMCP <https://github.com/jlowin/fastmcp>`__ library.
 The server exposes a ``generate_forecasts`` tool that takes a list of historical values, a prediction length, and a
-list of quantile levels, and returns probabilistic time series forecasts by invoking the Chronos Bedrock endpoint
+list of quantile levels, and returns probabilistic time series forecasts by invoking the Chronos endpoint
 via ``boto3``. For instructions on deploying Chronos on Bedrock, we refer to
 `our previous blog post <https://flaviagiammarino.com/blog/chronos_bedrock.html#create-the-bedrock-endpoint>`__.
 
@@ -7890,6 +7890,10 @@ The assistant consistently followed all instructions and used the correct tools 
 One limitation worth noting is that rather than joining the ``sales`` and ``products`` tables to resolve product names, the assistant
 memorized the product IDs from the ``products`` table and used them directly in subsequent queries.
 While this approach worked correctly in this case, it is not robust, as the ``products`` table may change over time.
+
+We also note that the model's thinking is occasionally too verbose. Additionally, in the final turn, the model's internal
+reasoning refers to "temperature readings" and "temperature curves" despite operating on product sales data - a domain slip
+in extended thinking that did not affect the final output.
 
 You can download the full code from our `GitHub repository <https://github.com/flaviagiammarino/machine-learning-blog/tree/main/forecasting_assistant/>`__.
 

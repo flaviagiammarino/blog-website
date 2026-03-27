@@ -340,7 +340,7 @@ we create a <code class="docutils literal notranslate"><span class="pre">docker-
 <h4>2.1.2 Create the forecasting MCP server<a class="headerlink" href="#create-the-forecasting-mcp-server" title="Link to this heading">¶</a></h4>
 <p>After that, we create the forecasting MCP server using the <a class="reference external" href="https://github.com/jlowin/fastmcp">FastMCP</a> library.
 The server exposes a <code class="docutils literal notranslate"><span class="pre">generate_forecasts</span></code> tool that takes a list of historical values, a prediction length, and a
-list of quantile levels, and returns probabilistic time series forecasts by invoking the Chronos Bedrock endpoint
+list of quantile levels, and returns probabilistic time series forecasts by invoking the Chronos endpoint
 via <code class="docutils literal notranslate"><span class="pre">boto3</span></code>. For instructions on deploying Chronos on Bedrock, we refer to
 <a class="reference external" href="https://flaviagiammarino.com/blog/chronos_bedrock.html#create-the-bedrock-endpoint">our previous blog post</a>.</p>
 <p>We configure the forecasting MCP server in the <code class="docutils literal notranslate"><span class="pre">docker-compose.override.yml</span></code> file
@@ -8014,6 +8014,9 @@ http://localhost:8004/plot_32abcfb962dc412f8909d2f8283c5067.html
 One limitation worth noting is that rather than joining the <code class="docutils literal notranslate"><span class="pre">sales</span></code> and <code class="docutils literal notranslate"><span class="pre">products</span></code> tables to resolve product names, the assistant
 memorized the product IDs from the <code class="docutils literal notranslate"><span class="pre">products</span></code> table and used them directly in subsequent queries.
 While this approach worked correctly in this case, it is not robust, as the <code class="docutils literal notranslate"><span class="pre">products</span></code> table may change over time.</p>
+<p>We also note that the model’s thinking is occasionally too verbose. Additionally, in the final turn, the model’s internal
+reasoning refers to “temperature readings” and “temperature curves” despite operating on product sales data - a domain slip
+in extended thinking that did not affect the final output.</p>
 <p>You can download the full code from our <a class="reference external" href="https://github.com/flaviagiammarino/machine-learning-blog/tree/main/forecasting_assistant/">GitHub repository</a>.</p>
 </section>
 </section>
