@@ -49,8 +49,8 @@ sitemap_url_scheme = "{link}"
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_baseurl = 'https://flaviagiammarino.com/'
-html_title = 'flaviagiammarino.com'
-html_short_title = 'flaviagiammarino.com'
+html_title = 'FlaviaGiammarino.com | Machine Learning Consultant | AWS (Bedrock & SageMaker)'
+html_short_title = 'FlaviaGiammarino.com'
 html_favicon = 'static/favicon.ico'
 html_static_path = ['static']
 html_extra_path = ['extra']
