@@ -560,7 +560,7 @@ the time series and prediction length from the previous turn without us repeatin
     <p>🔨 Ran <code>generate_forecasts</code></p>
 
     <code>
-    <pre class="tool">
+    <pre class="tool" style="overflow-x: auto;">
     {
         'input': {
             'target': [16, 6, 0, 3, 13, 20, 18, 9, 1, 1, 10, 18, 19, 12, 3, 0, 7, 16, 20, 15, 5, 0, 4, 14, 20, 17, 8, 1, 2, 11, 19, 19, 11, 2, 1, 8, 17, 20, 14, 4, 0, 5, 14, 20, 16, 7, 0, 3, 12, 19, 18, 10, 2, 1, 9, 18, 20, 13, 3, 0, 6, 15, 20, 16],
@@ -574,7 +574,7 @@ the time series and prediction length from the previous turn without us repeatin
     <p>🔨 Output:</p>
 
     <code>
-    <pre class="tool">
+    <pre class="tool" style="overflow-x: auto;">
     {
         'output': {
             'mean': [7.842952728271484, 3.9406585693359375, 4.136490345001221, 7.826767921447754, 15.442928314208984, 15.398470878601074, 9.315390586853027, 5.722835063934326, 5.371423244476318, 7.833820343017578],
