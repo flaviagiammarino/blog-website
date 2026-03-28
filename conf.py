@@ -55,10 +55,7 @@ html_favicon = 'static/favicon.ico'
 html_static_path = ['static']
 html_extra_path = ['extra']
 html_css_files = ['custom.css']
-html_js_files = [
-    ('custom.js',),
-    ('https://plausible.io/js/script.js', {"data-domain": "flaviagiammarino.com", "defer": "defer"}),
-]
+html_js_files = ['custom.js']
 html_show_sourcelink = True
 html_use_index = True
 html_domain_indices = False
