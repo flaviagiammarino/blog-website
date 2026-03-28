@@ -1,11 +1,11 @@
 :layout: post
 
 .. post:: March 15, 2026
-    :tags: Time Series Forecasting, Large Language Models, Amazon Chronos, Amazon Bedrock
+    :tags: Time Series Forecasting, Amazon Chronos, Amazon Bedrock, LibreChat
     :category: Time Series Foundation Models
     :author: Flavia
     :description: Build a time series forecasting assistant with ClickHouse, Amazon Bedrock, and LibreChat
-    :keywords: Time Series Forecasting, Large Language Models, Amazon Chronos, Amazon Bedrock, LibreChat, ClickHouse
+    :keywords: Time Series Forecasting, Amazon Chronos, Amazon Bedrock, LibreChat, ClickHouse
     :image_src: https://machine-learning-blog.s3.eu-west-2.amazonaws.com/forecasting-assistant/architecture_diagram.png
     :image_alt: Architecture diagram showing a user interacting with LibreChat, which routes requests to Claude Sonnet 4.6 on Amazon Bedrock to query a ClickHouse database and generate forecasts using Chronos on Amazon Bedrock.
     :excerpt: 1
@@ -201,6 +201,7 @@ The code used for building the Docker image of the forecasting MCP server is rep
 .. raw:: html
 
     <p>
+    <span style="font-weight:600">2.1.2.1</span>
     <code class="docutils literal notranslate">
     <span class="pre" style="font-weight:600">server.py</span>
     </code>
@@ -276,6 +277,7 @@ The code used for building the Docker image of the forecasting MCP server is rep
 .. raw:: html
 
     <p>
+    <span style="font-weight:600">2.1.2.2</span>
     <code class="docutils literal notranslate">
     <span class="pre" style="font-weight:600">requirements.txt</span>
     </code>
@@ -289,6 +291,7 @@ The code used for building the Docker image of the forecasting MCP server is rep
 .. raw:: html
 
     <p>
+    <span style="font-weight:600">2.1.2.3</span>
     <code class="docutils literal notranslate">
     <span class="pre" style="font-weight:600">Dockerfile</span>
     </code>
@@ -351,6 +354,7 @@ The code used for building the Docker image of the data visualization MCP server
 .. raw:: html
 
     <p>
+    <span style="font-weight:600">2.1.3.1</span>
     <code class="docutils literal notranslate">
     <span class="pre" style="font-weight:600">server.py</span>
     </code>
@@ -633,6 +637,7 @@ The code used for building the Docker image of the data visualization MCP server
 .. raw:: html
 
     <p>
+    <span style="font-weight:600">2.1.3.2</span>
     <code class="docutils literal notranslate">
     <span class="pre" style="font-weight:600">requirements.txt</span>
     </code>
@@ -646,6 +651,7 @@ The code used for building the Docker image of the data visualization MCP server
 .. raw:: html
 
     <p>
+    <span style="font-weight:600">2.1.3.3</span>
     <code class="docutils literal notranslate">
     <span class="pre" style="font-weight:600">Dockerfile</span>
     </code>

@@ -23,7 +23,8 @@
 }
 </style>
     <meta name="description" content="Build a time series forecasting assistant with ClickHouse, Amazon Bedrock, and LibreChat">
-    <meta name="keywords" content="Time Series Forecasting, Large Language Models, Amazon Chronos, Amazon Bedrock, LibreChat, ClickHouse">
+    <meta name="keywords" content="Time Series Forecasting, Amazon Chronos, Amazon Bedrock, LibreChat, ClickHouse">
+    <meta name="thumbnail" content="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/forecasting-assistant/architecture_diagram.png">
     <meta property="og:title" content="Building a time series forecasting assistant with Amazon Bedrock and LibreChat">
     <meta property="og:description" content="Build a time series forecasting assistant with ClickHouse, Amazon Bedrock, and LibreChat">
     <meta property="og:image" content="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/forecasting-assistant/architecture_diagram.png">
@@ -47,7 +48,7 @@
         "name": "Flavia Giammarino"
       },
       "description": "Build a time series forecasting assistant with ClickHouse, Amazon Bedrock, and LibreChat",
-      "keywords": "Time Series Forecasting, Large Language Models, Amazon Chronos, Amazon Bedrock, LibreChat, ClickHouse",
+      "keywords": "Time Series Forecasting, Amazon Chronos, Amazon Bedrock, LibreChat, ClickHouse",
       "mainEntityOfPage": {
         "@type": "WebPage",
         "@id": ""
@@ -113,6 +114,10 @@ data-aria-dark="Switch to auto color mode">
     </li>
       
     <li>
+      <a style="font-size: 90%" href="category/time-series-agents.html">Time Series Agents (1)</a>
+    </li>
+      
+    <li>
       <a style="font-size: 90%" href="category/time-series-foundation-models.html">Time Series Foundation Models (2)</a>
     </li>
      
@@ -125,8 +130,12 @@ data-aria-dark="Switch to auto color mode">
   </h3>
   <ul class="ablog-cloud">
      
-    <li class="ablog-cloud ablog-cloud-3">
+    <li class="ablog-cloud ablog-cloud-2">
       <a style="font-size: 90%" href="tag/amazon-bedrock.html">Amazon Bedrock</a>
+    </li>
+      
+    <li class="ablog-cloud ablog-cloud-1">
+      <a style="font-size: 90%" href="tag/amazon-bedrock-agentcore.html">Amazon Bedrock AgentCore</a>
     </li>
       
     <li class="ablog-cloud ablog-cloud-3">
@@ -137,8 +146,16 @@ data-aria-dark="Switch to auto color mode">
       <a style="font-size: 90%" href="tag/amazon-sagemaker.html">Amazon SageMaker</a>
     </li>
       
-    <li class="ablog-cloud ablog-cloud-3">
+    <li class="ablog-cloud ablog-cloud-1">
       <a style="font-size: 90%" href="tag/large-language-models.html">Large Language Models</a>
+    </li>
+      
+    <li class="ablog-cloud ablog-cloud-1">
+      <a style="font-size: 90%" href="tag/librechat.html">LibreChat</a>
+    </li>
+      
+    <li class="ablog-cloud ablog-cloud-1">
+      <a style="font-size: 90%" href="tag/strands-agents.html">Strands Agents</a>
     </li>
       
     <li class="ablog-cloud ablog-cloud-5">
@@ -155,7 +172,7 @@ data-aria-dark="Switch to auto color mode">
   <ul>
      
     <li>
-      <a style="font-size: 90%" href="2026.html">2026 (1)</a>
+      <a style="font-size: 90%" href="2026.html">2026 (2)</a>
     </li>
       
     <li>
@@ -172,7 +189,7 @@ data-aria-dark="Switch to auto color mode">
   <ul>
      
     <li>
-      <a style="font-size: 90%" href="author/flavia-giammarino.html">Flavia Giammarino (3)</a>
+      <a style="font-size: 90%" href="author/flavia-giammarino.html">Flavia Giammarino (4)</a>
     </li>
      
   </ul>
@@ -360,6 +377,7 @@ that we previously created for configuring the ClickHouse MCP server:</p>
 </div>
 <p>The code used for building the Docker image of the forecasting MCP server is reported below.</p>
 <p>
+<span style="font-weight:600">2.1.2.1</span>
 <code class="docutils literal notranslate">
 <span class="pre" style="font-weight:600">server.py</span>
 </code>
@@ -430,6 +448,7 @@ that we previously created for configuring the ClickHouse MCP server:</p>
 </span></pre></div>
 </div>
 <p>
+<span style="font-weight:600">2.1.2.2</span>
 <code class="docutils literal notranslate">
 <span class="pre" style="font-weight:600">requirements.txt</span>
 </code>
@@ -438,6 +457,7 @@ that we previously created for configuring the ClickHouse MCP server:</p>
 </span></pre></div>
 </div>
 <p>
+<span style="font-weight:600">2.1.2.3</span>
 <code class="docutils literal notranslate">
 <span class="pre" style="font-weight:600">Dockerfile</span>
 </code>
@@ -489,6 +509,7 @@ As we did for the forecasting server, we configure it in <code class="docutils l
 </div>
 <p>The code used for building the Docker image of the data visualization MCP server is reported below.</p>
 <p>
+<span style="font-weight:600">2.1.3.1</span>
 <code class="docutils literal notranslate">
 <span class="pre" style="font-weight:600">server.py</span>
 </code>
@@ -766,6 +787,7 @@ As we did for the forecasting server, we configure it in <code class="docutils l
 </span></pre></div>
 </div>
 <p>
+<span style="font-weight:600">2.1.3.2</span>
 <code class="docutils literal notranslate">
 <span class="pre" style="font-weight:600">requirements.txt</span>
 </code>
@@ -774,6 +796,7 @@ As we did for the forecasting server, we configure it in <code class="docutils l
 </span></pre></div>
 </div>
 <p>
+<span style="font-weight:600">2.1.3.3</span>
 <code class="docutils literal notranslate">
 <span class="pre" style="font-weight:600">Dockerfile</span>
 </code>
