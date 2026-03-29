@@ -4,7 +4,7 @@
     :tags: Time Series Forecasting, Amazon Chronos, Amazon Bedrock, Strands Agents
     :category: Time Series Agents
     :author: Flavia
-    :description: Build a time series forecasting agent with Amazon Chronos and Amazon Bedrock AgentCore
+    :description: Build a conversational time series forecasting agent with Strands Agents using Amazon Chronos as a tool and deploy it to Amazon Bedrock AgentCore
     :keywords: Time Series Forecasting, Amazon Chronos, Amazon Bedrock AgentCore, Strands Agents
     :image_src: https://machine-learning-blog.s3.eu-west-2.amazonaws.com/forecasting_agent/architecture_diagram.png
     :image_alt: Architecture diagram showing a user communicating with a Strands agent hosted on Amazon Bedrock AgentCore Runtime, which uses Claude Sonnet 4.6 as the language model and invokes Chronos on Amazon Bedrock as a time series forecasting tool.
