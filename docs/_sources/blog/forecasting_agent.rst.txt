@@ -233,14 +233,10 @@ The ``requirements.txt`` lists the packages needed to run the agent:
 We deploy the agent with the `bedrock-agentcore-starter-toolkit <https://aws.github.io/bedrock-agentcore-starter-toolkit/>`__ using direct code deployment.
 The ``--non-interactive`` flag skips the interactive prompts and deploys with short-term memory enabled by default.
 Short-term memory persists conversation context within a session without requiring any configuration in the agent code.
-The deployment creates four resources:
 
-.. rst-class:: list
-
-    - An AgentCore Runtime named ``forecasting_agent``, whose ARN will be needed to invoke the agent.
-    - A short-term memory resource in AgentCore Memory, automatically provisioned and linked to the runtime.
-    - A deployment package uploaded as a zip file to an S3 bucket, which is automatically created.
-    - An AgentCore Runtime execution role in IAM with the necessary permissions.
+The deployment creates four resources: an AgentCore Runtime named ``forecasting_agent``, whose ARN will be needed to invoke the agent;
+a short-term memory resource in AgentCore Memory, automatically provisioned and linked to the runtime; a deployment package uploaded as
+a zip file to an S3 bucket, which is automatically created; an AgentCore Runtime execution role in IAM with the necessary permissions.
 
 .. code-block:: shell
 
