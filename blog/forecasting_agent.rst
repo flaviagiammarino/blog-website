@@ -253,7 +253,7 @@ a zip file to S3, and an AgentCore Runtime execution role in IAM.
 .. important::
 
     Attach the following policy to the AgentCore execution role in IAM to allow the agent to invoke the
-    Chronos-Bolt endpoint on Amazon Bedrock. Replace ``<bedrock-endpoint-arn>`` with the
+    Chronos-Bolt endpoint on Bedrock. Replace ``<bedrock-endpoint-arn>`` with the
     ``bedrock_endpoint_arn`` returned in Section 2.1.
 
     .. code-block:: json
