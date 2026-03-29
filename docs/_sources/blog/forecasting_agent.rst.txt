@@ -282,7 +282,7 @@ a zip file to S3, and an AgentCore Runtime execution role in IAM.
 2.4 Test the agent in a Jupyter Notebook
 ===============================================================================================================
 
-We start by importing the required libraries: ``boto3`` to invoke the agent on Amazon Bedrock AgentCore,
+We start by importing the required libraries: ``boto3`` to invoke the agent on Bedrock AgentCore,
 ``json`` to serialize the request payload and deserialize the response, ``uuid`` to generate unique session
 identifiers, and ``IPython.display`` to render the agent's responses as formatted Markdown in the notebook.
 
@@ -418,7 +418,7 @@ context and short-term memory.
 We start the conversation by asking the agent what it can do.
 
 .. code:: ipython3
-
+    # Turn 1 / 3
     prompt = """
     What can you help me with?
     """
@@ -486,7 +486,7 @@ We then provide a time series and ask the agent to forecast the next 10 values. 
 asks for the quantile levels before proceeding, as instructed by the system prompt.
 
 .. code:: ipython3
-
+    # Turn 2 / 3
     prompt = """
     Can we predict the next 10 values of this time series?
     [16, 6, 0, 3, 13, 20, 18, 9, 1, 1, 10, 18, 19, 12, 3, 0, 7, 16, 20, 15, 5, 0, 4, 14, 20, 17, 8, 1, 2, 11, 19, 19, 11, 2, 1, 8, 17, 20, 14, 4, 0, 5, 14, 20, 16, 7, 0, 3, 12, 19, 18, 10, 2, 1, 9, 18, 20, 13, 3, 0, 6, 15, 20, 16]
@@ -533,7 +533,7 @@ forecast and the 95% prediction interval. This turn demonstrates the short-term 
 the time series and prediction length from the previous turn without us repeating them.
 
 .. code:: ipython3
-
+    # Turn 3 / 3
     prompt = """
     I need a 95% prediction interval. I don't need the median, only the mean.
     """
