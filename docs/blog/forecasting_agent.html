@@ -246,8 +246,7 @@ and deploying it to Amazon Bedrock AgentCore.</p>
 <h3>2.1 Deploy Chronos to Amazon Bedrock<a class="headerlink" href="#deploy-chronos-to-amazon-bedrock" title="Link to this heading">¶</a></h3>
 <p>We start by deploying Chronos-Bolt to a Bedrock endpoint hosted on a CPU EC2 instance
 using <code class="docutils literal notranslate"><span class="pre">boto3</span></code>. To use the code below, you need to provide the Bedrock Marketplace ARN of Chronos-Bolt in
-your AWS region, the ARN of your Bedrock execution role, and a custom endpoint name. Remember to delete the
-endpoint when it is no longer needed to avoid unexpected charges.</p>
+your AWS region, the ARN of your Bedrock execution role, and a custom endpoint name.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
 </span><span data-line="2">
 </span><span data-line="3"><span class="c1"># Create the Bedrock client</span>
@@ -273,6 +272,16 @@ endpoint when it is no longer needed to avoid unexpected charges.</p>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">bedrock_endpoint_arn</span></code> returned by the code will be needed in two places: inside the agent’s tool when
 invoking the endpoint, and in a custom IAM policy that grants the AgentCore execution role permission to invoke the endpoint.</p>
+<div class="admonition important">
+<p class="admonition-title">Important</p>
+<p>Remember to delete the endpoint when is no longer needed to avoid unexpected charges.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Delete the Bedrock endpoint</span>
+</span><span data-line="2"><span class="n">response</span> <span class="o">=</span> <span class="n">bedrock_client</span><span class="o">.</span><span class="n">delete_marketplace_model_endpoint</span><span class="p">(</span>
+</span><span data-line="3">    <span class="n">endpointArn</span><span class="o">=</span><span class="n">bedrock_endpoint_arn</span>
+</span><span data-line="4"><span class="p">)</span>
+</span></pre></div>
+</div>
+</div>
 </section>
 <section id="build-the-agent-with-strands-agents">
 <h3>2.2 Build the agent with Strands Agents<a class="headerlink" href="#build-the-agent-with-strands-agents" title="Link to this heading">¶</a></h3>

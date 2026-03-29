@@ -52,8 +52,7 @@ and deploying it to Amazon Bedrock AgentCore.
 
 We start by deploying Chronos-Bolt to a Bedrock endpoint hosted on a CPU EC2 instance
 using ``boto3``. To use the code below, you need to provide the Bedrock Marketplace ARN of Chronos-Bolt in
-your AWS region, the ARN of your Bedrock execution role, and a custom endpoint name. Remember to delete the
-endpoint when it is no longer needed to avoid unexpected charges.
+your AWS region, the ARN of your Bedrock execution role, and a custom endpoint name.
 
 .. code:: python
 
@@ -81,6 +80,17 @@ endpoint when it is no longer needed to avoid unexpected charges.
 
 The ``bedrock_endpoint_arn`` returned by the code will be needed in two places: inside the agent's tool when
 invoking the endpoint, and in a custom IAM policy that grants the AgentCore execution role permission to invoke the endpoint.
+
+.. important::
+
+    Remember to delete the endpoint when is no longer needed to avoid unexpected charges.
+
+    .. code:: python
+
+        # Delete the Bedrock endpoint
+        response = bedrock_client.delete_marketplace_model_endpoint(
+            endpointArn=bedrock_endpoint_arn
+        )
 
 2.2 Build the agent with Strands Agents
 ===============================================================================================================
