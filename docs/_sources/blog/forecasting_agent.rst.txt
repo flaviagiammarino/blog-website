@@ -51,7 +51,7 @@ and deploying it to Bedrock AgentCore.
 ===============================================================================================================
 
 We start by deploying Chronos-Bolt to a Bedrock endpoint hosted on a CPU EC2 instance
-using ``boto3``. To use the code below, you need to provide the Bedrock Marketplace ARN of Chronos-Bolt in
+using Boto3. To use the code below, you need to provide the Bedrock Marketplace ARN of Chronos-Bolt in
 your AWS region, the ARN of your Bedrock execution role, and a custom endpoint name.
 
 .. code:: python
@@ -103,8 +103,6 @@ To build the agent, we need three files: an empty ``__init__.py``, ``agent.py``,
    ├── __init__.py
    ├── agent.py
    └── requirements.txt
-
-
 
 The ``agent.py`` script implements a Strands agent backed by Claude Sonnet 4.6 on Bedrock which responds
 to forecasting requests using a ``generate_forecasts`` tool. The tool takes as input the historical time series
@@ -426,62 +424,41 @@ We start the conversation by asking the agent what it can do.
     messages = get_streaming_response(prompt, session_id)
     print_messages(prompt, messages)
 
-.. raw:: html
+.. code-block:: text
 
-    <div class="user-container">
-    <div class="user-name">User</div>
-    <div class="message">
-    <p>
-    What can you help me with?
-    </p>
-    </div>
-    </div>
+    I'm a **time series forecasting assistant**! Here's what I can help you with:
 
-    <div class="ai-container">
-    <div class="ai-name">Agent</div>
-    <div class="message">
-    <p>
-    I’m a <strong>time series forecasting assistant</strong>! Here’s what I can help you with:
+    ---
 
-    <h3>📈 What I Do</h3>
-    I generate <strong>probabilistic time series forecasts</strong> from your historical
-    numerical data. This means I don’t just predict a single value — I
-    provide a <strong>range of possible future outcomes</strong> based on uncertainty.
+    ### 📈 What I Do
+    I generate **probabilistic time series forecasts** from your historical numerical data. This means I don't just predict a single value — I provide a **range of possible future outcomes** based on uncertainty.
 
-    <h3>🔢 What I Need From You</h3>
-    </hr>
-    To generate a forecast, I’ll need:
-    <ol>
-    <li><strong>Historical Data</strong> — A list of numerical values representing your time series
-    (e.g., daily sales, hourly temperatures, monthly revenue).</li>
-    <li><strong>Prediction Length</strong> — How many future time steps you want to
-       forecast (e.g., 7 for the next 7 days).</li>
-    <li><strong>Quantile Levels</strong> — The probability levels for uncertainty bounds
-       (e.g., <code>[0.1, 0.5, 0.9]</code> gives you a low, median, and high
-       estimate).</li>
-    </ol>
+    ---
 
-    <h3>💡 Example Use Cases</h3>
-    <ul>
-    <li> 📦 <strong>Demand forecasting</strong> — Predict future product sales</li>
-    <li> 🌡️ <strong>Weather trends</strong> — Forecast temperature or rainfall</li>
-    <li>  💰 <strong>Financial data</strong> — Project revenue or stock trends</li>
-    <li>  ⚡ <strong>Energy consumption</strong> — Anticipate future usage</li>
-    <li>  🌐 <strong>Web traffic</strong> — Estimate future site visits</li>
-    </ul>
+    ### 🔢 What I Need From You
+    To generate a forecast, I'll need:
 
-    <h3>🚀 Getting Started</h3>
+    1. **Historical Data** — A list of numerical values representing your time series (e.g., daily sales, hourly temperatures, monthly revenue).
+    2. **Prediction Length** — How many future time steps you want to forecast (e.g., 7 for the next 7 days).
+    3. **Quantile Levels** — The probability levels for uncertainty bounds (e.g., `[0.1, 0.5, 0.9]` gives you a low, median, and high estimate).
 
-    Simply share your <strong>time series data</strong>, and let me know:
-    <ul>
-    <li>How far ahead you’d like to forecast</li>
-    <li>What quantile levels you want</li>
-    </ul>
+    ---
 
-    I’ll take care of the rest!
-    </p>
-    </div>
-    </div>
+    ### 💡 Example Use Cases
+    - 📦 **Demand forecasting** — Predict future product sales
+    - 🌡️ **Weather trends** — Forecast temperature or rainfall
+    - 💰 **Financial data** — Project revenue or stock trends
+    - ⚡ **Energy consumption** — Anticipate future usage
+    - 🌐 **Web traffic** — Estimate future site visits
+
+    ---
+
+    ### 🚀 Getting Started
+    Simply share your **time series data**, and let me know:
+    - How far ahead you'd like to forecast
+    - What quantile levels you want
+
+    I'll take care of the rest!
 
 We then provide a time series and ask the agent to forecast the next 10 values. The agent
 asks for the quantile levels before proceeding, as instructed by the system prompt.
@@ -496,38 +473,16 @@ asks for the quantile levels before proceeding, as instructed by the system prom
     messages = get_streaming_response(prompt, session_id)
     print_messages(prompt, messages)
 
+.. code-block:: text
 
-.. raw:: html
+    Sure! Before I generate the forecast, I just need one more detail:
 
-    <div class="user-container">
-    <div class="user-name">User</div>
-    <div class="message">
-    <p>
-    Can we predict the next 10 values of this time series? [16, 6, 0, 3, 13,
-    20, 18, 9, 1, 1, 10, 18, 19, 12, 3, 0, 7, 16, 20, 15, 5, 0, 4, 14, 20,
-    17, 8, 1, 2, 11, 19, 19, 11, 2, 1, 8, 17, 20, 14, 4, 0, 5, 14, 20, 16,
-    7, 0, 3, 12, 19, 18, 10, 2, 1, 9, 18, 20, 13, 3, 0, 6, 15, 20, 16]
-    </p>
-    </div>
-    </div>
-
-    <div class="ai-container">
-    <div class="ai-name">Agent</div>
-    <div class="message">
-    <p>
-    Sure! Before I generate the forecast, I just need one more detail:<br>
-
-    <strong>What quantile levels would you like?</strong> These represent the uncertainty
-    bounds of the forecast. For example:
-    <ul>
-    <li><code>[0.1, 0.5, 0.9]</code> → low, median, and high estimates</li>
-    <li><code>[0.25, 0.5, 0.75]</code> → tighter range around the median</li>
-    </ul>
+    **What quantile levels would you like?**
+    These represent the uncertainty bounds of the forecast. For example:
+    - `[0.1, 0.5, 0.9]` → low, median, and high estimates
+    - `[0.25, 0.5, 0.75]` → tighter range around the median
 
     What would you prefer?
-    </p>
-    </div>
-    </div>
 
 We provide the requested quantile levels and specify that we want the mean instead of
 the median. The agent now has all the information it needs and calls the ``generate_forecasts`` tool, returning the mean
@@ -543,99 +498,32 @@ the time series and prediction length from the previous turn without us repeatin
     messages = get_streaming_response(prompt, session_id)
     print_messages(prompt, messages)
 
+.. code-block:: text
 
-.. raw:: html
+    Got it! I'll use quantile levels `[0.025, 0.975]` for the 95% prediction interval, along with the mean.
 
-    <div class="user-container">
-    <div class="user-name">User</div>
-    <div class="message">
-    <p>
-    I need a 95% prediction interval. I don’t need the median, only the mean.
-    </p>
-    </div>
-    </div>
+    🔨 Ran `generate_forecasts`
 
-    <div class="ai-container">
-    <div class="ai-name">Agent</div>
-    <div class="message">
-    <p>
-    Got it! I’ll use quantile levels <code>[0.025, 0.975]</code> for the 95% prediction interval, along with the mean.<br>
+        {'input': {'target': [16, 6, 0, 3, 13, 20, 18, 9, 1, 1, 10, 18, 19, 12, 3, 0, 7, 16, 20, 15, 5, 0, 4, 14, 20, 17, 8, 1, 2, 11, 19, 19, 11, 2, 1, 8, 17, 20, 14, 4, 0, 5, 14, 20, 16, 7, 0, 3, 12, 19, 18, 10, 2, 1, 9, 18, 20, 13, 3, 0, 6, 15, 20, 16], 'prediction_length': 10, 'quantile_levels': [0.025, 0.975]}}
 
-    <p>🔨 Ran <code>generate_forecasts</code></p>
+    🔨 Output:
 
-    <code>
-    <pre class="tool" style="overflow-x: auto; white-space: pre;">
-    {
-        'input': {
-            'target': [16, 6, 0, 3, 13, 20, 18, 9, 1, 1, 10, 18, 19, 12, 3, 0, 7, 16, 20, 15, 5, 0, 4, 14, 20, 17, 8, 1, 2, 11, 19, 19, 11, 2, 1, 8, 17, 20, 14, 4, 0, 5, 14, 20, 16, 7, 0, 3, 12, 19, 18, 10, 2, 1, 9, 18, 20, 13, 3, 0, 6, 15, 20, 16],
-            'prediction_length': 10,
-            'quantile_levels': [0.025, 0.975]
-        }
-    }
-    </pre>
-    </code>
-
-    <p>🔨 Output:</p>
-
-    <code>
-    <pre class="tool" style="overflow-x: auto; white-space: pre;">
-    {
-        'output': {
-            'mean': [7.842952728271484, 3.9406585693359375, 4.136490345001221, 7.826767921447754, 15.442928314208984, 15.398470878601074, 9.315390586853027, 5.722835063934326, 5.371423244476318, 7.833820343017578],
-            '0.025': [2.4480767250061035, -0.8402576446533203, -0.2643604278564453, 2.227060317993164, 7.496842384338379, 7.033439636230469, 2.4833216667175293, -0.3372507095336914, -0.5436820983886719, 0.8084659576416016],
-            '0.975': [13.956232070922852, 10.066437721252441, 10.064048767089844, 14.887125015258789, 23.994970321655273, 24.602264404296875, 17.92835235595703, 13.450220108032227, 13.074174880981445, 16.784805297851562]
-        }
-    }
-    </pre>
-    </code>
+        {'output': {'mean': [7.842952728271484, 3.9406585693359375, 4.136490345001221, 7.826767921447754, 15.442928314208984, 15.398470878601074, 9.315390586853027, 5.722835063934326, 5.371423244476318, 7.833820343017578], '0.025': [2.4480767250061035, -0.8402576446533203, -0.2643604278564453, 2.227060317993164, 7.496842384338379, 7.033439636230469, 2.4833216667175293, -0.3372507095336914, -0.5436820983886719, 0.8084659576416016], '0.975': [13.956232070922852, 10.066437721252441, 10.064048767089844, 14.887125015258789, 23.994970321655273, 24.602264404296875, 17.92835235595703, 13.450220108032227, 13.074174880981445, 16.784805297851562]}}
 
     Here are the forecast results for the next 10 time steps:
 
-    <table style="width: 100%; table-layout: fixed; text-align: center;">
-     <colgroup>
-        <col style="width: 25%;">
-        <col style="width: 25%;">
-        <col style="width: 25%;">
-        <col style="width: 25%;">
-     </colgroup>
-     <thead>
-        <tr>
-          <th>Step</th>
-          <th>Mean</th>
-          <th>Lower 2.5%</th>
-          <th>Upper 97.5%</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td>1</td><td>7.84</td><td>2.45</td><td>13.96</td></tr>
-        <tr><td>2</td><td>3.94</td><td>-0.84</td><td>10.07</td></tr>
-        <tr><td>3</td><td>4.14</td><td>-0.26</td><td>10.06</td></tr>
-        <tr><td>4</td><td>7.83</td><td>2.23</td><td>14.89</td></tr>
-        <tr><td>5</td><td>15.44</td><td>7.50</td><td>23.99</td></tr>
-        <tr><td>6</td><td>15.40</td><td>7.03</td><td>24.60</td></tr>
-        <tr><td>7</td><td>9.32</td><td>2.48</td><td>17.93</td></tr>
-        <tr><td>8</td><td>5.72</td><td>-0.34</td><td>13.45</td></tr>
-        <tr><td>9</td><td>5.37</td><td>-0.54</td><td>13.07</td></tr>
-        <tr><td>10</td><td>7.83</td><td>0.81</td><td>16.78</td></tr>
-      </tbody>
-    </table>
-
-    <h3>🔍 Key Observations:</h3>
-    <ul>
-    <li><strong>Cyclical pattern detected</strong> — The model has picked up on the
-       wave-like pattern in your data (which oscillates between ~0 and ~20),
-       as seen in the predicted means rising and falling across the 10
-       steps.</li>
-    <li><strong>95% Prediction Interval</strong> — The lower bound dips slightly below 0
-       for some steps, which is consistent with the uncertainty in the model
-       around the troughs of the cycle.</li>
-    <li><strong>Peak around steps 5–6</strong> — The forecast anticipates a peak (~15.4)
-       mid-way, aligning with the recurring cycle in the historical data.</li>
-    </ul>
-    </p>
-    </div>
-    </div>
-
+    | Step | Mean | Lower 2.5% | Upper 97.5% |
+    |------|------|------------|-------------|
+    | 1  | 7.84  | 2.45  | 13.96 |
+    | 2  | 3.94  | -0.84 | 10.07 |
+    | 3  | 4.14  | -0.26 | 10.06 |
+    | 4  | 7.83  | 2.23  | 14.89 |
+    | 5  | 15.44 | 7.50  | 23.99 |
+    | 6  | 15.40 | 7.03  | 24.60 |
+    | 7  | 9.32  | 2.48  | 17.93 |
+    | 8  | 5.72  | -0.34 | 13.45 |
+    | 9  | 5.37  | -0.54 | 13.07 |
+    | 10 | 7.83  | 0.81  | 16.78 |
 
 You can download the full code from our `GitHub repository <https://github.com/flaviagiammarino/machine-learning-blog/tree/main/forecasting_agent/>`__.
 
