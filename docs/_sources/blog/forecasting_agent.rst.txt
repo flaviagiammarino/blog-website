@@ -246,9 +246,9 @@ Short-term memory persists conversation context within a session without requiri
 
     agentcore launch
 
-The deployment creates four resources: an AgentCore Runtime named ``forecasting_agent``, whose ARN will be needed to invoke the agent;
-a short-term memory resource in AgentCore Memory, automatically provisioned and linked to the runtime; a deployment package uploaded as
-a zip file to an S3 bucket, which is automatically created; an AgentCore Runtime execution role in IAM with the necessary permissions.
+The deployment creates four resources: an AgentCore Runtime named ``forecasting_agent``,
+a short-term memory resource in AgentCore Memory linked to the runtime, a deployment package uploaded as
+a zip file to S3, and an AgentCore Runtime execution role in IAM.
 
 .. important::
 
