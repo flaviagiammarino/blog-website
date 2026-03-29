@@ -463,12 +463,6 @@ Chronos-Bolt endpoint on Bedrock. Replace <code class="docutils literal notransl
 <p>We start by importing the required libraries: <code class="docutils literal notranslate"><span class="pre">boto3</span></code> to invoke the agent on Bedrock AgentCore,
 <code class="docutils literal notranslate"><span class="pre">json</span></code> to serialize the request payload and deserialize the response, <code class="docutils literal notranslate"><span class="pre">uuid</span></code> to generate unique session
 identifiers, and <code class="docutils literal notranslate"><span class="pre">IPython.display</span></code> to render the agent’s responses as formatted Markdown in the notebook.</p>
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
-</span><span data-line="2"><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
-</span><span data-line="3"><span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
-</span><span data-line="4"><span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">Markdown</span><span class="p">,</span> <span class="n">display</span>
-</span></pre></div>
-</div>
 <p>Next, we set up the client and helper functions. We define the AgentCore
 Runtime ARN and region, create a <code class="docutils literal notranslate"><span class="pre">boto3</span></code> client for invoking the
 agent, and implement three helper functions:
@@ -588,6 +582,14 @@ context and short-term memory.</p>
 </span></pre></div>
 </div>
 <p>We start the conversation by asking the agent what it can do.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Turn 1 / 3</span>
+</span><span data-line="2"><span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+</span><span data-line="3"><span class="s2">What can you help me with?</span>
+</span><span data-line="4"><span class="s2">&quot;&quot;&quot;</span>
+</span><span data-line="5"><span class="n">messages</span> <span class="o">=</span> <span class="n">get_streaming_response</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">session_id</span><span class="p">)</span>
+</span><span data-line="6"><span class="n">print_messages</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">messages</span><span class="p">)</span>
+</span></pre></div>
+</div>
 <div class="user-container">
 <div class="user-name">User</div>
 <div class="message">
@@ -643,6 +645,15 @@ I’ll take care of the rest!
 </div>
 </div><p>We then provide a time series and ask the agent to forecast the next 10 values. The agent
 asks for the quantile levels before proceeding, as instructed by the system prompt.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Turn 2 / 3</span>
+</span><span data-line="2"><span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+</span><span data-line="3"><span class="s2">Can we predict the next 10 values of this time series?</span>
+</span><span data-line="4"><span class="s2">[16, 6, 0, 3, 13, 20, 18, 9, 1, 1, 10, 18, 19, 12, 3, 0, 7, 16, 20, 15, 5, 0, 4, 14, 20, 17, 8, 1, 2, 11, 19, 19, 11, 2, 1, 8, 17, 20, 14, 4, 0, 5, 14, 20, 16, 7, 0, 3, 12, 19, 18, 10, 2, 1, 9, 18, 20, 13, 3, 0, 6, 15, 20, 16]</span>
+</span><span data-line="5"><span class="s2">&quot;&quot;&quot;</span>
+</span><span data-line="6"><span class="n">messages</span> <span class="o">=</span> <span class="n">get_streaming_response</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">session_id</span><span class="p">)</span>
+</span><span data-line="7"><span class="n">print_messages</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">messages</span><span class="p">)</span>
+</span></pre></div>
+</div>
 <div class="user-container">
 <div class="user-name">User</div>
 <div class="message">
@@ -675,6 +686,14 @@ What would you prefer?
 the median. The agent now has all the information it needs and calls the <code class="docutils literal notranslate"><span class="pre">generate_forecasts</span></code> tool, returning the mean
 forecast and the 95% prediction interval. This turn demonstrates the short-term memory capability - the agent recalls
 the time series and prediction length from the previous turn without us repeating them.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Turn 3 / 3</span>
+</span><span data-line="2"><span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+</span><span data-line="3"><span class="s2">I need a 95% prediction interval. I don&#39;t need the median, only the mean.</span>
+</span><span data-line="4"><span class="s2">&quot;&quot;&quot;</span>
+</span><span data-line="5"><span class="n">messages</span> <span class="o">=</span> <span class="n">get_streaming_response</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">session_id</span><span class="p">)</span>
+</span><span data-line="6"><span class="n">print_messages</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">messages</span><span class="p">)</span>
+</span></pre></div>
+</div>
 <div class="user-container">
 <div class="user-name">User</div>
 <div class="message">

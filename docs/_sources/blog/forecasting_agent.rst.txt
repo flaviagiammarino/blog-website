@@ -287,7 +287,7 @@ We start by importing the required libraries: ``boto3`` to invoke the agent on B
 identifiers, and ``IPython.display`` to render the agent's responses as formatted Markdown in the notebook.
 
 .. code:: ipython3
-
+    # Import the required libraries
     import json
     import boto3
     import uuid
@@ -418,6 +418,7 @@ context and short-term memory.
 We start the conversation by asking the agent what it can do.
 
 .. code:: ipython3
+
     # Turn 1 / 3
     prompt = """
     What can you help me with?
@@ -486,6 +487,7 @@ We then provide a time series and ask the agent to forecast the next 10 values. 
 asks for the quantile levels before proceeding, as instructed by the system prompt.
 
 .. code:: ipython3
+
     # Turn 2 / 3
     prompt = """
     Can we predict the next 10 values of this time series?
@@ -533,6 +535,7 @@ forecast and the 95% prediction interval. This turn demonstrates the short-term 
 the time series and prediction length from the previous turn without us repeating them.
 
 .. code:: ipython3
+
     # Turn 3 / 3
     prompt = """
     I need a 95% prediction interval. I don't need the median, only the mean.
