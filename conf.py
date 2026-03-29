@@ -33,8 +33,7 @@ extensions = [
     'sphinx_design',
     'myst_parser',
     'sphinx.ext.mathjax',
-    'ablog',
-    'extensions'
+    'ablog'
 ]
 
 templates_path = ['templates']
