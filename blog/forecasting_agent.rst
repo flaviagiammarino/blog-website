@@ -287,6 +287,7 @@ We start by importing the required libraries: ``boto3`` to invoke the agent on B
 identifiers, and ``IPython.display`` to render the agent's responses as formatted Markdown in the notebook.
 
 .. code:: ipython3
+
     # Import the required libraries
     import json
     import boto3

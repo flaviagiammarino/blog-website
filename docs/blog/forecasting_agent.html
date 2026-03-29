@@ -463,6 +463,13 @@ Chronos-Bolt endpoint on Bedrock. Replace <code class="docutils literal notransl
 <p>We start by importing the required libraries: <code class="docutils literal notranslate"><span class="pre">boto3</span></code> to invoke the agent on Bedrock AgentCore,
 <code class="docutils literal notranslate"><span class="pre">json</span></code> to serialize the request payload and deserialize the response, <code class="docutils literal notranslate"><span class="pre">uuid</span></code> to generate unique session
 identifiers, and <code class="docutils literal notranslate"><span class="pre">IPython.display</span></code> to render the agent’s responses as formatted Markdown in the notebook.</p>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Import the required libraries</span>
+</span><span data-line="2"><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+</span><span data-line="3"><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
+</span><span data-line="4"><span class="kn">import</span><span class="w"> </span><span class="nn">uuid</span>
+</span><span data-line="5"><span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">Markdown</span><span class="p">,</span> <span class="n">display</span>
+</span></pre></div>
+</div>
 <p>Next, we set up the client and helper functions. We define the AgentCore
 Runtime ARN and region, create a <code class="docutils literal notranslate"><span class="pre">boto3</span></code> client for invoking the
 agent, and implement three helper functions:
