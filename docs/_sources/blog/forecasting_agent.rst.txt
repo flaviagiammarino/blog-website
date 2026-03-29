@@ -295,7 +295,7 @@ identifiers, and ``IPython.display`` to render the agent's responses as formatte
     from IPython.display import Markdown, display
 
 Next, we set up the client and helper functions. We define the AgentCore
-Runtime ARN and region, create a ``boto3`` client for invoking the
+Runtime ARN and region, create a Boto3 client for invoking the
 agent, and implement three helper functions:
 ``parse_streaming_response`` to extract agent messages from the response
 stream, ``get_streaming_response`` to invoke the agent and return the
