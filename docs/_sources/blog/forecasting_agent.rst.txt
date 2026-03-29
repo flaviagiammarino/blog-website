@@ -1,7 +1,7 @@
 :layout: post
 
 .. post:: March 26, 2026
-    :tags: Time Series Forecasting, Amazon Chronos, Amazon Bedrock AgentCore, Strands Agents
+    :tags: Time Series Forecasting, Amazon Chronos, Amazon Bedrock, Strands Agents
     :category: Time Series Agents
     :author: Flavia
     :description: Build a time series forecasting agent with Amazon Bedrock AgentCore
