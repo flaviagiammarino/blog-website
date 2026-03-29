@@ -242,7 +242,7 @@ a conversational time series forecasting assistant using ClickHouse, Amazon Bedr
 The assistant allows the user to explore the underlying data, select specific time series, and adjust forecast parameters - such as
 quantile levels and prediction horizons - through natural language.</p>
 <p>The solution is built around the <a class="reference external" href="https://modelcontextprotocol.io">Model Context Protocol (MCP)</a>,
-which defines a common interface for connecting language models to external tools and services, and relies on three servers:
+which defines a standard interface for connecting language models to external tools and services, and relies on three servers:
 the <a class="reference external" href="https://github.com/ClickHouse/mcp-clickhouse">ClickHouse MCP server</a> for retrieving the time series,
 a custom MCP server that generates probabilistic time series forecasts using Chronos <a class="reference external" href="#references">[1, 2]</a> - a time series foundation model developed by Amazon -
 deployed on Amazon Bedrock, and an additional custom MCP server that creates interactive Plotly charts of the time series and their forecasts.
@@ -316,7 +316,7 @@ we update the following environment variables in the <code class="docutils liter
 </div>
 <section id="configure-the-clickhouse-mcp-server">
 <h4>2.1.1 Configure the ClickHouse MCP server<a class="headerlink" href="#configure-the-clickhouse-mcp-server" title="Link to this heading">¶</a></h4>
-<p>Next, we configure the ClickHouse MCP server. Following <a class="reference external" href="https://clickhouse.com/docs/use-cases/AI/MCP/librechat">ClickHouse documentation</a>,
+<p>Next, we configure the ClickHouse MCP server. As detailed in the <a class="reference external" href="https://clickhouse.com/docs/use-cases/AI/MCP/librechat">ClickHouse documentation</a>,
 we create a <code class="docutils literal notranslate"><span class="pre">docker-compose.override.yml</span></code> file and add the following configuration to it:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="nt">services</span><span class="p">:</span>
 </span><span data-line="2"><span class="w">  </span><span class="nt">api</span><span class="p">:</span>
@@ -350,7 +350,7 @@ we create a <code class="docutils literal notranslate"><span class="pre">docker-
 <p>After that, we create the forecasting MCP server using the <a class="reference external" href="https://github.com/jlowin/fastmcp">FastMCP</a> library.
 The server exposes a <code class="docutils literal notranslate"><span class="pre">generate_forecasts</span></code> tool that takes a list of historical values, a prediction length, and a
 list of quantile levels, and returns probabilistic time series forecasts by invoking the Chronos endpoint
-via <code class="docutils literal notranslate"><span class="pre">boto3</span></code>. For instructions on deploying Chronos on Bedrock, we refer to
+via <code class="docutils literal notranslate"><span class="pre">boto3</span></code>. For instructions on deploying Chronos to Amazon Bedrock, we refer to
 <a class="reference external" href="https://flaviagiammarino.com/blog/chronos_bedrock.html#create-the-bedrock-endpoint">our previous blog post</a>.</p>
 <p>We configure the forecasting MCP server in the <code class="docutils literal notranslate"><span class="pre">docker-compose.override.yml</span></code> file
 that we previously created for configuring the ClickHouse MCP server:</p>
@@ -815,7 +815,7 @@ As we did for the forecasting server, we configure it in <code class="docutils l
 <p>
 Finally, we configure the assistant in <code>librechat.yaml</code> using a
 <a href="https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/model_specs">LibreChat <code>modelSpecs</code> object</a>
-that combines the Bedrock model, the three MCP servers, and a system prompt.
+that combines the language model, the three MCP servers, and a system prompt.
 </p><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="nt">modelSpecs</span><span class="p">:</span>
 </span><span data-line="2"><span class="w">  </span><span class="nt">list</span><span class="p">:</span>
 </span><span data-line="3"><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;forecasting-assistant&quot;</span>

@@ -32,7 +32,7 @@ The assistant allows the user to explore the underlying data, select specific ti
 quantile levels and prediction horizons - through natural language.
 
 The solution is built around the `Model Context Protocol (MCP) <https://modelcontextprotocol.io>`__,
-which defines a common interface for connecting language models to external tools and services, and relies on three servers:
+which defines a standard interface for connecting language models to external tools and services, and relies on three servers:
 the `ClickHouse MCP server <https://github.com/ClickHouse/mcp-clickhouse>`__ for retrieving the time series,
 a custom MCP server that generates probabilistic time series forecasts using Chronos `[1, 2] <#references>`_ - a time series foundation model developed by Amazon -
 deployed on Amazon Bedrock, and an additional custom MCP server that creates interactive Plotly charts of the time series and their forecasts.
@@ -128,7 +128,7 @@ We also include the model's inference profile ARN in ``librechat.yaml``:
 2.1.1 Configure the ClickHouse MCP server
 ---------------------------------------------------------------------------------------------------------------
 
-Next, we configure the ClickHouse MCP server. Following `ClickHouse documentation <https://clickhouse.com/docs/use-cases/AI/MCP/librechat>`__,
+Next, we configure the ClickHouse MCP server. As detailed in the `ClickHouse documentation <https://clickhouse.com/docs/use-cases/AI/MCP/librechat>`__,
 we create a ``docker-compose.override.yml`` file and add the following configuration to it:
 
 .. code-block:: yaml
@@ -166,7 +166,7 @@ We also register the ClickHouse MCP server in ``librechat.yaml`` to run on port 
 After that, we create the forecasting MCP server using the `FastMCP <https://github.com/jlowin/fastmcp>`__ library.
 The server exposes a ``generate_forecasts`` tool that takes a list of historical values, a prediction length, and a
 list of quantile levels, and returns probabilistic time series forecasts by invoking the Chronos endpoint
-via ``boto3``. For instructions on deploying Chronos on Bedrock, we refer to
+via ``boto3``. For instructions on deploying Chronos to Amazon Bedrock, we refer to
 `our previous blog post <https://flaviagiammarino.com/blog/chronos_bedrock.html#create-the-bedrock-endpoint>`__.
 
 We configure the forecasting MCP server in the ``docker-compose.override.yml`` file
@@ -674,7 +674,7 @@ The code used for building the Docker image of the data visualization MCP server
     <p>
     Finally, we configure the assistant in <code>librechat.yaml</code> using a
     <a href="https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/model_specs">LibreChat <code>modelSpecs</code> object</a>
-    that combines the Bedrock model, the three MCP servers, and a system prompt.
+    that combines the language model, the three MCP servers, and a system prompt.
     </p>
 
 .. code-block:: yaml
