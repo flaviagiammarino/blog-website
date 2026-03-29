@@ -282,12 +282,6 @@ a zip file to S3, and an AgentCore Runtime execution role in IAM.
 2.4 Test the agent in a Jupyter Notebook
 ===============================================================================================================
 
-We test the agent in a Jupyter notebook using a three-turn conversation.
-In the first turn, the agent describes its capabilities. In the second turn, the user
-provides a time series and requests a forecast, and the agent asks for the quantile levels before
-proceeding. In the third turn, the user provides the quantile levels and the agent calls the
-``generate_forecasts`` tool and returns the results.
-
 We start by importing the required libraries: ``boto3`` to invoke the agent on Amazon Bedrock AgentCore,
 ``json`` to serialize the request payload and deserialize the response, ``uuid`` to generate unique session
 identifiers, and ``IPython.display`` to render the agent's responses as formatted Markdown in the notebook.

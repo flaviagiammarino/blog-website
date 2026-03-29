@@ -460,11 +460,6 @@ Chronos-Bolt endpoint on Bedrock. Replace <code class="docutils literal notransl
 </section>
 <section id="test-the-agent-in-a-jupyter-notebook">
 <h3>2.4 Test the agent in a Jupyter Notebook<a class="headerlink" href="#test-the-agent-in-a-jupyter-notebook" title="Link to this heading">¶</a></h3>
-<p>We test the agent in a Jupyter notebook using a three-turn conversation.
-In the first turn, the agent describes its capabilities. In the second turn, the user
-provides a time series and requests a forecast, and the agent asks for the quantile levels before
-proceeding. In the third turn, the user provides the quantile levels and the agent calls the
-<code class="docutils literal notranslate"><span class="pre">generate_forecasts</span></code> tool and returns the results.</p>
 <p>We start by importing the required libraries: <code class="docutils literal notranslate"><span class="pre">boto3</span></code> to invoke the agent on Amazon Bedrock AgentCore,
 <code class="docutils literal notranslate"><span class="pre">json</span></code> to serialize the request payload and deserialize the response, <code class="docutils literal notranslate"><span class="pre">uuid</span></code> to generate unique session
 identifiers, and <code class="docutils literal notranslate"><span class="pre">IPython.display</span></code> to render the agent’s responses as formatted Markdown in the notebook.</p>
