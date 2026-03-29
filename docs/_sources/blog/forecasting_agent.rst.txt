@@ -95,7 +95,7 @@ invoking the endpoint, and in a custom IAM policy that grants the AgentCore exec
 2.2 Build the agent with Strands Agents
 ===============================================================================================================
 
-To build the agent, we need three files: an empty ``__init__.py``, ``agent.py``, and a ``requirements.txt``.
+To build the agent, we need three files: an empty ``__init__.py``, ``agent.py``, and ``requirements.txt``.
 
 .. code-block:: text
 
