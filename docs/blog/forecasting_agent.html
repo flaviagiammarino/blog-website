@@ -285,7 +285,7 @@ invoking the endpoint, and in a custom IAM policy that grants the AgentCore exec
 </section>
 <section id="build-the-agent-with-strands-agents">
 <h3>2.2 Build the agent with Strands Agents<a class="headerlink" href="#build-the-agent-with-strands-agents" title="Link to this heading">¶</a></h3>
-<p>To build the agent, we need three files: <code class="docutils literal notranslate"><span class="pre">agent.py</span></code>, an empty <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code>, and a <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code>.</p>
+<p>To build the agent, we need three files: an empty <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code>, <code class="docutils literal notranslate"><span class="pre">agent.py</span></code>, and a <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code>.</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span data-line="1">agent/
 </span><span data-line="2">├── __init__.py
 </span><span data-line="3">├── agent.py
@@ -298,11 +298,12 @@ invoking the endpoint, and in a custom IAM policy that grants the AgentCore exec
 </span><span data-line="3">strands-agents&gt;=1.0.0
 </span></pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">agent.py</span></code> script is shown below. It implements a Strands agent backed by Claude Sonnet 4.6 on Amazon Bedrock which responds
+<p>The <code class="docutils literal notranslate"><span class="pre">agent.py</span></code> script implements a Strands agent backed by Claude Sonnet 4.6 on Bedrock which responds
 to forecasting requests using a <code class="docutils literal notranslate"><span class="pre">generate_forecasts</span></code> tool. The tool takes as input the historical time series
-values, the prediction length and the quantile levels, and invokes the Chronos-Bolt endpoint on Amazon Bedrock
+values, the prediction length and the quantile levels, and invokes the Chronos-Bolt endpoint on Bedrock
 to return the predicted mean and quantiles. The agent is wrapped in a <code class="docutils literal notranslate"><span class="pre">BedrockAgentCoreApp</span></code> with an async
-streaming entrypoint that yields agent events - including not only text responses, but also tool call inputs and results - back to the caller.</p>
+streaming entrypoint that yields agent events - including not only text responses, but also tool call inputs
+and results - back to the caller.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 </span><span data-line="2"><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
 </span><span data-line="3"><span class="kn">from</span><span class="w"> </span><span class="nn">strands</span><span class="w"> </span><span class="kn">import</span> <span class="n">Agent</span><span class="p">,</span> <span class="n">tool</span>

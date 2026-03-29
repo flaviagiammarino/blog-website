@@ -95,7 +95,7 @@ invoking the endpoint, and in a custom IAM policy that grants the AgentCore exec
 2.2 Build the agent with Strands Agents
 ===============================================================================================================
 
-To build the agent, we need three files: ``agent.py``, an empty ``__init__.py``, and a ``requirements.txt``.
+To build the agent, we need three files: an empty ``__init__.py``, ``agent.py``, and a ``requirements.txt``.
 
 .. code-block:: text
 
@@ -112,11 +112,12 @@ The ``requirements.txt`` lists the packages needed to run the agent:
     bedrock_agentcore==1.4.7
     strands-agents>=1.0.0
 
-The ``agent.py`` script is shown below. It implements a Strands agent backed by Claude Sonnet 4.6 on Amazon Bedrock which responds
+The ``agent.py`` script implements a Strands agent backed by Claude Sonnet 4.6 on Bedrock which responds
 to forecasting requests using a ``generate_forecasts`` tool. The tool takes as input the historical time series
-values, the prediction length and the quantile levels, and invokes the Chronos-Bolt endpoint on Amazon Bedrock
+values, the prediction length and the quantile levels, and invokes the Chronos-Bolt endpoint on Bedrock
 to return the predicted mean and quantiles. The agent is wrapped in a ``BedrockAgentCoreApp`` with an async
-streaming entrypoint that yields agent events - including not only text responses, but also tool call inputs and results - back to the caller.
+streaming entrypoint that yields agent events - including not only text responses, but also tool call inputs
+and results - back to the caller.
 
 .. code:: python
 
