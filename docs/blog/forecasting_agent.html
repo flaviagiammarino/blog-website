@@ -274,7 +274,7 @@ your AWS region, the ARN of your Bedrock execution role, and a custom endpoint n
 invoking the endpoint, and in a custom IAM policy that grants the AgentCore execution role permission to invoke the endpoint.</p>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
-<p>Remember to delete the endpoint when is no longer needed to avoid unexpected charges:</p>
+<p>Remember to delete the endpoint when it is no longer needed to avoid unexpected charges:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Delete the Bedrock endpoint</span>
 </span><span data-line="2"><span class="n">response</span> <span class="o">=</span> <span class="n">bedrock_client</span><span class="o">.</span><span class="n">delete_marketplace_model_endpoint</span><span class="p">(</span>
 </span><span data-line="3">    <span class="n">endpointArn</span><span class="o">=</span><span class="n">bedrock_endpoint_arn</span>

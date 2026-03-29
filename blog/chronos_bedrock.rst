@@ -117,7 +117,7 @@ or directly from the Bedrock console.
 
 .. important::
 
-    Remember to delete the endpoint when is no longer needed to avoid unexpected charges.
+    Remember to delete the endpoint when it is no longer needed to avoid unexpected charges.
     This can be done using `Boto3 <https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/bedrock/client/delete_marketplace_model_endpoint.html>`__
     as in the code below, with the `AWS-CLI <https://docs.aws.amazon.com/cli/latest/reference/bedrock/delete-marketplace-model-endpoint.html>`__,
     or directly from the Bedrock console.
