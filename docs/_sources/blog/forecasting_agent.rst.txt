@@ -44,8 +44,8 @@ isolation, short-term memory and built-in observability through Amazon CloudWatc
 2. Solution
 ***************************************************************************************************************
 
-The solution consists of three steps: deploying Chronos-Bolt to Amazon Bedrock, building the Strands agent
-and deploying it to Amazon Bedrock AgentCore.
+The solution consists of three steps: deploying Chronos-Bolt to Bedrock, building the Strands agent
+and deploying it to Bedrock AgentCore.
 
 2.1 Deploy Chronos to Amazon Bedrock
 ===============================================================================================================
