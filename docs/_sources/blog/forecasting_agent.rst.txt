@@ -83,7 +83,7 @@ invoking the endpoint, and in a custom IAM policy that grants the AgentCore exec
 
 .. important::
 
-    Remember to delete the endpoint when is no longer needed to avoid unexpected charges.
+    Remember to delete the endpoint when is no longer needed to avoid unexpected charges:
 
     .. code:: python
 
