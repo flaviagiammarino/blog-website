@@ -104,13 +104,7 @@ To build the agent, we need three files: an empty ``__init__.py``, ``agent.py``,
    ├── agent.py
    └── requirements.txt
 
-The ``requirements.txt`` lists the packages needed to run the agent:
 
-.. code-block:: text
-
-    boto3==1.42.73
-    bedrock_agentcore==1.4.7
-    strands-agents>=1.0.0
 
 The ``agent.py`` script implements a Strands agent backed by Claude Sonnet 4.6 on Bedrock which responds
 to forecasting requests using a ``generate_forecasts`` tool. The tool takes as input the historical time series
@@ -225,6 +219,13 @@ and results - back to the caller.
     if __name__ == "__main__":
         app.run()
 
+The ``requirements.txt`` lists the packages needed to run the agent:
+
+.. code-block:: text
+
+    boto3==1.42.73
+    bedrock_agentcore==1.4.7
+    strands-agents>=1.0.0
 
 2.3 Deploy the agent to Amazon Bedrock AgentCore
 ===============================================================================================================

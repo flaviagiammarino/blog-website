@@ -292,12 +292,6 @@ invoking the endpoint, and in a custom IAM policy that grants the AgentCore exec
 </span><span data-line="4">└── requirements.txt
 </span></pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> lists the packages needed to run the agent:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span data-line="1">boto3==1.42.73
-</span><span data-line="2">bedrock_agentcore==1.4.7
-</span><span data-line="3">strands-agents&gt;=1.0.0
-</span></pre></div>
-</div>
 <p>The <code class="docutils literal notranslate"><span class="pre">agent.py</span></code> script implements a Strands agent backed by Claude Sonnet 4.6 on Bedrock which responds
 to forecasting requests using a <code class="docutils literal notranslate"><span class="pre">generate_forecasts</span></code> tool. The tool takes as input the historical time series
 values, the prediction length and the quantile levels, and invokes the Chronos-Bolt endpoint on Bedrock
@@ -407,6 +401,12 @@ and results - back to the caller.</p>
 </span><span data-line="101"><span class="c1"># Run the AgentCore app</span>
 </span><span data-line="102"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
 </span><span data-line="103">    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</span></pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code> lists the packages needed to run the agent:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span data-line="1">boto3==1.42.73
+</span><span data-line="2">bedrock_agentcore==1.4.7
+</span><span data-line="3">strands-agents&gt;=1.0.0
 </span></pre></div>
 </div>
 </section>
