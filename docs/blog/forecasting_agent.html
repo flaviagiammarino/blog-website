@@ -415,9 +415,6 @@ and results - back to the caller.</p>
 <p>We deploy the agent with the <a class="reference external" href="https://aws.github.io/bedrock-agentcore-starter-toolkit/">bedrock-agentcore-starter-toolkit</a> using direct code deployment.
 The <code class="docutils literal notranslate"><span class="pre">--non-interactive</span></code> flag skips the interactive prompts and deploys with short-term memory enabled by default.
 Short-term memory persists conversation context within a session without requiring any configuration in the agent code.</p>
-<p>The deployment creates four resources: an AgentCore Runtime named <code class="docutils literal notranslate"><span class="pre">forecasting_agent</span></code>, whose ARN will be needed to invoke the agent;
-a short-term memory resource in AgentCore Memory, automatically provisioned and linked to the runtime; a deployment package uploaded as
-a zip file to an S3 bucket, which is automatically created; an AgentCore Runtime execution role in IAM with the necessary permissions.</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span data-line="1">agentcore<span class="w"> </span>configure<span class="w"> </span><span class="se">\</span>
 </span><span data-line="2"><span class="w">    </span>--entrypoint<span class="w"> </span>agent.py<span class="w"> </span><span class="se">\</span>
 </span><span data-line="3"><span class="w">    </span>--name<span class="w"> </span>forecasting_agent<span class="w"> </span><span class="se">\</span>
@@ -429,6 +426,9 @@ a zip file to an S3 bucket, which is automatically created; an AgentCore Runtime
 </span><span data-line="9">agentcore<span class="w"> </span>launch
 </span></pre></div>
 </div>
+<p>The deployment creates four resources: an AgentCore Runtime named <code class="docutils literal notranslate"><span class="pre">forecasting_agent</span></code>, whose ARN will be needed to invoke the agent;
+a short-term memory resource in AgentCore Memory, automatically provisioned and linked to the runtime; a deployment package uploaded as
+a zip file to an S3 bucket, which is automatically created; an AgentCore Runtime execution role in IAM with the necessary permissions.</p>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
 <p>Attach the following policy to the AgentCore execution role in IAM to allow the agent to invoke the

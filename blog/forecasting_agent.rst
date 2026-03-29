@@ -234,10 +234,6 @@ We deploy the agent with the `bedrock-agentcore-starter-toolkit <https://aws.git
 The ``--non-interactive`` flag skips the interactive prompts and deploys with short-term memory enabled by default.
 Short-term memory persists conversation context within a session without requiring any configuration in the agent code.
 
-The deployment creates four resources: an AgentCore Runtime named ``forecasting_agent``, whose ARN will be needed to invoke the agent;
-a short-term memory resource in AgentCore Memory, automatically provisioned and linked to the runtime; a deployment package uploaded as
-a zip file to an S3 bucket, which is automatically created; an AgentCore Runtime execution role in IAM with the necessary permissions.
-
 .. code-block:: shell
 
     agentcore configure \
@@ -249,6 +245,10 @@ a zip file to an S3 bucket, which is automatically created; an AgentCore Runtime
         --non-interactive
 
     agentcore launch
+
+The deployment creates four resources: an AgentCore Runtime named ``forecasting_agent``, whose ARN will be needed to invoke the agent;
+a short-term memory resource in AgentCore Memory, automatically provisioned and linked to the runtime; a deployment package uploaded as
+a zip file to an S3 bucket, which is automatically created; an AgentCore Runtime execution role in IAM with the necessary permissions.
 
 .. important::
 
