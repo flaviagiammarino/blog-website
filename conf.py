@@ -27,12 +27,12 @@ extensions = [
     "sphinx.ext.ifconfig",
     'sphinx.ext.extlinks',
     'sphinx.ext.viewcode',
+    'sphinx.ext.mathjax',
     "sphinx_automodapi.automodapi",
     'sphinx_sitemap',
     'sphinx_copybutton',
     'sphinx_design',
     'myst_parser',
-    'sphinx.ext.mathjax',
     'ablog'
 ]
 
