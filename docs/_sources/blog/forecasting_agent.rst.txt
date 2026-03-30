@@ -106,7 +106,7 @@ To build the agent, we need three files: an empty ``__init__.py``, ``agent.py``,
 
 
 
-The ``agent.py`` script is reported below. It implements a Strands agent backed by Claude Sonnet 4.6 on Bedrock which responds
+The ``agent.py`` script is shown below. It implements a Strands agent backed by Claude Sonnet 4.6 on Bedrock which responds
 to forecasting requests using a ``generate_forecasts`` tool. The tool takes as input the historical time series
 values, the prediction length and the quantile levels, and invokes the Chronos-Bolt endpoint on Bedrock
 to return the predicted mean and quantiles. The agent is wrapped in a ``BedrockAgentCoreApp`` with an async

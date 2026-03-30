@@ -300,7 +300,7 @@ invoking the endpoint, and in a custom IAM policy that grants the AgentCore exec
 </span><span data-line="4">└── requirements.txt
 </span></pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">agent.py</span></code> script is reported below. It implements a Strands agent backed by Claude Sonnet 4.6 on Bedrock which responds
+<p>The <code class="docutils literal notranslate"><span class="pre">agent.py</span></code> script is shown below. It implements a Strands agent backed by Claude Sonnet 4.6 on Bedrock which responds
 to forecasting requests using a <code class="docutils literal notranslate"><span class="pre">generate_forecasts</span></code> tool. The tool takes as input the historical time series
 values, the prediction length and the quantile levels, and invokes the Chronos-Bolt endpoint on Bedrock
 to return the predicted mean and quantiles. The agent is wrapped in a <code class="docutils literal notranslate"><span class="pre">BedrockAgentCoreApp</span></code> with an async
