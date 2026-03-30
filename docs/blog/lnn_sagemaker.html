@@ -374,7 +374,7 @@ It supports two input data channels:
 <code class="docutils literal notranslate"><span class="pre">training</span></code> (mandatory) and <code class="docutils literal notranslate"><span class="pre">validation</span></code> (optional). If a <code class="docutils literal notranslate"><span class="pre">model</span></code> channel is also provided,
 the script loads the pre-trained model from the specified directory and continues training it,
 otherwise it trains a new model from scratch.</p>
-<p>The script infers the column roles from the column names: a columns named <code class="docutils literal notranslate"><span class="pre">ts</span></code> is treated
+<p>The script infers the column roles from the column names: a column named <code class="docutils literal notranslate"><span class="pre">ts</span></code> is treated
 as time spans, columns starting with <code class="docutils literal notranslate"><span class="pre">x</span></code> as features, and columns starting with <code class="docutils literal notranslate"><span class="pre">y</span></code> as targets.
 The data is scaled using min-max normalization, with the scaling parameters computed from the training
 data and stored in the model checkpoint together with the model and optimizer state dictionaries.</p>
