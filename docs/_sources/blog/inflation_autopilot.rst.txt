@@ -1,6 +1,6 @@
 :layout: post
 
-.. post:: August 15, 2024
+.. post:: March 20, 2024
     :tags: Time Series Forecasting, Amazon SageMaker
     :category: AutoML
     :author: Flavia

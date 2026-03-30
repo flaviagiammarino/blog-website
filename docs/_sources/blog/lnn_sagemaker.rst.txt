@@ -1,6 +1,6 @@
 :layout: post
 
-.. post:: September 11, 2024
+.. post:: September 6, 2023
     :tags: Time Series Forecasting, Amazon SageMaker
     :category: Time Series Deep Learning
     :author: Flavia
