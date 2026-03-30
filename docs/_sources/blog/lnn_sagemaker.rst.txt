@@ -1,7 +1,7 @@
 :layout: post
 
 .. post:: September 6, 2023
-    :tags: Time Series Forecasting, Amazon SageMaker
+    :tags: Amazon SageMaker
     :category: Time Series Deep Learning
     :author: Flavia
     :description: Deploy a liquid neural network for time series forecasting as a custom Amazon SageMaker algorithm by extending the PyTorch deep learning containers.
