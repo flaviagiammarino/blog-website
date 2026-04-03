@@ -11,7 +11,7 @@
     :excerpt: 1
 
 ###############################################################################################################
-Building a time series forecasting agent with Amazon Bedrock AgentCore
+Building a simple time series forecasting agent with Strands Agents and Amazon Bedrock AgentCore
 ###############################################################################################################
 
 .. raw:: html
@@ -40,6 +40,13 @@ The agent is built with `Strands Agents <https://strandsagents.com/>`__,
 where orchestration decisions are delegated to the language model rather than defined in fixed, predefined workflows.
 The agent is deployed to Amazon Bedrock AgentCore, a serverless environment designed for AI agents that provides session
 isolation, short-term memory and built-in observability through Amazon CloudWatch.
+
+.. note::
+
+    In this demo, the user provides the time series values directly in the chat message.
+    For a more production-ready solution, see our :doc:earlier post </blog/forecasting_assistant>,
+    where the assistant retrieves time series data from a database via the Model Context Protocol (MCP)
+    and the user communicates with the assistant through the `LibreChat <https://www.librechat.ai/>`__ interface.
 
 2. Solution
 ***************************************************************************************************************
