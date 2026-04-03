@@ -44,7 +44,7 @@ isolation, short-term memory and built-in observability through Amazon CloudWatc
 .. note::
 
     In this demo, the user provides the time series values directly in the chat message.
-    For a more production-ready solution, see our :doc:earlier post </blog/forecasting_assistant>,
+    For a more production-ready solution, see our :doc:`earlier post </blog/forecasting_assistant>`,
     where the assistant retrieves time series data from a database via the Model Context Protocol (MCP)
     and the user communicates with the assistant through the `LibreChat <https://www.librechat.ai/>`__ interface.
 
