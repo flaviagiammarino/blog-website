@@ -4,7 +4,7 @@
     :tags: Amazon Chronos, Amazon Bedrock
     :category: Time Series Foundation Models
     :author: Flavia
-    :description: Perform time series forecasting with Chronos on Amazon Bedrock using data stored in ClickHouse
+    :description: Perform time series forecasting with Chronos on Amazon Bedrock using data stored in ClickHouse.
     :keywords: Time Series Forecasting, Amazon Chronos, Amazon Bedrock, ClickHouse
     :image_src: https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/architecture_diagram.png
     :image_alt: Architecture diagram showing Chronos on Amazon Bedrock integrated with ClickHouse in AWS Lambda.
