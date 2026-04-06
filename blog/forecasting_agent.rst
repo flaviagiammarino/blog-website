@@ -11,7 +11,7 @@
     :excerpt: 1
 
 ###############################################################################################################
-Building a simple time series forecasting agent with Strands Agents and Amazon Bedrock AgentCore
+Deploying a minimal time series forecasting agent with Strands Agents and Amazon Bedrock AgentCore
 ###############################################################################################################
 
 .. raw:: html
