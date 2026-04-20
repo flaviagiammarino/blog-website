@@ -4,11 +4,15 @@
     <a href="{{ pathto(ablog.author.path) }}">{{ gettext('Authors') }}</a>
   </h3>
   <ul>
-    {% for coll in ablog.author %} {% if coll %}
-    <li>
-      <a style="font-size: 90%" href="{{ pathto(coll.docname) }}">{{ coll }} ({{ coll|length }})</a>
-    </li>
-    {% endif %} {% endfor %}
+  {% for coll in ablog.author %} {% if coll %}
+  <li>
+    {% if coll|string == "Flavia Giammarino" %}
+    <a style="font-size: 90%" href="https://www.linkedin.com/in/flaviagiammarino">{{ coll }} ({{ coll|length }})</a>
+    {% else %}
+    <span style="font-size: 90%">{{ coll }} ({{ coll|length }})</span>
+    {% endif %}
+  </li>
+  {% endif %} {% endfor %}
   </ul>
 </div>
 {% endif %}
