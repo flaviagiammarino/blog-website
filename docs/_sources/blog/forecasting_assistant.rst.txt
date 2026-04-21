@@ -1,7 +1,7 @@
 :layout: post
 
 .. post:: March 15, 2026
-    :tags: Amazon Chronos, Amazon Bedrock, LibreChat
+    :tags: Amazon Chronos, Amazon Bedrock
     :category: Time Series Foundation Models
     :author: Flavia
     :description: Build a conversational time series forecasting assistant with ClickHouse, Amazon Bedrock, and LibreChat.
