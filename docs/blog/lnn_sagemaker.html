@@ -254,7 +254,7 @@ LNNs are based on the liquid time constant (LTC) ODE <a class="reference externa
 time constant of the hidden state are parametrized by a neural network.
 Like other CT-RNNs, LTCs rely on a numerical ODE solver, which introduces significant computational
 overhead at both training and inference time.
-The algorithm implements the closed-form continuous-depth (CfC) variant of LNNs <a class="reference external" href="#references">[4]</a>,
+This algorithm implements the closed-form continuous-depth (CfC) variant of LNNs <a class="reference external" href="#references">[4]</a>,
 which provides a closed-form approximation to the ODE solution, making it significantly faster
 than LTCs and other CT-RNNs.</p>
 <p>In the rest of this post, we walk through the steps needed to build and test the algorithm.
@@ -368,7 +368,7 @@ Before building the image, it copies <code class="docutils literal notranslate">
 <span class="pre" style="font-weight:600">training.py</span>
 </code>
 </p><p><code class="docutils literal notranslate"><span class="pre">training.py</span></code> reads the hyperparameters from the
-command-line arguments passed by SageMaker, and the input and output paths from the SageMaker environment.
+command-line arguments, and the input and output paths from the SageMaker environment.
 It supports two input data channels:
 <code class="docutils literal notranslate"><span class="pre">training</span></code> (mandatory) and <code class="docutils literal notranslate"><span class="pre">validation</span></code> (optional). If a <code class="docutils literal notranslate"><span class="pre">model</span></code> channel is also provided,
 the script loads the pre-trained model from the specified directory and continues training it,
@@ -1353,7 +1353,7 @@ serving time.</p>
 </section>
 <section id="create-the-algorithm">
 <h3>2.3 Create the algorithm<a class="headerlink" href="#create-the-algorithm" title="Link to this heading">¶</a></h3>
-<p>With both images pushed to ECR, we register them as a custom Amazon SageMaker algorithm.
+<p>With both images pushed to ECR, we register them as a custom SageMaker algorithm.
 The algorithm specification has two parts: the <code class="docutils literal notranslate"><span class="pre">TrainingSpecification</span></code>
 and the <code class="docutils literal notranslate"><span class="pre">InferenceSpecification</span></code>.
 The <code class="docutils literal notranslate"><span class="pre">TrainingSpecification</span></code> defines the training image URI, the supported hyperparameters
@@ -1472,8 +1472,8 @@ for real-time and batch inference, with CSV as both the input content type and t
 <h3>2.4 Test the algorithm<a class="headerlink" href="#test-the-algorithm" title="Link to this heading">¶</a></h3>
 <section id="upload-the-sample-data-to-s3">
 <h4>2.4.1 Upload the sample data to S3<a class="headerlink" href="#upload-the-sample-data-to-s3" title="Link to this heading">¶</a></h4>
-<p>We test the algorithm on the sample dataset included in the repository. The dataset is a multivariate
-time series with two target columns (<code class="docutils literal notranslate"><span class="pre">y1</span></code>, <code class="docutils literal notranslate"><span class="pre">y2</span></code>), two feature columns (<code class="docutils literal notranslate"><span class="pre">x1</span></code>, <code class="docutils literal notranslate"><span class="pre">x2</span></code>) and a time
+<p>We test the algorithm on the sample dataset included in the <a class="reference external" href="https://github.com/flaviagiammarino/lnn-sagemaker">GitHub repository</a>.
+The dataset includes two target time series (<code class="docutils literal notranslate"><span class="pre">y1</span></code>, <code class="docutils literal notranslate"><span class="pre">y2</span></code>), two feature time series (<code class="docutils literal notranslate"><span class="pre">x1</span></code>, <code class="docutils literal notranslate"><span class="pre">x2</span></code>) and a time
 span column (<code class="docutils literal notranslate"><span class="pre">ts</span></code>), split into training, validation and test sets of 1000, 500 and 500 samples
 respectively.</p>
 <p>We start by loading the three dataset splits into DataFrames.</p>

@@ -43,7 +43,7 @@ LNNs are based on the liquid time constant (LTC) ODE `[3] <#references>`__, wher
 time constant of the hidden state are parametrized by a neural network.
 Like other CT-RNNs, LTCs rely on a numerical ODE solver, which introduces significant computational
 overhead at both training and inference time.
-The algorithm implements the closed-form continuous-depth (CfC) variant of LNNs `[4] <#references>`__,
+This algorithm implements the closed-form continuous-depth (CfC) variant of LNNs `[4] <#references>`__,
 which provides a closed-form approximation to the ODE solution, making it significantly faster
 than LTCs and other CT-RNNs.
 
@@ -173,7 +173,7 @@ Before building the image, it copies ``modules.py`` into the ``model/`` subfolde
     </p>
 
 ``training.py`` reads the hyperparameters from the
-command-line arguments passed by SageMaker, and the input and output paths from the SageMaker environment.
+command-line arguments, and the input and output paths from the SageMaker environment.
 It supports two input data channels:
 ``training`` (mandatory) and ``validation`` (optional). If a ``model`` channel is also provided,
 the script loads the pre-trained model from the specified directory and continues training it,
@@ -1185,7 +1185,7 @@ serving time.
 2.3 Create the algorithm
 ===============================================================================================================
 
-With both images pushed to ECR, we register them as a custom Amazon SageMaker algorithm.
+With both images pushed to ECR, we register them as a custom SageMaker algorithm.
 The algorithm specification has two parts: the ``TrainingSpecification``
 and the ``InferenceSpecification``.
 The ``TrainingSpecification`` defines the training image URI, the supported hyperparameters
@@ -1309,8 +1309,8 @@ Once registered, the algorithm is identified by its ARN, which is used in all su
 2.4.1 Upload the sample data to S3
 ---------------------------------------------------------------------------------------------------------------
 
-We test the algorithm on the sample dataset included in the repository. The dataset is a multivariate
-time series with two target columns (``y1``, ``y2``), two feature columns (``x1``, ``x2``) and a time
+We test the algorithm on the sample dataset included in the `GitHub repository <https://github.com/flaviagiammarino/lnn-sagemaker>`__.
+The dataset includes two target time series (``y1``, ``y2``), two feature time series (``x1``, ``x2``) and a time
 span column (``ts``), split into training, validation and test sets of 1000, 500 and 500 samples
 respectively.
 
