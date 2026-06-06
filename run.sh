@@ -5,6 +5,7 @@
 rm -r docs
 make html
 cp docs/_static/favicon.ico docs/favicon.ico
+git remote set-url origin git@github.com:flaviagiammarino/blog-website.git
 git add --all
 git commit -m "update website"
 git push origin main
