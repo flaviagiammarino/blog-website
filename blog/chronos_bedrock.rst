@@ -2,7 +2,7 @@
 
 .. post:: August 22, 2025
     :tags: Amazon Chronos, Amazon Bedrock
-    :category: Time Series Foundation Models
+    :category: Foundation Models
     :author: Flavia
     :description: Perform time series forecasting with Chronos on Amazon Bedrock using data stored in ClickHouse.
     :keywords: Time Series Forecasting, Amazon Chronos, Amazon Bedrock, ClickHouse

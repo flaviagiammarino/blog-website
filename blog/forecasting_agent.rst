@@ -2,7 +2,7 @@
 
 .. post:: March 26, 2026
     :tags: Amazon Chronos, Amazon Bedrock, Strands Agents
-    :category: Time Series Agents
+    :category: Agentic AI
     :author: Flavia
     :description: Build a conversational time series forecasting agent with Strands Agents using Amazon Chronos as a tool and deploy it to Amazon Bedrock AgentCore.
     :keywords: Time Series Forecasting, Amazon Chronos, Amazon Bedrock AgentCore, Strands Agents
