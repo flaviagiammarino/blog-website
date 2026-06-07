@@ -25,7 +25,7 @@ Deploying a text-to-SQL agent with private VPC access to RDS PostgreSQL on Amazo
 1. Overview
 ***************************************************************************************************************
 
-Text-to-SQL translates natural language queries into structured SQL statements, allowing users without specialized database knowledge to explore and analyze data. Unlike RAG-based approaches that require re-syncing the knowledge base whenever the schema or data changes, in the agentic approach the agent queries directly the live database, automatically reflecting any changes without manual intervention.
+Text-to-SQL translates natural language queries into structured SQL statements, allowing users without specialized database knowledge to explore and analyze data. Unlike RAG-based approaches that require re-syncing the knowledge base whenever the schema or data changes, in the agentic approach the agent queries directly the live database, automatically incorporating any changes without manual intervention.
 
 In this post, we build a text-to-SQL agent using Strands Agents and deploy it to Amazon Bedrock AgentCore Runtime in a private VPC.
 The agent accesses an Amazon RDS PostgreSQL instance in the same VPC via an MCP server and communicates with other AWS services through a NAT Gateway.
