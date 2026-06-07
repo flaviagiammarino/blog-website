@@ -93,9 +93,7 @@ To allow the agent to reach other AWS services such as Amazon Bedrock, AWS Secre
 2.3 Build the agent with Strands Agents
 ===============================================================================================================
 
-.. raw:: html
-
-    <p>The agent connects to the database with the <a class="reference external" href="https://github.com/crystaldba/postgres-mcp"><tt class="docutils literal"><code><span class="pre">postgres-mcp</span></code></a> server, which includes tools for listing schemas, describing tables and running SQL queries. The agent retrieves the database user and password from AWS Secrets Manager. The ID of the secret with the database user and password, the database host, and the database name are passed as environment variables to the AgentCore Runtime by the deployment script in the next section.</p>
+The agent connects to the database with the `postgres-mcp <https://github.com/crystaldba/postgres-mcp>`__ server, which includes tools for listing schemas, describing tables and running SQL queries. The agent retrieves the database user and password from AWS Secrets Manager. The ID of the secret with the database user and password, the database host, and the database name are passed as environment variables to the AgentCore Runtime by the deployment script in the next section.
 
 We configure the ``postgres-mcp`` server to run as a subprocess via ``uv``. The database URI, including the SSL certificate path for secure connections to RDS, is passed to the subprocess as an environment variable. The MCP client communicates with the server over standard input/output.
 We start the client at module level and keep it alive for the lifetime of the session.
