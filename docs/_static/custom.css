@@ -111,6 +111,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .message {
     padding-left: 1rem;
+    padding-right: 1rem;
     padding-bottom: 0.2rem;
 }
 
@@ -125,4 +126,16 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 500;
     max-height: 300px;
     overflow-y: auto;
+}
+
+.tool-x-scroll {
+    white-space: pre;
+    word-break: break-word;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    margin-right: 1rem;
+    background: #0000000F;
+    color: var(--sy-c-text);
+    font-weight: 500;
+    overflow-x: auto;
 }

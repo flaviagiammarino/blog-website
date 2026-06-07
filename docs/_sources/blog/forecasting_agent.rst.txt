@@ -352,8 +352,7 @@ the notebook with formatted text, tool calls and tool results.
 
     def get_streaming_response(prompt: str, session_id: str) -> list[dict]:
         """
-        Invoke the forecasting agent on Amazon Bedrock AgentCore and return
-        the agent messages.
+        Invoke the agent on Amazon Bedrock AgentCore and return the agent messages.
 
         Parameters:
         ===============================================================================
