@@ -204,7 +204,7 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#overview">1. Overview</a></li>
 <li><a class="reference internal" href="#solution">2. Solution</a><ul>
 <li><a class="reference internal" href="#create-the-postgresql-database-in-rds">2.1 Create the PostgreSQL database in RDS</a></li>
-<li><a class="reference internal" href="#create-the-private-subnet-and-nat-gateway">2.2 Create the private subnet and NAT Gateway</a></li>
+<li><a class="reference internal" href="#update-the-default-vpc-configuration">2.2 Update the default VPC configuration</a></li>
 <li><a class="reference internal" href="#build-the-agent-with-strands-agents">2.3 Build the agent with Strands Agents</a></li>
 <li><a class="reference internal" href="#deploy-the-agent-to-amazon-bedrock-agentcore">2.4 Deploy the agent to Amazon Bedrock AgentCore</a></li>
 <li><a class="reference internal" href="#test-the-agent-in-a-jupyter-notebook">2.5 Test the agent in a Jupyter Notebook</a></li>
@@ -227,7 +227,7 @@ data-aria-dark="Switch to auto color mode">
     alt="Architecture diagram showing a user invoking a Strands agent on Amazon Bedrock AgentCore Runtime in a private VPC subnet where the agent queries an Amazon RDS PostgreSQL database."
 ><section id="overview">
 <h2>1. Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
-<p>Text-to-SQL translates natural language queries into structured SQL statements, allowing users without specialized database knowledge to interactively explore and analyze data — beyond the pre-configured queries of static dashboards, and without depending on technical teams to write and run custom queries.</p>
+<p>Text-to-SQL translates natural language queries into structured SQL statements, allowing users without specialized database knowledge to interactively explore and analyze data - beyond the pre-configured queries of static dashboards and reports, and without depending on technical teams to write and run custom queries.</p>
 <p>In this post, we build a text-to-SQL agent using Strands Agents and deploy it to Amazon Bedrock AgentCore Runtime in a private VPC.
 The agent accesses an Amazon RDS PostgreSQL instance in the same VPC via an MCP server and communicates with other AWS services through a NAT Gateway.</p>
 <p>The agent translates user questions into SQL queries, executes them against the database, and explains the results in natural language.
@@ -275,21 +275,21 @@ We store the database credentials in AWS Secrets Manager.</p>
 </p>
 
 </div></section>
-<section id="create-the-private-subnet-and-nat-gateway">
-<h3>2.2 Create the private subnet and NAT Gateway<a class="headerlink" href="#create-the-private-subnet-and-nat-gateway" title="Link to this heading">¶</a></h3>
-<p>To allow the agent to reach AWS services such as Amazon Bedrock, AWS Secrets Manager and Amazon CloudWatch, we create a private subnet in the same VPC as the RDS instance. Since resources in a private subnet have no public IP and cannot reach the internet directly, we place a NAT Gateway in one of the existing public subnets with an Elastic IP. We then create a route table that sends all outbound traffic to the NAT Gateway and associate it with the private subnet. This gives the agent outbound internet access through the NAT Gateway while keeping it on the same private network as the RDS database. For more details, see <a class="reference external" href="https://builder.aws.com/content/2xQRB09BKuwZ7aMcLZBh4ycoTvV/deploying-amazon-bedrock-agentcore-runtime-in-a-vpc-a-step-by-step-guide">this article in the AWS Builders Center</a>.</p>
+<section id="update-the-default-vpc-configuration">
+<h3>2.2 Update the default VPC configuration<a class="headerlink" href="#update-the-default-vpc-configuration" title="Link to this heading">¶</a></h3>
+<p>To allow the agent to reach other AWS services such as Amazon Bedrock, AWS Secrets Manager and Amazon CloudWatch, we create a private subnet in the default VPC where the RDS instance is running. Since resources in a private subnet have no public IP and cannot reach the internet directly, we place a NAT Gateway in one of the existing public subnets with an Elastic IP. We then create a route table that sends all outbound traffic to the NAT Gateway and associate it with the private subnet. This gives the agent outbound internet access through the NAT Gateway while keeping it on the same private network as the RDS database. For more details, see <a class="reference external" href="https://builder.aws.com/content/2xQRB09BKuwZ7aMcLZBh4ycoTvV/deploying-amazon-bedrock-agentcore-runtime-in-a-vpc-a-step-by-step-guide">this article in the AWS Builders Center</a>.</p>
 </section>
 <section id="build-the-agent-with-strands-agents">
 <h3>2.3 Build the agent with Strands Agents<a class="headerlink" href="#build-the-agent-with-strands-agents" title="Link to this heading">¶</a></h3>
-<p>The agent connects to the database with the <a class="reference external" href="https://github.com/crystaldba/postgres-mcp">postgres-mcp</a> server, which includes tools for listing schemas, describing tables and running SQL queries. The agent retrieves the database user and password from AWS Secrets Manager.
+<p>The agent connects to the database with the <code class="docutils literal notranslate"><span class="pre">`postgres-mcp</span></code> &lt;<a class="reference external" href="https://github.com/crystaldba/postgres-mcp">https://github.com/crystaldba/postgres-mcp</a>&gt;`__ server, which includes tools for listing schemas, describing tables and running SQL queries. The agent retrieves the database user and password from AWS Secrets Manager.
 The ID of the secret with the database user and password, the database host, and the database name are passed as environment variables to the AgentCore Runtime by the deployment script in the next section.</p>
-<p>We configure the postgres-mcp server to run as a subprocess via <code class="docutils literal notranslate"><span class="pre">uv</span></code>. The database URI, including the SSL certificate path for secure connections to RDS, is passed to the subprocess as an environment variable. The MCP client communicates with the server over standard input/output.
+<p>We configure the <code class="docutils literal notranslate"><span class="pre">postgres-mcp</span></code> server to run as a subprocess via <code class="docutils literal notranslate"><span class="pre">uv</span></code>. The database URI, including the SSL certificate path for secure connections to RDS, is passed to the subprocess as an environment variable. The MCP client communicates with the server over standard input/output.
 We start the client at module level and keep it alive for the lifetime of the session.</p>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
-<p>By default, the postgres-mcp server runs in <code class="docutils literal notranslate"><span class="pre">unrestricted</span></code> access mode, allowing both read and write access to the database. For production use, set the access mode to <code class="docutils literal notranslate"><span class="pre">restricted</span></code> to limit the agent to read-only queries.</p>
+<p>By default, the <code class="docutils literal notranslate"><span class="pre">postgres-mcp</span></code> server runs in <code class="docutils literal notranslate"><span class="pre">unrestricted</span></code> access mode, allowing both read and write access to the database. For production use, set the access mode to <code class="docutils literal notranslate"><span class="pre">restricted</span></code> to limit the agent to read-only queries.</p>
 </div>
-<p>The agent is initialized with Claude Sonnet 4.6 as the underlying model, the postgres-mcp tools, and a system prompt.
+<p>The agent is initialized with Claude Sonnet 4.6 as the underlying model, the <code class="docutils literal notranslate"><span class="pre">postgres-mcp</span></code> tools, and a system prompt.
 The agent is wrapped in a <code class="docutils literal notranslate"><span class="pre">BedrockAgentCoreApp</span></code> with an async streaming entrypoint that yields agent events — including not only text responses, but also tool call inputs and results — back to the caller.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 </span><span data-line="2"><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>

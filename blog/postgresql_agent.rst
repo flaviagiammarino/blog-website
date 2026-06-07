@@ -25,7 +25,7 @@ Deploying a text-to-SQL agent with private VPC access to RDS PostgreSQL on Amazo
 1. Overview
 ***************************************************************************************************************
 
-Text-to-SQL translates natural language queries into structured SQL statements, allowing users without specialized database knowledge to interactively explore and analyze data — beyond the pre-configured queries of static dashboards, and without depending on technical teams to write and run custom queries.
+Text-to-SQL translates natural language queries into structured SQL statements, allowing users without specialized database knowledge to interactively explore and analyze data - beyond the pre-configured queries of static dashboards and reports, and without depending on technical teams to write and run custom queries.
 
 In this post, we build a text-to-SQL agent using Strands Agents and deploy it to Amazon Bedrock AgentCore Runtime in a private VPC.
 The agent accesses an Amazon RDS PostgreSQL instance in the same VPC via an MCP server and communicates with other AWS services through a NAT Gateway.
@@ -85,25 +85,25 @@ We store the database credentials in AWS Secrets Manager.
 
     </div>
 
-2.2 Create the private subnet and NAT Gateway
+2.2 Update the default VPC configuration
 ===============================================================================================================
 
-To allow the agent to reach AWS services such as Amazon Bedrock, AWS Secrets Manager and Amazon CloudWatch, we create a private subnet in the same VPC as the RDS instance. Since resources in a private subnet have no public IP and cannot reach the internet directly, we place a NAT Gateway in one of the existing public subnets with an Elastic IP. We then create a route table that sends all outbound traffic to the NAT Gateway and associate it with the private subnet. This gives the agent outbound internet access through the NAT Gateway while keeping it on the same private network as the RDS database. For more details, see `this article in the AWS Builders Center <https://builder.aws.com/content/2xQRB09BKuwZ7aMcLZBh4ycoTvV/deploying-amazon-bedrock-agentcore-runtime-in-a-vpc-a-step-by-step-guide>`__.
+To allow the agent to reach other AWS services such as Amazon Bedrock, AWS Secrets Manager and Amazon CloudWatch, we create a private subnet in the default VPC where the RDS instance is running. Since resources in a private subnet have no public IP and cannot reach the internet directly, we place a NAT Gateway in one of the existing public subnets with an Elastic IP. We then create a route table that sends all outbound traffic to the NAT Gateway and associate it with the private subnet. This gives the agent outbound internet access through the NAT Gateway while keeping it on the same private network as the RDS database. For more details, see `this article in the AWS Builders Center <https://builder.aws.com/content/2xQRB09BKuwZ7aMcLZBh4ycoTvV/deploying-amazon-bedrock-agentcore-runtime-in-a-vpc-a-step-by-step-guide>`__.
 
 2.3 Build the agent with Strands Agents
 ===============================================================================================================
 
-The agent connects to the database with the `postgres-mcp <https://github.com/crystaldba/postgres-mcp>`__ server, which includes tools for listing schemas, describing tables and running SQL queries. The agent retrieves the database user and password from AWS Secrets Manager.
+The agent connects to the database with the ```postgres-mcp`` <https://github.com/crystaldba/postgres-mcp>`__ server, which includes tools for listing schemas, describing tables and running SQL queries. The agent retrieves the database user and password from AWS Secrets Manager.
 The ID of the secret with the database user and password, the database host, and the database name are passed as environment variables to the AgentCore Runtime by the deployment script in the next section.
 
-We configure the postgres-mcp server to run as a subprocess via ``uv``. The database URI, including the SSL certificate path for secure connections to RDS, is passed to the subprocess as an environment variable. The MCP client communicates with the server over standard input/output.
+We configure the ``postgres-mcp`` server to run as a subprocess via ``uv``. The database URI, including the SSL certificate path for secure connections to RDS, is passed to the subprocess as an environment variable. The MCP client communicates with the server over standard input/output.
 We start the client at module level and keep it alive for the lifetime of the session.
 
 .. important::
 
-    By default, the postgres-mcp server runs in ``unrestricted`` access mode, allowing both read and write access to the database. For production use, set the access mode to ``restricted`` to limit the agent to read-only queries.
+    By default, the ``postgres-mcp`` server runs in ``unrestricted`` access mode, allowing both read and write access to the database. For production use, set the access mode to ``restricted`` to limit the agent to read-only queries.
 
-The agent is initialized with Claude Sonnet 4.6 as the underlying model, the postgres-mcp tools, and a system prompt.
+The agent is initialized with Claude Sonnet 4.6 as the underlying model, the ``postgres-mcp`` tools, and a system prompt.
 The agent is wrapped in a ``BedrockAgentCoreApp`` with an async streaming entrypoint that yields agent events — including not only text responses, but also tool call inputs and results — back to the caller.
 
 .. code:: python
