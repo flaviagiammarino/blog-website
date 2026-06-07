@@ -96,7 +96,7 @@ To allow the agent to reach other AWS services such as Amazon Bedrock, AWS Secre
 .. raw:: html
 
     <p>
-    The agent connects to the database with the <a href="https://github.com/crystaldba/postgres-mcp"><code>postgres-mcp</code></a> server, which includes tools for listing schemas, describing tables and running SQL queries. The agent retrieves the database user and password from AWS Secrets Manager.
+    The agent connects to the database with the <a href="https://github.com/crystaldba/postgres-mcp"><code class="docutils literal notranslate"><span class="pre">postgres-mcp</span></code></a> server, which includes tools for listing schemas, describing tables and running SQL queries. The agent retrieves the database user and password from AWS Secrets Manager.
     </p>
 
 The ID of the secret with the database user and password, the database host, and the database name are passed as environment variables to the AgentCore Runtime by the deployment script in the next section.
