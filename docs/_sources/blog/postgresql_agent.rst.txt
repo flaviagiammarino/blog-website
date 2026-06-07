@@ -41,9 +41,8 @@ Unlike RAG-based approaches that require re-syncing the knowledge base whenever 
 
 For this demonstration, we use two small tables: ``products`` and ``sales``,
 containing product names and unit sales for three items.
-We create the two tables in a PostgreSQL RDS instance with public access disabled.
+We create the two tables in a PostgreSQL RDS instance with public access disabled and store the database credentials in AWS Secrets Manager.
 The instance runs within the default VPC with three public subnets and an internet gateway.
-We store the database credentials in AWS Secrets Manager.
 
 .. raw:: html
 
