@@ -289,9 +289,7 @@ a zip file to S3, and an AgentCore Runtime execution role in IAM.
 2.4 Test the agent in a Jupyter Notebook
 ===============================================================================================================
 
-We start by importing the required libraries: ``boto3`` to invoke the agent on Bedrock AgentCore,
-``json`` to serialize the request payload and deserialize the response, ``uuid`` to generate unique session
-identifiers, and ``IPython.display`` to render the agent's responses as formatted Markdown in the notebook.
+After the agent has been deployed, we test it in a Jupyter Notebook. We start by importing the required libraries: ``boto3`` to invoke the agent on Bedrock AgentCore, ``json`` to serialize the request payload and deserialize the response, ``uuid`` to generate unique session identifiers, and ``IPython.display`` to render the agent's responses as formatted Markdown in the notebook.
 
 .. code:: ipython3
 
