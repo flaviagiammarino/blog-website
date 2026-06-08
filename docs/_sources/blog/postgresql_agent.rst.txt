@@ -99,7 +99,6 @@ The instance runs within the default VPC, which has three public subnets, an int
 ===============================================================================================================
 
 To allow the agent to reach other AWS services such as Amazon Bedrock, AWS Secrets Manager and Amazon CloudWatch, we create a private subnet in the default VPC where the RDS instance is running. Since resources in a private subnet have no public IP and cannot reach the internet directly, we place a NAT Gateway in one of the existing public subnets with an Elastic IP. We then create a route table that sends all outbound traffic to the NAT Gateway and associate it with the private subnet.
-
 This gives the agent outbound internet access through the NAT Gateway while keeping it on the same private network as the RDS database. Multiple private subnets across different AZs could additionally be set up to improve agent availability. For more details on the VPC configuration, see `this article in the AWS Builders Center <https://builder.aws.com/content/2xQRB09BKuwZ7aMcLZBh4ycoTvV/deploying-amazon-bedrock-agentcore-runtime-in-a-vpc-a-step-by-step-guide>`__.
 
 2.3 Build the agent with Strands Agents
