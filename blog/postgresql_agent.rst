@@ -62,7 +62,7 @@ The instance runs within the default VPC, which has three public subnets, an int
     <img
         src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/postgresql_agent/products_table.png"
         style="width:70%"
-        alt="products Postgres table"
+        alt="products PostgreSQL table"
     >
 
     <p>
@@ -70,7 +70,7 @@ The instance runs within the default VPC, which has three public subnets, an int
     <code class="docutils literal notranslate">
     <span class="pre" style="font-weight:600">products</span>
     </code>
-    <span>Postgres table.</span>
+    <span>PostgreSQL table.</span>
     </p>
 
     </div>
@@ -82,7 +82,7 @@ The instance runs within the default VPC, which has three public subnets, an int
     <img
         src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/postgresql_agent/sales_table.png"
         style="width:70%"
-        alt="sales Postgres table"
+        alt="sales PostgreSQL table"
     >
 
     <p>
@@ -90,7 +90,7 @@ The instance runs within the default VPC, which has three public subnets, an int
     <code class="docutils literal notranslate">
     <span class="pre" style="font-weight:600">sales</span>
     </code>
-    <span>Postgres table.</span>
+    <span>PostgreSQL table.</span>
     </p>
 
     </div>
