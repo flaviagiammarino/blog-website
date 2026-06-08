@@ -32,8 +32,8 @@ as context windows, prediction horizons and quantile levels.
 
 The forecasting tool uses Chronos `[1] <#references>`_, a family of foundation models for zero-shot
 probabilistic forecasting of univariate time series trained on a large collection of real and
-synthetic time series datasets using the T5 architecture `[2] <#references>`_.
-Specifically, the tool uses Chronos-Bolt `[3] <#references>`_, a faster, more accurate
+synthetic time series datasets.
+Specifically, the tool uses Chronos-Bolt `[2] <#references>`_, a faster, more accurate
 and more memory-efficient variant that runs on CPU and is available on Amazon Bedrock Marketplace.
 
 The agent is built with `Strands Agents <https://strandsagents.com/>`__,
@@ -110,8 +110,6 @@ To build the agent, we need three files: an empty ``__init__.py``, ``agent.py``,
    ├── __init__.py
    ├── agent.py
    └── requirements.txt
-
-
 
 The ``agent.py`` script is shown below. It implements a Strands agent backed by Claude Sonnet 4.6 on Bedrock which responds
 to forecasting requests using a ``generate_forecasts`` tool. The tool takes as input the historical time series
@@ -651,11 +649,6 @@ References
 Chronos: Learning the language of time series. *arXiv preprint*,
 `doi: 10.48550/arXiv.2403.07815 <https://doi.org/10.48550/arXiv.2403.07815>`__.
 
-[2] Raffel, C., Shazeer, N., Roberts, A., Lee, K., Narang, S., Matena, M., Zhou, Y., Li, W. and Liu, P.J., (2020).
-Exploring the limits of transfer learning with a unified text-to-text transformer.
-*Journal of machine learning research*, 21(140), pp.1-67,
-`doi: 10.48550/arXiv.1910.10683 <https://doi.org/10.48550/arXiv.1910.10683>`__.
-
-[3] Ansari, A.F., Turkmen, C., Shchur, O., and Stella, L. (2024).
+[2] Ansari, A.F., Turkmen, C., Shchur, O., and Stella, L. (2024).
 Fast and accurate zero-shot forecasting with Chronos-Bolt and AutoGluon.
 `AWS Blogs - Artificial Intelligence <https://aws.amazon.com/blogs/machine-learning/fast-and-accurate-zero-shot-forecasting-with-chronos-bolt-and-autogluon/>`__.

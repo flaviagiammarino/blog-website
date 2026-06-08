@@ -233,8 +233,8 @@ with short-term memory, allowing users to generate forecasts and iteratively adj
 as context windows, prediction horizons and quantile levels.</p>
 <p>The forecasting tool uses Chronos <a class="reference external" href="#references">[1]</a>, a family of foundation models for zero-shot
 probabilistic forecasting of univariate time series trained on a large collection of real and
-synthetic time series datasets using the T5 architecture <a class="reference external" href="#references">[2]</a>.
-Specifically, the tool uses Chronos-Bolt <a class="reference external" href="#references">[3]</a>, a faster, more accurate
+synthetic time series datasets.
+Specifically, the tool uses Chronos-Bolt <a class="reference external" href="#references">[2]</a>, a faster, more accurate
 and more memory-efficient variant that runs on CPU and is available on Amazon Bedrock Marketplace.</p>
 <p>The agent is built with <a class="reference external" href="https://strandsagents.com/">Strands Agents</a>,
 where orchestration decisions are delegated to the language model rather than defined in fixed, predefined workflows.
@@ -804,11 +804,7 @@ Here are the forecast results for the next 10 time steps:
 <p>[1] Ansari, A.F., Stella, L., Turkmen, C., Zhang, X., Mercado, P., Shen, H., Shchur, O., Rangapuram, S.S., Arango, S.P., Kapoor, S. and Zschiegner, J., (2024).
 Chronos: Learning the language of time series. <em>arXiv preprint</em>,
 <a class="reference external" href="https://doi.org/10.48550/arXiv.2403.07815">doi: 10.48550/arXiv.2403.07815</a>.</p>
-<p>[2] Raffel, C., Shazeer, N., Roberts, A., Lee, K., Narang, S., Matena, M., Zhou, Y., Li, W. and Liu, P.J., (2020).
-Exploring the limits of transfer learning with a unified text-to-text transformer.
-<em>Journal of machine learning research</em>, 21(140), pp.1-67,
-<a class="reference external" href="https://doi.org/10.48550/arXiv.1910.10683">doi: 10.48550/arXiv.1910.10683</a>.</p>
-<p>[3] Ansari, A.F., Turkmen, C., Shchur, O., and Stella, L. (2024).
+<p>[2] Ansari, A.F., Turkmen, C., Shchur, O., and Stella, L. (2024).
 Fast and accurate zero-shot forecasting with Chronos-Bolt and AutoGluon.
 <a class="reference external" href="https://aws.amazon.com/blogs/machine-learning/fast-and-accurate-zero-shot-forecasting-with-chronos-bolt-and-autogluon/">AWS Blogs - Artificial Intelligence</a>.</p>
 </section>
