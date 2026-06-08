@@ -236,11 +236,20 @@ Unlike RAG-based approaches that require re-syncing the knowledge base whenever 
 </section>
 <section id="solution">
 <h2>2. Solution<a class="headerlink" href="#solution" title="Link to this heading">¶</a></h2>
-<p>To implement this solution, you will need:
-- An AWS account with access to Amazon Bedrock, Amazon RDS, Amazon ECR and Amazon Bedrock AgentCore in your target region.
-- The AWS CLI installed and configured with appropriate credentials.
-- Docker installed for building and pushing the container image.
-- Python 3.13 and <a class="reference external" href="https://docs.astral.sh/uv/">uv</a> installed for project setup and dependency management.</p>
+<p>To follow along, you will need:</p>
+<ul class="simple">
+<li><p>An AWS account with sufficient IAM permissions to create and manage the resources described in this post.</p></li>
+<li><p>The AWS CLI installed and configured with appropriate credentials.</p></li>
+<li><p>Docker installed for building and pushing the container image.</p></li>
+<li><p>Python 3.13 and <a class="reference external" href="https://docs.astral.sh/uv/">uv</a> installed for project setup and dependency management.</p></li>
+</ul>
+<p>The solution involves creating an RDS PostgreSQL database, configuring the VPC with a private subnet and NAT Gateway, building the agent in Python with Strands Agents, containerizing it with Docker, pushing the image to Amazon ECR, and deploying it to Amazon Bedrock AgentCore Runtime. The implementation consists of three files:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span data-line="1">agent/
+</span><span data-line="2">├── agent.py              # Strands agent with database tools
+</span><span data-line="3">├── Dockerfile            # Container image definition
+</span><span data-line="4">└── build_and_deploy.sh   # ECR image creation and AgentCore Runtime deployment
+</span></pre></div>
+</div>
 <section id="create-the-postgresql-database-in-rds">
 <h3>2.1 Create the PostgreSQL database in RDS<a class="headerlink" href="#create-the-postgresql-database-in-rds" title="Link to this heading">¶</a></h3>
 <p>For this demonstration, we use two small tables: <code class="docutils literal notranslate"><span class="pre">products</span></code> and <code class="docutils literal notranslate"><span class="pre">sales</span></code>,
@@ -684,7 +693,7 @@ What tables are in the database?
 {'input': {}}
 </pre>
 <p>🔨 Output:</p>
-<pre class="tool" style="overflow-x: auto; white-space: pre-wrap; overflow-y: visible;">
+<pre  class="tool-x-scroll">
 {'output': 'Error: consuming input failed: SSL error: unexpected eof while reading'}
 </pre>
 <p>It seems there was a connection issue. Let me try again!</p>

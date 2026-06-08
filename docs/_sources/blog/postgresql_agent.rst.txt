@@ -36,11 +36,22 @@ Unlike RAG-based approaches that require re-syncing the knowledge base whenever 
 2. Solution
 ***************************************************************************************************************
 
-To implement this solution, you will need:
-- An AWS account with access to Amazon Bedrock, Amazon RDS, Amazon ECR and Amazon Bedrock AgentCore in your target region.
+To follow along, you will need:
+
+- An AWS account with sufficient IAM permissions to create and manage the resources described in this post.
 - The AWS CLI installed and configured with appropriate credentials.
 - Docker installed for building and pushing the container image.
 - Python 3.13 and `uv <https://docs.astral.sh/uv/>`__ installed for project setup and dependency management.
+
+The solution involves creating an RDS PostgreSQL database, configuring the VPC with a private subnet and NAT Gateway, building the agent in Python with Strands Agents, containerizing it with Docker, pushing the image to Amazon ECR, and deploying it to Amazon Bedrock AgentCore Runtime. The implementation consists of three files:
+
+.. code-block:: text
+
+    agent/
+    ├── agent.py              # Strands agent with database tools
+    ├── Dockerfile            # Container image definition
+    └── build_and_deploy.sh   # ECR image creation and AgentCore Runtime deployment
+
 
 2.1 Create the PostgreSQL database in RDS
 ===============================================================================================================
@@ -521,7 +532,7 @@ The initial connection to PostgreSQL fails due to an SSL handshake timing issue,
     {'input': {}}
     </pre>
     <p>🔨 Output:</p>
-    <pre class="tool" style="overflow-x: auto; white-space: pre-wrap; overflow-y: visible;">
+    <pre  class="tool-x-scroll">
     {'output': 'Error: consuming input failed: SSL error: unexpected eof while reading'}
     </pre>
     <p>It seems there was a connection issue. Let me try again!</p>
