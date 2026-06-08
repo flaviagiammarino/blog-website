@@ -467,6 +467,9 @@ The ID of the secret with the database user and password, the database host, and
 </section>
 <section id="test-the-agent-in-a-jupyter-notebook">
 <h3>2.5 Test the agent in a Jupyter Notebook<a class="headerlink" href="#test-the-agent-in-a-jupyter-notebook" title="Link to this heading">¶</a></h3>
+<p>After the agent has been deployed, we test it in a Jupyter Notebook.
+We invoke the agent over four conversational turns, demonstrating schema discovery, short-term memory, and a multi-table query.
+To avoid ongoing charges, delete the AgentCore runtime, ECR repository, RDS instance, NAT Gateway, Elastic IP, private subnet and route table after testing.</p>
 <p>We start by importing the required libraries: <code class="docutils literal notranslate"><span class="pre">boto3</span></code> to invoke the agent on Bedrock AgentCore,
 <code class="docutils literal notranslate"><span class="pre">json</span></code> to serialize the request payload and deserialize the response, <code class="docutils literal notranslate"><span class="pre">uuid</span></code> to generate unique session
 identifiers, and <code class="docutils literal notranslate"><span class="pre">IPython.display</span></code> to render the agent’s responses as formatted Markdown in the notebook.</p>
@@ -1020,8 +1023,7 @@ Combine the two tables and add the percentage of total sales for each product.
 </ul>
 <p>Would you like any further analysis, such as visualizations, filtering, or additional metrics?</p>
 </div>
-</div><p>To avoid ongoing charges, delete the AgentCore runtime, ECR repository, RDS instance, NAT Gateway, Elastic IP, private subnet and route table after testing.</p>
-</section>
+</div></section>
 </section>
 <section id="conclusion">
 <h2>3. Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">¶</a></h2>

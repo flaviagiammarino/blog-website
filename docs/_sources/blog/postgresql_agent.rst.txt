@@ -289,6 +289,9 @@ The ID of the secret with the database user and password, the database host, and
 2.5 Test the agent in a Jupyter Notebook
 ===============================================================================================================
 
+After the agent has been deployed, we test it in a Jupyter Notebook.
+We invoke the agent over four conversational turns, demonstrating schema discovery, short-term memory, and a multi-table query.
+To avoid ongoing charges, delete the AgentCore runtime, ECR repository, RDS instance, NAT Gateway, Elastic IP, private subnet and route table after testing.
 
 We start by importing the required libraries: ``boto3`` to invoke the agent on Bedrock AgentCore,
 ``json`` to serialize the request payload and deserialize the response, ``uuid`` to generate unique session
@@ -872,8 +875,6 @@ Finally, we ask the agent to join the two tables and compute a simple derived me
     <p>Would you like any further analysis, such as visualizations, filtering, or additional metrics?</p>
     </div>
     </div>
-
-To avoid ongoing charges, delete the AgentCore runtime, ECR repository, RDS instance, NAT Gateway, Elastic IP, private subnet and route table after testing.
 
 3. Conclusion
 ***************************************************************************************************************
