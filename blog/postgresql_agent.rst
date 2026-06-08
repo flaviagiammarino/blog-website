@@ -36,13 +36,19 @@ Unlike RAG-based approaches that require re-syncing the knowledge base whenever 
 2. Solution
 ***************************************************************************************************************
 
+To implement this solution, you will need:
+- An AWS account with access to Amazon Bedrock, Amazon RDS, Amazon ECR and Amazon Bedrock AgentCore in your target region.
+- The AWS CLI installed and configured with appropriate credentials.
+- Docker installed for building and pushing the container image.
+- Python 3.13 and `uv <https://docs.astral.sh/uv/>`__ installed for project setup and dependency management.
+
 2.1 Create the PostgreSQL database in RDS
 ===============================================================================================================
 
 For this demonstration, we use two small tables: ``products`` and ``sales``,
 containing product names and unit sales for three items.
 We create the two tables in a PostgreSQL RDS instance with public access disabled and store the database credentials in AWS Secrets Manager.
-The instance runs within the default VPC with three public subnets and an internet gateway.
+The instance runs within the default VPC with three public subnets, an internet gateway, and DNS hostnames and DNS resolution enabled.
 
 .. raw:: html
 
@@ -87,17 +93,17 @@ The instance runs within the default VPC with three public subnets and an intern
 2.2 Update the default VPC configuration
 ===============================================================================================================
 
-To allow the agent to reach other AWS services such as Amazon Bedrock, AWS Secrets Manager and Amazon CloudWatch, we create a private subnet in the default VPC where the RDS instance is running. Since resources in a private subnet have no public IP and cannot reach the internet directly, we place a NAT Gateway in one of the existing public subnets with an Elastic IP. We then create a route table that sends all outbound traffic to the NAT Gateway and associate it with the private subnet. This gives the agent outbound internet access through the NAT Gateway while keeping it on the same private network as the RDS database. For more details, see `this article in the AWS Builders Center <https://builder.aws.com/content/2xQRB09BKuwZ7aMcLZBh4ycoTvV/deploying-amazon-bedrock-agentcore-runtime-in-a-vpc-a-step-by-step-guide>`__.
+To allow the agent to reach other AWS services such as Amazon Bedrock, AWS Secrets Manager and Amazon CloudWatch, we create a private subnet in the default VPC where the RDS instance is running. Since resources in a private subnet have no public IP and cannot reach the internet directly, we place a NAT Gateway in one of the existing public subnets with an Elastic IP. We then create a route table that sends all outbound traffic to the NAT Gateway and associate it with the private subnet. This gives the agent outbound internet access through the NAT Gateway while keeping it on the same private network as the RDS database. Multiple private subnets across different AZs could additionally be set up with the same configuration to improve agent availability. For more details, see `this article in the AWS Builders Center <https://builder.aws.com/content/2xQRB09BKuwZ7aMcLZBh4ycoTvV/deploying-amazon-bedrock-agentcore-runtime-in-a-vpc-a-step-by-step-guide>`__.
 
 2.3 Build the agent with Strands Agents
 ===============================================================================================================
 
-The agent connects to the database with the `postgres-mcp <https://github.com/crystaldba/postgres-mcp>`__ server, which includes tools for listing schemas, describing tables and running SQL queries. The agent retrieves the database user and password from AWS Secrets Manager. The ID of the secret with the database user and password, the database host, and the database name are passed as environment variables to the AgentCore Runtime by the deployment script in the next section.
+The agent connects to the database with the `postgres-mcp <https://github.com/crystaldba/postgres-mcp>`__ server, which includes tools for listing schemas, describing tables and running SQL queries. The agent retrieves the database user and password from AWS Secrets Manager. The secret ID, the database host, and the database name are passed as environment variables to the AgentCore Runtime by the deployment script in the next section.
 
 We configure the ``postgres-mcp`` server to run as a subprocess via ``uv``. The database URI, including the SSL certificate path for secure connections to RDS, is passed to the subprocess as an environment variable. The MCP client communicates with the server over standard input/output.
 We start the client at module level and keep it alive for the lifetime of the session.
 
-.. important::
+.. warning::
 
     By default, the ``postgres-mcp`` server runs in ``unrestricted`` access mode, allowing both read and write access to the database. For production use, set the access mode to ``restricted`` to limit the agent to read-only queries.
 
@@ -860,5 +866,14 @@ Finally, we ask the agent to join the two tables and compute a simple derived me
     <p>Would you like any further analysis, such as visualizations, filtering, or additional metrics?</p>
     </div>
     </div>
+
+To avoid ongoing charges, delete the AgentCore runtime, ECR repository, RDS instance, NAT Gateway, Elastic IP, private subnet and route table after testing.
+
+3. Conclusion
+***************************************************************************************************************
+
+In this post, we deployed a text-to-SQL agent using Strands Agents on Amazon Bedrock AgentCore Runtime with private VPC access to an RDS PostgreSQL database. The agent translates natural language questions into SQL queries, executes them against the database, and explains the results - with full visibility into the reasoning steps and tool calls.
+
+This is a basic implementation intended as a starting point. A production deployment would require additional controls, such as SQL validation to verify generated queries for correctness before execution, access controls to ensure that users can only query data they are authorized to access, caching to reduce latency and model invocation costs for frequent queries, and ongoing monitoring of quality, latency, throughput, errors and costs. For further discussion of implementing production text-to-SQL solutions in Amazon Bedrock, see `this article in the AWS Blog <https://aws.amazon.com/blogs/machine-learning/text-to-sql-solution-powered-by-amazon-bedrock/>`__.
 
 You can download the full code from our `GitHub repository <https://github.com/flaviagiammarino/machine-learning-blog/tree/main/postgresql_agent/>`__.
