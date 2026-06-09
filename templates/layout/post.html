@@ -9,18 +9,22 @@
     <meta property="og:description" content="{{post.description}}">
     <meta property="og:image" content="{{post.image_src}}">
     <script type="application/ld+json">
-    {
+        {
       "@context": "https://schema.org",
       "@type": "BlogPosting",
       "headline": "{{post.title}}",
       "image": "{{post.image_src}}",
-      "thumbnailUrl": "{{post.image_src}}",
-      "datePublished": "{{post.date}}.0000000Z",
-      "dateModified": "{{post.last_updated}}.0000000Z",
+      "datePublished": "{{post.date}}T00:00:00Z",
+      "dateModified": "{{post.last_updated}}T00:00:00Z",
       "author": {
         "@type": "Person",
         "name": "Flavia Giammarino",
-        "url": "https://flaviagiammarino.com"
+        "url": "https://flaviagiammarino.com",
+        "sameAs": [
+          "https://www.linkedin.com/in/flaviagiammarino",
+          "https://scholar.google.com/citations?user=fGy6rYEAAAAJ",
+          "https://github.com/flaviagiammarino"
+        ]
       },
       "description": "{{post.description}}",
       "keywords": "{{post.keywords}}",
