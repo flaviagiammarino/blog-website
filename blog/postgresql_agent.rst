@@ -5,7 +5,7 @@
     :category: Agentic AI
     :author: Flavia
     :description: Build and deploy a PostgreSQL text-to-SQL agent with Amazon Bedrock AgentCore and Strands Agents
-    :keywords: Text-to-SQL, Amazon Bedrock, Strands Agents
+    :keywords: Text-to-SQL, PostgreSQL, Amazon RDS, Amazon Bedrock, Strands Agents
     :image_src: https://machine-learning-blog.s3.eu-west-2.amazonaws.com/postgresql_agent/architecture_diagram.png
     :image_alt: Architecture diagram showing a user invoking a Strands agent on Amazon Bedrock AgentCore Runtime in a private VPC subnet where the agent queries an Amazon RDS PostgreSQL database.
     :excerpt: 1
