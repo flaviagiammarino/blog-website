@@ -3,6 +3,7 @@
 {% set post = ablog[pagename] %}
 
 {%- block extrahead -%}
+    <meta name="title" content="{{post.title}}">
     <meta name="description" content="{{post.description}}">
     <meta name="thumbnail" content="{{post.image_src}}">
     <meta property="og:description" content="{{post.description}}">
