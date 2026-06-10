@@ -65,6 +65,10 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 500 !important;
 }
 
+h2 {
+    margin-top: 25.6px !important;
+}
+
 .theme-switch .theme-icon, [data-color-mode=auto] .theme-switch .theme-icon {
     width: 19px !important;
     height: 19px !important;
