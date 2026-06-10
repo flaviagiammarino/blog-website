@@ -45,6 +45,9 @@
 }
 
 @media (max-width: 1200px){
+    h1 {
+        font-size: 80% !important;
+    }
    .blog-info-container{
         display: block !important;
     }
