@@ -47,6 +47,7 @@
 @media (max-width: 1200px){
     h1 {
         font-size: 1.8em !important;
+        line-height: 1.2 !important;
     }
    .blog-info-container{
         display: block !important;
@@ -66,7 +67,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h2 {
-    margin-top: 25.6px !important;
+    margin-top: 26px !important;
 }
 
 .theme-switch .theme-icon, [data-color-mode=auto] .theme-switch .theme-icon {
