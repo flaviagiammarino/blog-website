@@ -8027,10 +8027,8 @@ http://localhost:8004/plot_32abcfb962dc412f8909d2f8283c5067.html
 </div><p>The assistant consistently followed all instructions and used the correct tools in the right order.</p>
 <p>One limitation worth noting is that rather than joining the <code class="docutils literal notranslate"><span class="pre">sales</span></code> and <code class="docutils literal notranslate"><span class="pre">products</span></code> tables to resolve product names, the assistant
 memorized the product IDs from the <code class="docutils literal notranslate"><span class="pre">products</span></code> table and used them directly in subsequent queries.
-While this approach worked correctly in this case, it is not robust, as the <code class="docutils literal notranslate"><span class="pre">products</span></code> table may change over time.</p>
-<p>We also note that the model’s thinking is occasionally too verbose. Additionally, in the final turn, the model’s internal
-reasoning refers to “temperature readings” and “temperature curves” despite operating on product sales data - a domain slip
-in extended thinking that did not affect the final output.</p>
+While this approach worked correctly in this case, it is not robust, as the <code class="docutils literal notranslate"><span class="pre">products</span></code> table may change over time.
+We also note that the model’s thinking is occasionally too verbose and shows domain slips in the last turn, though neither affected the final output.</p>
 <p>You can download the full code from our <a class="reference external" href="https://github.com/flaviagiammarino/machine-learning-blog/tree/main/forecasting_assistant/">GitHub repository</a>.</p>
 </section>
 </section>

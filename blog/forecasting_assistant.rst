@@ -7896,10 +7896,7 @@ The assistant consistently followed all instructions and used the correct tools 
 One limitation worth noting is that rather than joining the ``sales`` and ``products`` tables to resolve product names, the assistant
 memorized the product IDs from the ``products`` table and used them directly in subsequent queries.
 While this approach worked correctly in this case, it is not robust, as the ``products`` table may change over time.
-
-We also note that the model's thinking is occasionally too verbose. Additionally, in the final turn, the model's internal
-reasoning refers to "temperature readings" and "temperature curves" despite operating on product sales data - a domain slip
-in extended thinking that did not affect the final output.
+We also note that the model's thinking is occasionally too verbose and shows domain slips in the last turn, though neither affected the final output.
 
 You can download the full code from our `GitHub repository <https://github.com/flaviagiammarino/machine-learning-blog/tree/main/forecasting_assistant/>`__.
 
