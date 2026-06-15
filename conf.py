@@ -88,7 +88,14 @@ html_theme_options = {
     "github_url": "https://github.com/flaviagiammarino",
     "youtube_url": "https://youtube.com/@FlaviaGiammarino",
     "linkedin_url": "https://www.linkedin.com/in/flaviagiammarino",
-    "twitter_url": "https://x.com/Flavia_G_ML"
+    "twitter_url": "https://x.com/Flavia_G_ML",
+    "nav_links": [
+        {
+            "title": "Book a consultation",
+            "url": "https://calendly.com/flaviagiammarino/consultation",
+            "external": True,
+        },
+    ]
 }
 
 html_sidebars = {
