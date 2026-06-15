@@ -2,6 +2,12 @@
     display: none !important;
 }
 
+@media (max-width: 767px) {
+    .sy-head-links {
+        display: flex !important;
+    }
+}
+
 .hamburger {
     display: none !important;
 }
