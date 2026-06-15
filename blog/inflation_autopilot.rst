@@ -8,7 +8,7 @@
     :keywords: Time Series Forecasting, Inflation Forecasting, AutoML, Amazon SageMaker Autopilot, FRED-MD
     :image_src: https://machine-learning-blog.s3.eu-west-2.amazonaws.com/inflation_autopilot/architecture_diagram.png
     :image_alt: Architecture diagram showing inflation forecasting with Amazon SageMaker Autopilot using data from FRED MD stored in Amazon S3.
-    :excerpt: 1
+    :summary: An Amazon SageMaker Autopilot AutoML pipeline for forecasting US CPI inflation using the FRED-MD database.
 
 
 ###############################################################################################################

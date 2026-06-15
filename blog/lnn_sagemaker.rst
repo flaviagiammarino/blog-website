@@ -8,7 +8,7 @@
     :keywords: Time Series Forecasting, Deep Learning, Neural Networks, Amazon SageMaker
     :image_src: https://machine-learning-blog.s3.eu-west-2.amazonaws.com/lnn_sagemaker/architecture_diagram.png
     :image_alt: Custom Amazon SageMaker algorithm architecture with ECR training and inference images.
-    :excerpt: 1
+    :summary: A custom Amazon SageMaker algorithm that implements liquid neural networks for probabilistic time series forecasting. The training and inference Docker images are built by extending the AWS PyTorch deep learning containers.
 
 
 ###############################################################################################################

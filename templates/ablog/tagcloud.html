@@ -3,7 +3,7 @@
   <h3 style="color: var(--sy-c-light);">
       <a href="{{ pathto(ablog.tags.path) }}">{{ gettext('Tags') }}</a>
   </h3>
-  <ul class="ablog-cloud">
+  <ul class="ablog-cloud"">
     {% for coll in ablog.tags %} {% if coll %}
     <li class="ablog-cloud ablog-cloud-{{ coll.relsize(5, 1) }}">
       <a style="font-size: 90%" href="{{ pathto(coll.docname) }}">{{ coll }}</a>

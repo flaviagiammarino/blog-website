@@ -8,7 +8,7 @@
     :keywords: Time Series Forecasting, Amazon Chronos, Amazon Bedrock, LibreChat, ClickHouse
     :image_src: https://machine-learning-blog.s3.eu-west-2.amazonaws.com/forecasting-assistant/architecture_diagram.png
     :image_alt: Architecture diagram showing a user interacting with LibreChat, which routes requests to Claude Sonnet 4.6 on Amazon Bedrock to query a ClickHouse database and generate forecasts using Chronos on Amazon Bedrock.
-    :excerpt: 1
+    :summary: A conversational time series forecasting assistant that allows the user to retrieve time series data from ClickHouse and generate time series forecasts using Chronos on Amazon Bedrock through the LibreChat UI. Claude Sonnet 4.6 on Amazon Bedrock orchestrates the MCP tools and explains the results in natural language.
 
 ###############################################################################################################
 Building a time series forecasting assistant with Amazon Bedrock and LibreChat

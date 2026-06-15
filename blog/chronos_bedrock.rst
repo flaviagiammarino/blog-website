@@ -8,7 +8,7 @@
     :keywords: Time Series Forecasting, Amazon Chronos, Amazon Bedrock, ClickHouse
     :image_src: https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/architecture_diagram.png
     :image_alt: Architecture diagram showing Chronos on Amazon Bedrock integrated with ClickHouse in AWS Lambda.
-    :excerpt: 1
+    :summary: An AWS Lambda function that queries time series data in ClickHouse and generates zero-shot probabilistic time series forecasts using Chronos on Amazon Bedrock.
 
 ###############################################################################################################
 Zero-shot time series forecasting with Chronos using Amazon Bedrock and ClickHouse

@@ -48,7 +48,7 @@ sitemap_url_scheme = "{link}"
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_baseurl = 'https://flaviagiammarino.com/'
-html_title = 'FlaviaGiammarino.com | Machine Learning Consultant | AWS (Bedrock & SageMaker) | PhD, AWS-Certified'
+html_title = 'FlaviaGiammarino.com | Machine Learning Consultant | PhD, AWS-Certified'
 html_short_title = 'FlaviaGiammarino.com'
 html_favicon = 'static/favicon.ico'
 html_static_path = ['static']
@@ -83,19 +83,10 @@ html_theme = "shibuya"
 
 html_theme_options = {
     "globaltoc_expand_depth": 1,
-    "light_logo": "_static/icon-light.png",
-    "dark_logo": "_static/icon-dark.png",
     "github_url": "https://github.com/flaviagiammarino",
     "youtube_url": "https://youtube.com/@FlaviaGiammarino",
     "linkedin_url": "https://www.linkedin.com/in/flaviagiammarino",
     "twitter_url": "https://x.com/Flavia_G_ML",
-    "nav_links": [
-        {
-            "title": "Book a consultation",
-            "url": "https://calendly.com/flaviagiammarino/consultation",
-            "external": True,
-        },
-    ]
 }
 
 html_sidebars = {
