@@ -589,7 +589,7 @@ highlighting its strength in capturing complex temporal patterns.
 
     </div>
 
-You can download the full code from our `GitHub repository <https://github.com/flaviagiammarino/machine-learning-blog/tree/main/chronos_bedrock/>`__.
+The full code is available on `GitHub <https://github.com/flaviagiammarino/bedrock-clickhouse-forecasting/>`__.
 
 References
 ***************************************************************************************************************

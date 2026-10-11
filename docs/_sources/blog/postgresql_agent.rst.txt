@@ -883,4 +883,5 @@ In this post, we deployed a text-to-SQL agent using Strands Agents on Amazon Bed
 
 This is a basic implementation intended as a starting point. A production deployment would require additional controls, such as SQL validation to verify generated queries for correctness before execution, access controls to ensure that users can only query data they are authorized to access, caching to reduce latency and model invocation costs for frequent queries, and ongoing monitoring of quality, latency, throughput, errors and costs. For further discussion of implementing production text-to-SQL solutions in Amazon Bedrock, see `this article in the AWS Blog <https://aws.amazon.com/blogs/machine-learning/text-to-sql-solution-powered-by-amazon-bedrock/>`__.
 
-You can download the full code from our `GitHub repository <https://github.com/flaviagiammarino/machine-learning-blog/tree/main/postgresql_agent/>`__.
+The full code is available on `GitHub <https://github.com/flaviagiammarino/agentcore-postgres-agent/>`__.
+

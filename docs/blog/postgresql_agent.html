@@ -999,7 +999,7 @@ Combine the two tables and add the percentage of total sales for each product.
 <h2>3. Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">¶</a></h2>
 <p>In this post, we deployed a text-to-SQL agent using Strands Agents on Amazon Bedrock AgentCore Runtime with private VPC access to an RDS PostgreSQL database. The agent translates natural language questions into SQL queries, executes them against the database, and explains the results - with full visibility into the reasoning steps and tool calls.</p>
 <p>This is a basic implementation intended as a starting point. A production deployment would require additional controls, such as SQL validation to verify generated queries for correctness before execution, access controls to ensure that users can only query data they are authorized to access, caching to reduce latency and model invocation costs for frequent queries, and ongoing monitoring of quality, latency, throughput, errors and costs. For further discussion of implementing production text-to-SQL solutions in Amazon Bedrock, see <a class="reference external" href="https://aws.amazon.com/blogs/machine-learning/text-to-sql-solution-powered-by-amazon-bedrock/">this article in the AWS Blog</a>.</p>
-<p>You can download the full code from our <a class="reference external" href="https://github.com/flaviagiammarino/machine-learning-blog/tree/main/postgresql_agent/">GitHub repository</a>.</p>
+<p>The full code is available on <a class="reference external" href="https://github.com/flaviagiammarino/agentcore-postgres-agent/">GitHub</a>.</p>
 </section>
 </section>
 
