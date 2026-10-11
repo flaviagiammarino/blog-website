@@ -73,7 +73,7 @@ For instance, the January 2024 vintage includes the data from January 1959 to De
 Different vintages can include different time series, as indicators are occasionally added and removed from the dataset.
 
 The FRED-MD time series are sourced from the
-`Federal Reserve Economic Data (FRED) database <href="https://fred.stlouisfed.org/>`_,
+`Federal Reserve Economic Data (FRED) database <href=https://fred.stlouisfed.org/>`_,
 which is St. Louis Fed’s main, publicly accessible, economic database.
 Different retrospective adjustments are applied to the time series sourced from the FRED database,
 including seasonal adjustments, inflation adjustments and backfilling of missing values.
@@ -621,8 +621,7 @@ and real money supply are also relevant, though less significant.
 
 The model quality report includes the model’s performance metrics on the validation data as well as several diagnostic plots,
 such as actual versus predicted scatter plots and standardized residuals plots.
-The report shows that the model achieves a root mean squared error (RMSE) of 0.2073%,
-a mean absolute error (MAE) of 0.1743% and a 60% R-squared on the validation data.
+The report shows that the model achieves a root mean squared error (RMSE) of 0.2073% and a mean absolute error (MAE) of 0.1743% on the validation data.
 
 .. raw:: html
 
@@ -716,7 +715,7 @@ After the batch transform job has completed, we can load the forecasts from S3.
     correlations = predictions.corr()
 
 The RMSE is 0.1322% while the MAE is 0.0978%. The forecasts display a relatively high
-correlation with the data (78% R-squared), even though some significant deviations
+correlation with the data (69%), even though some significant deviations
 are observed on a few months.
 
 .. raw:: html
