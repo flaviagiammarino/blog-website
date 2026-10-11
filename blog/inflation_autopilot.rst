@@ -73,7 +73,7 @@ For instance, the January 2024 vintage includes the data from January 1959 to De
 Different vintages can include different time series, as indicators are occasionally added and removed from the dataset.
 
 The FRED-MD time series are sourced from the
-`Federal Reserve Economic Data (FRED) database <href=https://fred.stlouisfed.org/>`_,
+`Federal Reserve Economic Data (FRED) database <href="https://fred.stlouisfed.org"/>`_,
 which is St. Louis Fed’s main, publicly accessible, economic database.
 Different retrospective adjustments are applied to the time series sourced from the FRED database,
 including seasonal adjustments, inflation adjustments and backfilling of missing values.
