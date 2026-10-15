@@ -2,7 +2,7 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Zero-shot time series forecasting with Chronos using Amazon Bedrock and ClickHouse - FlaviaGiammarino.com | AI/ML Consultant | PhD, AWS-Certified</title><link rel="shortcut icon" href="../_static/favicon.ico"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Forecasting inflation with AutoML in Amazon SageMaker Autopilot" href="inflation_autopilot.html" /><link rel="prev" title="Building a time series forecasting assistant with Amazon Bedrock and LibreChat" href="forecasting_assistant.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Forecasting time series in ClickHouse with Chronos on Amazon Bedrock - FlaviaGiammarino.com | AI/ML Consultant | PhD, AWS-Certified</title><link rel="shortcut icon" href="../_static/favicon.ico"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Forecasting inflation with AutoML in Amazon SageMaker Autopilot" href="inflation_autopilot.html" /><link rel="prev" title="Building a time series forecasting assistant with Amazon Bedrock and LibreChat" href="forecasting_assistant.html" />
       <link rel="canonical" href="https://flaviagiammarino.com/blog/chronos_bedrock.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
@@ -22,7 +22,7 @@
   --sy-f-heading: "Inter", var(--sy-f-sys), var(--sy-f-cjk), sans-serif;
 }
 </style>
-    <meta name="title" content="Zero-shot time series forecasting with Chronos using Amazon Bedrock and ClickHouse">
+    <meta name="title" content="Forecasting time series in ClickHouse with Chronos on Amazon Bedrock">
     <meta name="description" content="Forecast time series data stored in ClickHouse using Chronos on Amazon Bedrock.">
     <meta name="thumbnail" content="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/architecture_diagram.png">
     <meta property="og:description" content="Forecast time series data stored in ClickHouse using Chronos on Amazon Bedrock.">
@@ -31,7 +31,7 @@
         {
       "@context": "https://schema.org",
       "@type": "BlogPosting",
-      "headline": "Zero-shot time series forecasting with Chronos using Amazon Bedrock and ClickHouse",
+      "headline": "Forecasting time series in ClickHouse with Chronos on Amazon Bedrock",
       "image": "https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/architecture_diagram.png",
       "datePublished": "2025-08-22 00:00:00T00:00:00Z",
       "dateModified": "T00:00:00Z",
@@ -194,8 +194,8 @@ data-aria-dark="Switch to auto color mode">
     <div class="flex flex-col break-words justify-between">
       <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
         <article class="yue" role="main">
-          <section id="zero-shot-time-series-forecasting-with-chronos-using-amazon-bedrock-and-clickhouse">
-<h1>Zero-shot time series forecasting with Chronos using Amazon Bedrock and ClickHouse<a class="headerlink" href="#zero-shot-time-series-forecasting-with-chronos-using-amazon-bedrock-and-clickhouse" title="Link to this heading">¶</a></h1>
+          <section id="forecasting-time-series-in-clickhouse-with-chronos-on-amazon-bedrock">
+<h1>Forecasting time series in ClickHouse with Chronos on Amazon Bedrock<a class="headerlink" href="#forecasting-time-series-in-clickhouse-with-chronos-on-amazon-bedrock" title="Link to this heading">¶</a></h1>
 <img
     src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/architecture_diagram.png"
     style="width:100%"
