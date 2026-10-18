@@ -249,10 +249,10 @@ The ID of the secret with the database user and password, the database host, and
     # IAM execution role for AgentCore Runtime
     role_name="<agentcore-runtime-role>"
 
-    # Private subnet (routes through NAT Gateway for outbound internet access)
+    # Private subnet
     subnet_id="<private-subnet-id>"
 
-    # Security group (allows HTTPS outbound for AWS API calls and inbound from RDS)
+    # Security group 
     security_group_id="<vpc-security-group>"
 
     # Project setup
