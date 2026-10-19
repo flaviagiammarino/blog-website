@@ -25,7 +25,7 @@ Deploying a text-to-SQL agent with private VPC access to RDS PostgreSQL on Amazo
 1. Overview
 ***************************************************************************************************************
 
-Text-to-SQL translates natural language queries into structured SQL statements, allowing users without specialized database knowledge to interactively explore and analyze data - beyond the pre-configured queries of static dashboards and reports, and without depending on technical teams to write and run custom queries.
+Text-to-SQL translates natural language queries into structured SQL statements, allowing users without specialized database knowledge to interactively explore and analyze data, beyond the pre-configured queries of static dashboards and reports, and without depending on technical teams to write and run custom queries.
 
 In this post, we build a text-to-SQL agent using Strands Agents and deploy it to Amazon Bedrock AgentCore Runtime in a private VPC.
 The agent accesses an Amazon RDS PostgreSQL instance in the same VPC via an MCP server and communicates with other AWS services through a NAT Gateway.
@@ -879,7 +879,7 @@ Finally, we ask the agent to join the two tables and compute a simple derived me
 3. Conclusion
 ***************************************************************************************************************
 
-In this post, we deployed a text-to-SQL agent using Strands Agents on Amazon Bedrock AgentCore Runtime with private VPC access to an RDS PostgreSQL database. The agent translates natural language questions into SQL queries, executes them against the database, and explains the results - with full visibility into the reasoning steps and tool calls.
+In this post, we deployed a text-to-SQL agent using Strands Agents on Amazon Bedrock AgentCore Runtime with private VPC access to an RDS PostgreSQL database. The agent translates natural language questions into SQL queries, executes them against the database, and explains the results, with full visibility into the reasoning steps and tool calls.
 
 This is a basic implementation intended as a starting point. A production deployment would require additional controls, such as SQL validation to verify generated queries for correctness before execution, access controls to ensure that users can only query data they are authorized to access, caching to reduce latency and model invocation costs for frequent queries, and ongoing monitoring of quality, latency, throughput, errors and costs. For further discussion of implementing production text-to-SQL solutions in Amazon Bedrock, see `this article in the AWS Blog <https://aws.amazon.com/blogs/machine-learning/text-to-sql-solution-powered-by-amazon-bedrock/>`__.
 
