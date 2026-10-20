@@ -63,13 +63,21 @@ To follow along, you will need an AWS account with sufficient IAM permissions to
 2.1 Set up the VPC and private connectivity
 ===============================================================================================================
 
-We create a private subnet with its own route table, place a regional NAT gateway in the VPC, and route the subnet's outbound traffic through it. This gives the workloads in the subnet outbound access, which they use to reach AWS services, while leaving them with no public address and no inbound path. We also associate an S3 gateway endpoint with the subnet's route table, so that S3 traffic bypasses the NAT gateway.
+We create a private subnet with its own route table, place a regional NAT gateway in the VPC, and route the subnet's outbound traffic through it. This gives the workloads in the subnet outbound access, which they use to reach AWS services, while leaving them with no public address and no inbound path. We also associate an S3 gateway endpoint with the subnet's route table, so that S3 traffic bypasses the NAT gateway. The endpoint policy restricts access to two buckets: the one holding the model weights, and the regional bucket in which Amazon ECR stores container image layers.
 
-The SageMaker endpoint attaches its network interfaces to the private subnet through the model's VPC configuration, with a security group that has no inbound rules and allows outbound HTTPS to S3 only. Network isolation is enabled on the model, so the container makes no outbound calls; SageMaker downloads the weights on its behalf over the S3 gateway endpoint.
+The SageMaker endpoint attaches its network interfaces to the private subnet through the model's VPC configuration. Network isolation is enabled on the model, so the container makes no outbound calls; SageMaker downloads the weights on its behalf over the S3 gateway endpoint.
 
 The ClickHouse database is reached through PrivateLink. We create an interface endpoint to ClickHouse's regional endpoint service in the private subnet and register it with the service in the ClickHouse Cloud console. Private DNS is enabled on the endpoint, so inside the VPC the service's private hostname resolves to the endpoint's private IP address, and database traffic goes through PrivateLink instead of the NAT gateway. We empty the database's IP access list, which closes the public hostname and leaves the private endpoint as the only path to the data.
 
-The agent is deployed on AgentCore Runtime in VPC network mode, in the private subnet. Its security group has no inbound rules and two outbound rules: HTTPS to any destination, and port 8443 to the ClickHouse endpoint's security group. The first rule carries the agent's calls to AWS services, while the second carries its database connections.
+The agent is deployed on AgentCore Runtime in VPC network mode, in the private subnet.
+
+Each component has its own security group:
+
+* ``<model-security-group-id>``, attached to the SageMaker endpoint: no inbound rules; outbound HTTPS to the S3 prefix list only, for the weights download.
+* ``<agent-security-group-id>``, attached to the AgentCore Runtime: no inbound rules; outbound HTTPS to any destination, for the agent's calls to AWS services through the NAT gateway, and port 8443 to ``<clickhouse-security-group-id>``, for its database connections.
+* ``<clickhouse-security-group-id>``, attached to the ClickHouse interface endpoint: inbound on ClickHouse's TLS ports, 8443 and 9440, from ``<agent-security-group-id>`` only; no outbound rules.
+
+Security groups are stateful, so the responses to connections the agent opens are allowed back without inbound rules.
 
 2.2 Deploy the open-weight LLM to SageMaker
 ===============================================================================================================
@@ -85,7 +93,7 @@ In the endpoint configuration, we deploy a single instance and increase the mode
     import boto3
 
     # AWS region for all resources
-    region="<aws-region>"
+    region = "<aws-region>"
 
     # S3 prefix holding the model weights
     model_uri = "<s3-uri>"
@@ -97,10 +105,10 @@ In the endpoint configuration, we deploy a single instance and increase the mode
     subnets = ["<private-subnet-id>"]
 
     # Security groups
-    security_groups = ["<vpc-security-group>"]
+    security_groups = ["<model-security-group-id>"]
 
     # vLLM inference container from the AWS Deep Learning Containers registry
-    image_uri = "763104351884.dkr.ecr.eu-west-1.amazonaws.com/vllm:server-sagemaker-cuda-v2.5"
+    image_uri = f"763104351884.dkr.ecr.{region}.amazonaws.com/vllm:server-sagemaker-cuda-v2.5"
 
     # SageMaker model, endpoint configuration, and endpoint names
     model_name = "qwen36-27b-fp8"
@@ -329,7 +337,7 @@ It then authenticates with ECR, creates a repository, and builds and pushes the 
     subnet_id="<private-subnet-id>"
 
     # Security group
-    security_group_id="<vpc-security-group>"
+    security_group_id="<agent-security-group-id>"
 
     # Project setup
     uv init --name "$agent_name" --description "Strands Agent for ClickHouse Text-to-SQL" --python 3.13 --bare
@@ -368,8 +376,6 @@ It then authenticates with ECR, creates a repository, and builds and pushes the 
 After the agent has been deployed, we test it in a Jupyter Notebook on a small, synthetically generated retail banking dataset.
 
 The database contains three tables: ``customers``, with 1,000 customers, ``accounts``, with one current, savings or credit card account per customer, and ``transactions``, with 10,000 transactions over the last 12 months, where debits are recorded as negative amounts and salary payments as positive ones.
-
-We invoke the agent over four conversational turns, demonstrating schema discovery, short-term memory, and a query that joins all three tables.
 
 We start by importing the required libraries: ``boto3`` to invoke the agent on Bedrock AgentCore,
 ``json`` to serialize the request payload and deserialize the response, ``uuid`` to generate unique session
@@ -1006,12 +1012,15 @@ Finally, we ask the agent to join the tables and compute a derived metric.
     <span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="k">abs</span><span class="p">(</span><span class="n">avg_monthly_spending</span><span class="p">)</span><span class="w"> </span><span class="k">DESC</span>
     </pre></div>
     <p>The calculation first groups spending by account and month, then averages those monthly totals across all accounts of each type.</p>
+    </div>
+    </div>
 
+The agent handles schema discovery and the follow-up reference correctly, and writes valid ClickHouse SQL for the final question, but its responses also contain errors. In the third turn, it infers the date range of the whole table from five rows of a single account. In the last turn, it averages spending only over the months in which each account has transactions, which overstates the monthly figures, draws a conclusion from differences between account types that are too small to be meaningful, and reports the amounts in dollars, although the dataset does not specify a currency. The agent does not flag any of these issues itself, which is why the generated queries and their results still need to be reviewed.
 
 3. Conclusion
 ***************************************************************************************************************
 
-In this post, we built a text-to-SQL agent with Strands Agents and deployed it on Amazon Bedrock AgentCore Runtime with private access to an open-weight LLM on Amazon SageMaker and to a ClickHouse Cloud database over AWS PrivateLink. The model weights are loaded from an S3 bucket, the model container runs with network isolation, and neither the model nor the database can be reached from the internet. The agent translates natural language questions into SQL, runs them against the database, and explains the results, with full visibility into the reasoning steps and tool calls.
+In this post, we built a text-to-SQL agent with Strands Agents and deployed it on Amazon Bedrock AgentCore Runtime with private access to an open-weight LLM on Amazon SageMaker and to a ClickHouse Cloud database over AWS PrivateLink. The model weights are loaded from an S3 bucket, the model container runs with network isolation, and neither the model nor the database can be reached from the internet. The agent translates natural language questions into SQL, runs them against the database, and explains the results, with full visibility into the tool calls and their output.
 
 This is a basic implementation intended as a starting point. In our setup, the agent reaches AWS services such as Secrets Manager and CloudWatch Logs through a NAT gateway. A stricter configuration would replace the NAT gateway with interface endpoints to each of these services, so that the subnet has no route to the internet at all, and would restrict the database credentials in Secrets Manager to the corresponding endpoint.
 
