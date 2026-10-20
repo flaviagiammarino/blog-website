@@ -114,7 +114,7 @@ We start the client at module level and keep it alive for the lifetime of the se
     By default, the ``postgres-mcp`` server runs in ``unrestricted`` access mode, allowing both read and write access to the database. For production use, set the access mode to ``restricted`` to limit the agent to read-only queries.
 
 The agent is initialized with Claude Sonnet 4.6 as the underlying model, the ``postgres-mcp`` tools, and a system prompt.
-The agent is wrapped in a ``BedrockAgentCoreApp`` with an async streaming entrypoint that yields agent events — including not only text responses, but also tool call inputs and results — back to the caller. The ``agent.py`` script is shown below.
+The agent is wrapped in a ``BedrockAgentCoreApp`` with an async streaming entrypoint that yields agent events, including not only text responses, but also tool call inputs and results, back to the caller. The ``agent.py`` script is shown below.
 
 .. code:: python
 

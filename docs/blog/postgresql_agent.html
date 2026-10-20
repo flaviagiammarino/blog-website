@@ -198,7 +198,7 @@ data-aria-dark="Switch to auto color mode">
     alt="Architecture diagram showing a user invoking a Strands agent on Amazon Bedrock AgentCore Runtime in a private VPC subnet where the agent queries an Amazon RDS PostgreSQL database."
 ><section id="overview">
 <h2>1. Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
-<p>Text-to-SQL translates natural language queries into structured SQL statements, allowing users without specialized database knowledge to interactively explore and analyze data - beyond the pre-configured queries of static dashboards and reports, and without depending on technical teams to write and run custom queries.</p>
+<p>Text-to-SQL translates natural language queries into structured SQL statements, allowing users without specialized database knowledge to interactively explore and analyze data, beyond the pre-configured queries of static dashboards and reports, and without depending on technical teams to write and run custom queries.</p>
 <p>In this post, we build a text-to-SQL agent using Strands Agents and deploy it to Amazon Bedrock AgentCore Runtime in a private VPC.
 The agent accesses an Amazon RDS PostgreSQL instance in the same VPC via an MCP server and communicates with other AWS services through a NAT Gateway.</p>
 <p>The agent translates user questions into SQL queries, executes them against the database, and explains the results in natural language.
@@ -268,7 +268,7 @@ We start the client at module level and keep it alive for the lifetime of the se
 <p>By default, the <code class="docutils literal notranslate"><span class="pre">postgres-mcp</span></code> server runs in <code class="docutils literal notranslate"><span class="pre">unrestricted</span></code> access mode, allowing both read and write access to the database. For production use, set the access mode to <code class="docutils literal notranslate"><span class="pre">restricted</span></code> to limit the agent to read-only queries.</p>
 </div>
 <p>The agent is initialized with Claude Sonnet 4.6 as the underlying model, the <code class="docutils literal notranslate"><span class="pre">postgres-mcp</span></code> tools, and a system prompt.
-The agent is wrapped in a <code class="docutils literal notranslate"><span class="pre">BedrockAgentCoreApp</span></code> with an async streaming entrypoint that yields agent events — including not only text responses, but also tool call inputs and results — back to the caller. The <code class="docutils literal notranslate"><span class="pre">agent.py</span></code> script is shown below.</p>
+The agent is wrapped in a <code class="docutils literal notranslate"><span class="pre">BedrockAgentCoreApp</span></code> with an async streaming entrypoint that yields agent events, including not only text responses, but also tool call inputs and results, back to the caller. The <code class="docutils literal notranslate"><span class="pre">agent.py</span></code> script is shown below.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 </span><span data-line="2"><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
 </span><span data-line="3"><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
@@ -396,10 +396,10 @@ The ID of the secret with the database user and password, the database host, and
 </span><span data-line="22"><span class="c1"># IAM execution role for AgentCore Runtime</span>
 </span><span data-line="23"><span class="nv">role_name</span><span class="o">=</span><span class="s2">&quot;&lt;agentcore-runtime-role&gt;&quot;</span>
 </span><span data-line="24">
-</span><span data-line="25"><span class="c1"># Private subnet (routes through NAT Gateway for outbound internet access)</span>
+</span><span data-line="25"><span class="c1"># Private subnet</span>
 </span><span data-line="26"><span class="nv">subnet_id</span><span class="o">=</span><span class="s2">&quot;&lt;private-subnet-id&gt;&quot;</span>
 </span><span data-line="27">
-</span><span data-line="28"><span class="c1"># Security group (allows HTTPS outbound for AWS API calls and inbound from RDS)</span>
+</span><span data-line="28"><span class="c1"># Security group</span>
 </span><span data-line="29"><span class="nv">security_group_id</span><span class="o">=</span><span class="s2">&quot;&lt;vpc-security-group&gt;&quot;</span>
 </span><span data-line="30">
 </span><span data-line="31"><span class="c1"># Project setup</span>
@@ -997,7 +997,7 @@ Combine the two tables and add the percentage of total sales for each product.
 </section>
 <section id="conclusion">
 <h2>3. Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">¶</a></h2>
-<p>In this post, we deployed a text-to-SQL agent using Strands Agents on Amazon Bedrock AgentCore Runtime with private VPC access to an RDS PostgreSQL database. The agent translates natural language questions into SQL queries, executes them against the database, and explains the results - with full visibility into the reasoning steps and tool calls.</p>
+<p>In this post, we deployed a text-to-SQL agent using Strands Agents on Amazon Bedrock AgentCore Runtime with private VPC access to an RDS PostgreSQL database. The agent translates natural language questions into SQL queries, executes them against the database, and explains the results, with full visibility into the reasoning steps and tool calls.</p>
 <p>This is a basic implementation intended as a starting point. A production deployment would require additional controls, such as SQL validation to verify generated queries for correctness before execution, access controls to ensure that users can only query data they are authorized to access, caching to reduce latency and model invocation costs for frequent queries, and ongoing monitoring of quality, latency, throughput, errors and costs. For further discussion of implementing production text-to-SQL solutions in Amazon Bedrock, see <a class="reference external" href="https://aws.amazon.com/blogs/machine-learning/text-to-sql-solution-powered-by-amazon-bedrock/">this article in the AWS Blog</a>.</p>
 <p>The full code is available on <a class="reference external" href="https://github.com/flaviagiammarino/agentcore-postgres-agent/">GitHub</a>.</p>
 </section>
