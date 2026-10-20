@@ -257,7 +257,7 @@ The ID of the secret with the database user and password, the database host, and
     # Project setup
     uv init --name postgres-agent --description "Strands Agent for Postgres Text-to-SQL" --python 3.13 --bare
     uv lock
-    uv add strands-agents fastmcp postgres-mcp boto3 bedrock-agentcore
+    uv add strands-agents postgres-mcp boto3 bedrock-agentcore
 
     # ECR login and repository creation
     aws ecr get-login-password --region $region | docker login --username AWS --password-stdin $aws_account_id.dkr.ecr.$region.amazonaws.com
@@ -878,9 +878,10 @@ Finally, we ask the agent to join the two tables and compute a simple derived me
 3. Conclusion
 ***************************************************************************************************************
 
-In this post, we deployed a text-to-SQL agent using Strands Agents on Amazon Bedrock AgentCore Runtime with private VPC access to an RDS PostgreSQL database. The agent translates natural language questions into SQL queries, executes them against the database, and explains the results, with full visibility into the reasoning steps and tool calls.
+In this post, we deployed a text-to-SQL agent using Strands Agents on Amazon Bedrock AgentCore Runtime with private VPC access to an RDS PostgreSQL database. The agent translates natural language questions into SQL queries, executes them against the database, and explains the results, with full visibility into the tool calls and their output.
 
-This is a basic implementation intended as a starting point. A production deployment would require additional controls, such as SQL validation to verify generated queries for correctness before execution, access controls to ensure that users can only query data they are authorized to access, caching to reduce latency and model invocation costs for frequent queries, and ongoing monitoring of quality, latency, throughput, errors and costs. For further discussion of implementing production text-to-SQL solutions in Amazon Bedrock, see `this article in the AWS Blog <https://aws.amazon.com/blogs/machine-learning/text-to-sql-solution-powered-by-amazon-bedrock/>`__.
+This is a basic implementation intended as a starting point. A production deployment would require additional controls, such as SQL validation to verify generated queries for correctness before execution, access controls to ensure that users can only query data they are authorized to access, caching to reduce latency and model invocation costs for frequent queries, and ongoing monitoring of quality, latency, throughput, errors and costs.
+
+The NAT Gateway could also be replaced with interface VPC endpoints for each AWS service the agent calls, such as Amazon Bedrock, AWS Secrets Manager and Amazon CloudWatch Logs, removing the need for internet access from the private subnet entirely.
 
 The full code is available on `GitHub <https://github.com/flaviagiammarino/agentcore-postgres-agent/>`__.
-
