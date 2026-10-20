@@ -36,7 +36,7 @@ Unlike RAG-based approaches that require re-syncing the knowledge base whenever 
 2. Solution
 ***************************************************************************************************************
 
-The solution involves creating an RDS PostgreSQL database, updating the default VPC configuration, building the agent in Python with Strands Agents, containerizing it with Docker, pushing the image to Amazon ECR, and deploying it to Amazon Bedrock AgentCore Runtime. The implementation consists of three files:
+The solution involves creating an RDS PostgreSQL database, updating the default VPC configuration, building the agent in Python with Strands Agents, containerizing it with Docker, pushing the image to Amazon ECR, and deploying it to Amazon Bedrock AgentCore Runtime. The code is organized as follows:
 
 .. code-block:: text
 
@@ -45,7 +45,7 @@ The solution involves creating an RDS PostgreSQL database, updating the default 
     ├── Dockerfile            # Container image definition
     └── build_and_deploy.sh   # ECR image creation and AgentCore Runtime deployment
 
-To follow along, you will need an AWS account with sufficient IAM permissions to create and manage the resources described in this post, the AWS CLI installed and configured with appropriate credentials, Docker for building and pushing the container image, and Python 3.13 with `uv <https://docs.astral.sh/uv/>`__ for project setup and dependency management.
+To follow along, you will need an AWS account with sufficient IAM permissions to create and manage the resources described in this post, the AWS CLI installed and configured with appropriate credentials, Docker for building and pushing the container image, and Python 3.13 with ``uv`` for project setup and dependency management.
 
 2.1 Create the PostgreSQL database in RDS
 ===============================================================================================================

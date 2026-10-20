@@ -100,7 +100,7 @@ data-aria-dark="Switch to auto color mode">
   <ul>
      
     <li>
-      <a style="font-size: 90%" href="category/agentic-ai.html">Agentic AI (2)</a>
+      <a style="font-size: 90%" href="category/agentic-ai.html">Agentic AI (3)</a>
     </li>
       
     <li>
@@ -124,15 +124,19 @@ data-aria-dark="Switch to auto color mode">
       <a style="font-size: 90%" href="tag/amazon-bedrock.html">Amazon Bedrock</a>
     </li>
       
-    <li class="ablog-cloud ablog-cloud-3">
+    <li class="ablog-cloud ablog-cloud-2">
       <a style="font-size: 90%" href="tag/amazon-chronos.html">Amazon Chronos</a>
     </li>
       
-    <li class="ablog-cloud ablog-cloud-1">
+    <li class="ablog-cloud ablog-cloud-2">
       <a style="font-size: 90%" href="tag/amazon-sagemaker.html">Amazon SageMaker</a>
     </li>
       
     <li class="ablog-cloud ablog-cloud-1">
+      <a style="font-size: 90%" href="tag/clickhouse.html">ClickHouse</a>
+    </li>
+      
+    <li class="ablog-cloud ablog-cloud-2">
       <a style="font-size: 90%" href="tag/strands-agents.html">Strands Agents</a>
     </li>
      
@@ -146,7 +150,7 @@ data-aria-dark="Switch to auto color mode">
   <ul>
      
     <li>
-      <a style="font-size: 90%" href="2026.html">2026 (2)</a>
+      <a style="font-size: 90%" href="2026.html">2026 (3)</a>
     </li>
       
     <li>
@@ -206,14 +210,14 @@ Unlike RAG-based approaches that require re-syncing the knowledge base whenever 
 </section>
 <section id="solution">
 <h2>2. Solution<a class="headerlink" href="#solution" title="Link to this heading">¶</a></h2>
-<p>The solution involves creating an RDS PostgreSQL database, updating the default VPC configuration, building the agent in Python with Strands Agents, containerizing it with Docker, pushing the image to Amazon ECR, and deploying it to Amazon Bedrock AgentCore Runtime. The implementation consists of three files:</p>
+<p>The solution involves creating an RDS PostgreSQL database, updating the default VPC configuration, building the agent in Python with Strands Agents, containerizing it with Docker, pushing the image to Amazon ECR, and deploying it to Amazon Bedrock AgentCore Runtime. The code is organized as follows:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span data-line="1">agent/
 </span><span data-line="2">├── agent.py              # Strands agent with database tools
 </span><span data-line="3">├── Dockerfile            # Container image definition
 </span><span data-line="4">└── build_and_deploy.sh   # ECR image creation and AgentCore Runtime deployment
 </span></pre></div>
 </div>
-<p>To follow along, you will need an AWS account with sufficient IAM permissions to create and manage the resources described in this post, the AWS CLI installed and configured with appropriate credentials, Docker for building and pushing the container image, and Python 3.13 with <a class="reference external" href="https://docs.astral.sh/uv/">uv</a> for project setup and dependency management.</p>
+<p>To follow along, you will need an AWS account with sufficient IAM permissions to create and manage the resources described in this post, the AWS CLI installed and configured with appropriate credentials, Docker for building and pushing the container image, and Python 3.13 with <code class="docutils literal notranslate"><span class="pre">uv</span></code> for project setup and dependency management.</p>
 <section id="create-the-postgresql-database-in-rds">
 <h3>2.1 Create the PostgreSQL database in RDS<a class="headerlink" href="#create-the-postgresql-database-in-rds" title="Link to this heading">¶</a></h3>
 <p>For this demonstration, we use two small tables: <code class="docutils literal notranslate"><span class="pre">products</span></code> and <code class="docutils literal notranslate"><span class="pre">sales</span></code>,
