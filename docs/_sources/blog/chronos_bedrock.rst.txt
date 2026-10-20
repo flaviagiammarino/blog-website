@@ -81,7 +81,7 @@ this solution can be applied to any other time series.
 
     To be able to run the code provided in the rest of this section, you will need to have Boto3 and the AWS-CLI installed on your machine.
     You will also need to update several variables in the code to reflect your AWS
-    configuration - such as your AWS account number, region, service roles, etc.
+    configuration, such as your AWS account number, region, service roles, etc.
 
 2.1 Create the Bedrock endpoint
 ===============================================================================================================
