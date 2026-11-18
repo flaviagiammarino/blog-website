@@ -589,7 +589,7 @@ highlighting its strength in capturing complex temporal patterns.
 
     </div>
 
-The full code is available on `GitHub <https://github.com/flaviagiammarino/bedrock-clickhouse-forecasting/>`__.
+The full code is available on `GitHub <https://github.com/flaviagiammarino/lambda-clickhouse-forecasting/>`__.
 
 References
 ***************************************************************************************************************
