@@ -10578,7 +10578,7 @@ memorized the product IDs from the ``products`` table and used them directly in 
 While this approach worked correctly in this case, it is not robust, as the ``products`` table may change over time.
 We also note that the model's thinking is occasionally too verbose and shows domain slips in the last turn, though neither affected the final output.
 
-The full code is available on `GitHub <https://github.com/flaviagiammarino/bedrock-librechat-forecasting/>`__.
+The full code is available on `GitHub <https://github.com/flaviagiammarino/librechat-clickhouse-forecasting/>`__.
 
 References
 ***************************************************************************************************************
