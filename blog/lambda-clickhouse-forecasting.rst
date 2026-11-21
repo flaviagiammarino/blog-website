@@ -6,7 +6,7 @@
     :author: Flavia
     :description: Forecast time series data stored in ClickHouse using Chronos on Amazon Bedrock.
     :keywords: Time Series Forecasting, Amazon Chronos, Amazon Bedrock, ClickHouse
-    :image_src: https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/architecture_diagram.png
+    :image_src: https://machine-learning-blog.s3.eu-west-2.amazonaws.com/lambda-clickhouse-forecasting/architecture_diagram.png
     :image_alt: Architecture diagram showing Chronos on Amazon Bedrock integrated with ClickHouse in AWS Lambda.
     :summary: An AWS Lambda function that queries context data from ClickHouse and generates zero-shot probabilistic forecasts with Chronos on Amazon Bedrock.
 
@@ -17,7 +17,7 @@ Forecasting time series in ClickHouse with Chronos on Amazon Bedrock
 .. raw:: html
 
     <img
-        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/architecture_diagram.png"
+        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/lambda-clickhouse-forecasting/architecture_diagram.png"
         style="width:100%"
         alt="Architecture diagram showing Chronos on Amazon Bedrock integrated with ClickHouse in AWS Lambda."
     >
@@ -61,7 +61,7 @@ this solution can be applied to any other time series.
     <div style="margin: 2em 0em 2em 0em">
 
     <img
-        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/total_load_data.png"
+        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/lambda-clickhouse-forecasting/total_load_data.png"
         style="width:50%"
         alt="Last 10 rows of total_load_data ClickHouse table"
     >
@@ -465,7 +465,7 @@ In both cases, we use a 3-week context window to generate 1-day-ahead forecasts.
     <div style="margin: 2em 0em 2em 0em">
 
     <img
-        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/predictions_table.png"
+        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/lambda-clickhouse-forecasting/predictions_table.png"
         style="width:100%"
         alt="Last 10 rows of Pandas DataFrame with Amazon Chronos forecasts of the Italian electricity system's total demand for August 17, 2025"
     >
@@ -497,7 +497,7 @@ In both cases, we use a 3-week context window to generate 1-day-ahead forecasts.
     <div style="margin: 2em 0em 2em 0em">
 
     <img
-        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/forecasts_table.png"
+        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/lambda-clickhouse-forecasting/forecasts_table.png"
         style="width:100%"
         alt="Last 10 rows of Pandas DataFrame with Amazon Chronos forecasts of the Italian electricity system's total demand for August 18, 2025"
     >
@@ -577,7 +577,7 @@ highlighting its strength in capturing complex temporal patterns.
     <div style="margin: 2em 0em 2em 0em">
 
     <img
-        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/forecasts_plot.png"
+        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/lambda-clickhouse-forecasting/forecasts_plot.png"
         style="width:100%"
         alt="Line chart of Amazon Chronos zero-shot probabilistic forecasts of the Italian electricity system's total demand for August 17-18, 2025 against historical data"
     >

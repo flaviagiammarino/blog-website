@@ -2,8 +2,8 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Forecasting inflation with AutoML in Amazon SageMaker Autopilot - FlaviaGiammarino.com | AI/ML Consultant | PhD, AWS-Certified</title><link rel="shortcut icon" href="../_static/favicon.ico"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="prev" title="Forecasting time series in ClickHouse with Chronos on Amazon Bedrock" href="chronos_bedrock.html" />
-      <link rel="canonical" href="https://flaviagiammarino.com/blog/inflation_autopilot.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Forecasting inflation with AutoML in Amazon SageMaker Autopilot - FlaviaGiammarino.com | AI/ML Consultant | PhD, AWS-Certified</title><link rel="shortcut icon" href="../_static/favicon.ico"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="prev" title="Forecasting time series in ClickHouse with Chronos on Amazon Bedrock" href="lambda-clickhouse-forecasting.html" />
+      <link rel="canonical" href="https://flaviagiammarino.com/blog/autopilot-inflation-forecasting.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
@@ -24,15 +24,15 @@
 </style>
     <meta name="title" content="Forecasting inflation with AutoML in Amazon SageMaker Autopilot">
     <meta name="description" content="Forecast US Inflation with AutoML in Amazon SageMaker Autopilot using the FRED-MD dataset.">
-    <meta name="thumbnail" content="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/inflation_autopilot/architecture_diagram.png">
+    <meta name="thumbnail" content="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/autopilot-inflation-forecasting/architecture_diagram.png">
     <meta property="og:description" content="Forecast US Inflation with AutoML in Amazon SageMaker Autopilot using the FRED-MD dataset.">
-    <meta property="og:image" content="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/inflation_autopilot/architecture_diagram.png">
+    <meta property="og:image" content="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/autopilot-inflation-forecasting/architecture_diagram.png">
     <script type="application/ld+json">
         {
       "@context": "https://schema.org",
       "@type": "BlogPosting",
       "headline": "Forecasting inflation with AutoML in Amazon SageMaker Autopilot",
-      "image": "https://machine-learning-blog.s3.eu-west-2.amazonaws.com/inflation_autopilot/architecture_diagram.png",
+      "image": "https://machine-learning-blog.s3.eu-west-2.amazonaws.com/autopilot-inflation-forecasting/architecture_diagram.png",
       "datePublished": "2024-03-20 00:00:00T00:00:00Z",
       "dateModified": "T00:00:00Z",
       "author": {
@@ -199,7 +199,7 @@ data-aria-dark="Switch to auto color mode">
           <section id="forecasting-inflation-with-automl-in-amazon-sagemaker-autopilot">
 <h1>Forecasting inflation with AutoML in Amazon SageMaker Autopilot<a class="headerlink" href="#forecasting-inflation-with-automl-in-amazon-sagemaker-autopilot" title="Link to this heading">¶</a></h1>
 <img
-    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/inflation_autopilot/architecture_diagram.png"
+    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/autopilot-inflation-forecasting/architecture_diagram.png"
     style="width:100%"
     alt="Architecture diagram showing inflation forecasting with Amazon SageMaker Autopilot using data from FRED MD stored in Amazon S3."
 ><section id="overview">
@@ -706,7 +706,7 @@ and real money supply are also relevant, though less significant.</p>
 <div style="margin: 2em 0em 2em 0em">
 
 <img
-    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/inflation_autopilot/feature_importance_plot.png"
+    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/autopilot-inflation-forecasting/feature_importance_plot.png"
     style="width:100%"
     alt="Bar chart of top 10 features by SHAP value"
 >
@@ -724,7 +724,7 @@ The report shows that the model achieves a root mean squared error (RMSE) of 0.2
 <div style="margin: 2em 0em 2em 0em">
 
 <img
-    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/inflation_autopilot/actual_vs_predicted_plot.png"
+    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/autopilot-inflation-forecasting/actual_vs_predicted_plot.png"
     style="width:100%"
     alt="Scatter plot of actual versus predicted US CPI MoM inflation from January 2023 to December 2023"
 >
@@ -779,7 +779,7 @@ The report shows that the model achieves a root mean squared error (RMSE) of 0.2
 <div style="margin: 2em 0em 2em 0em">
 
 <img
-    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/inflation_autopilot/forecasts_table.png"
+    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/autopilot-inflation-forecasting/forecasts_table.png"
     style="width:55%"
     alt="Table of 1-month-ahead AutoML forecasts of US CPI MoM inflation and historical FRED-MD data"
 >
@@ -805,7 +805,7 @@ are observed on a few months.</p>
 <div style="margin: 2em 0em 2em 0em">
 
 <img
-    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/inflation_autopilot/forecasts_plot.png"
+    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/autopilot-inflation-forecasting/forecasts_plot.png"
     style="width:100%"
     alt="Line chart of 1-month-ahead AutoML forecasts of US CPI MoM inflation against historical FRED-MD data from January 2024 to December 2024"
 >
@@ -1326,7 +1326,7 @@ Forecasting inflation in a data-rich environment: the benefits of machine learni
   </svg>
   <span>Back to top</span>
 </button><!--<div class="navigation flex print:hidden"><div class="navigation-prev">
-    <a href="chronos_bedrock.html">
+    <a href="lambda-clickhouse-forecasting.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
         <span>Previous</span><div class="title">Forecasting time series in ClickHouse with Chronos on Amazon Bedrock</div></div>

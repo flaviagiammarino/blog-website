@@ -6,7 +6,7 @@
     :author: Flavia
     :description: Build a conversational time series forecasting assistant with ClickHouse, Amazon Bedrock, and LibreChat.
     :keywords: Time Series Forecasting, Amazon Chronos, Amazon Bedrock, LibreChat, ClickHouse
-    :image_src: https://machine-learning-blog.s3.eu-west-2.amazonaws.com/forecasting-assistant/architecture_diagram.png
+    :image_src: https://machine-learning-blog.s3.eu-west-2.amazonaws.com/librechat-clickhouse-forecasting/architecture_diagram.png
     :image_alt: Architecture diagram showing a user interacting with LibreChat, which routes requests to Claude Sonnet 4.6 on Amazon Bedrock to query a ClickHouse database and generate forecasts using Chronos on Amazon Bedrock.
     :summary: A conversational time series forecasting assistant that allows the user to retrieve time series data from ClickHouse and generate time series forecasts using Chronos on Amazon Bedrock through the LibreChat UI. Claude Sonnet 4.6 on Amazon Bedrock orchestrates the MCP tools and explains the results in natural language.
 
@@ -17,7 +17,7 @@ Building a time series forecasting assistant with Amazon Bedrock and LibreChat
 .. raw:: html
 
     <img
-        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/forecasting-assistant/architecture_diagram.png"
+        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/librechat-clickhouse-forecasting/architecture_diagram.png"
         style="width:100%"
         alt="Architecture diagram showing a user interacting with LibreChat, which routes requests to Claude Sonnet 4.6 on Amazon Bedrock to query a ClickHouse database and generate forecasts using Chronos on Amazon Bedrock."
     >
@@ -47,7 +47,7 @@ the transcript is reported at the end of this post.
 .. raw:: html
 
     <video width="100%" controls style="border-radius: 0.5rem; mask-image: radial-gradient(white, white); -webkit-mask-image: -webkit-radial-gradient(white, white);">
-        <source src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/forecasting-assistant/video.mp4" type="video/mp4">
+        <source src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/librechat-clickhouse-forecasting/video.mp4" type="video/mp4">
         A conversation with a time series forecasting assistant built using Amazon Bedrock and LibreChat.
         The assistant retrieves the data from ClickHouse and uses Amazon Chronos deployed on Amazon Bedrock to generate forecasts.
     </video>
@@ -64,7 +64,7 @@ and ``sales``, which records hourly units sold per product.
     <div style="margin: 2em 0em 2em 0em">
 
     <img
-        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/forecasting-assistant/products.png"
+        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/librechat-clickhouse-forecasting/products.png"
         style="width:90%"
         alt="products ClickHouse table"
     >
@@ -85,7 +85,7 @@ and ``sales``, which records hourly units sold per product.
     <div style="margin: 2em 0em 2em 0em">
 
     <img
-        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/forecasting-assistant/sales.png"
+        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/librechat-clickhouse-forecasting/sales.png"
         style="width:90%"
         alt="Last 9 rows of sales ClickHouse table"
     >
@@ -167,7 +167,7 @@ After that, we create the forecasting MCP server using the `FastMCP <https://git
 The server exposes a ``generate_forecasts`` tool that takes a list of historical values, a prediction length, and a
 list of quantile levels, and returns probabilistic time series forecasts by invoking the Chronos endpoint
 via ``boto3``. For instructions on deploying Chronos to Amazon Bedrock, we refer to
-`our previous blog post <https://flaviagiammarino.com/blog/chronos_bedrock.html#create-the-bedrock-endpoint>`__.
+`our previous blog post <https://flaviagiammarino.com/blog/lambda-clickhouse-forecasting.html#create-the-bedrock-endpoint>`__.
 
 We configure the forecasting MCP server in the ``docker-compose.override.yml`` file
 that we previously created for configuring the ClickHouse MCP server:

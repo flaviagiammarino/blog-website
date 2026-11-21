@@ -6,7 +6,7 @@
     :author: Flavia
     :description: Forecast US Inflation with AutoML in Amazon SageMaker Autopilot using the FRED-MD dataset.
     :keywords: Time Series Forecasting, Inflation Forecasting, AutoML, Amazon SageMaker Autopilot, FRED-MD
-    :image_src: https://machine-learning-blog.s3.eu-west-2.amazonaws.com/inflation_autopilot/architecture_diagram.png
+    :image_src: https://machine-learning-blog.s3.eu-west-2.amazonaws.com/autopilot-inflation-forecasting/architecture_diagram.png
     :image_alt: Architecture diagram showing inflation forecasting with Amazon SageMaker Autopilot using data from FRED MD stored in Amazon S3.
     :summary: An Amazon SageMaker Autopilot AutoML pipeline for forecasting US CPI inflation using the FRED-MD database.
 
@@ -18,7 +18,7 @@ Forecasting inflation with AutoML in Amazon SageMaker Autopilot
 .. raw:: html
 
     <img
-        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/inflation_autopilot/architecture_diagram.png"
+        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/autopilot-inflation-forecasting/architecture_diagram.png"
         style="width:100%"
         alt="Architecture diagram showing inflation forecasting with Amazon SageMaker Autopilot using data from FRED MD stored in Amazon S3."
     >
@@ -601,7 +601,7 @@ and real money supply are also relevant, though less significant.
     <div style="margin: 2em 0em 2em 0em">
 
     <img
-        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/inflation_autopilot/feature_importance_plot.png"
+        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/autopilot-inflation-forecasting/feature_importance_plot.png"
         style="width:100%"
         alt="Bar chart of top 10 features by SHAP value"
     >
@@ -628,7 +628,7 @@ The report shows that the model achieves a root mean squared error (RMSE) of 0.2
     <div style="margin: 2em 0em 2em 0em">
 
     <img
-        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/inflation_autopilot/actual_vs_predicted_plot.png"
+        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/autopilot-inflation-forecasting/actual_vs_predicted_plot.png"
         style="width:100%"
         alt="Scatter plot of actual versus predicted US CPI MoM inflation from January 2023 to December 2023"
     >
@@ -691,7 +691,7 @@ After the batch transform job has completed, we can load the forecasts from S3.
     <div style="margin: 2em 0em 2em 0em">
 
     <img
-        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/inflation_autopilot/forecasts_table.png"
+        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/autopilot-inflation-forecasting/forecasts_table.png"
         style="width:55%"
         alt="Table of 1-month-ahead AutoML forecasts of US CPI MoM inflation and historical FRED-MD data"
     >
@@ -723,7 +723,7 @@ are observed on a few months.
     <div style="margin: 2em 0em 2em 0em">
 
     <img
-        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/inflation_autopilot/forecasts_plot.png"
+        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/autopilot-inflation-forecasting/forecasts_plot.png"
         style="width:100%"
         alt="Line chart of 1-month-ahead AutoML forecasts of US CPI MoM inflation against historical FRED-MD data from January 2024 to December 2024"
     >

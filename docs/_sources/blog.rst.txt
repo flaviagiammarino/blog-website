@@ -2,6 +2,7 @@
 .. toctree::
     :hidden:
 
-    blog/forecasting_assistant
-    blog/chronos_bedrock
-    blog/inflation_autopilot
+    blog/agentcore-postgres-agent
+    blog/librechat-clickhouse-forecasting
+    blog/lambda-clickhouse-forecasting
+    blog/autopilot-inflation-forecasting

@@ -2,8 +2,8 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Forecasting time series in ClickHouse with Chronos on Amazon Bedrock - FlaviaGiammarino.com | AI/ML Consultant | PhD, AWS-Certified</title><link rel="shortcut icon" href="../_static/favicon.ico"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Forecasting inflation with AutoML in Amazon SageMaker Autopilot" href="inflation_autopilot.html" /><link rel="prev" title="Building a time series forecasting assistant with Amazon Bedrock and LibreChat" href="forecasting_assistant.html" />
-      <link rel="canonical" href="https://flaviagiammarino.com/blog/chronos_bedrock.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Forecasting time series in ClickHouse with Chronos on Amazon Bedrock - FlaviaGiammarino.com | AI/ML Consultant | PhD, AWS-Certified</title><link rel="shortcut icon" href="../_static/favicon.ico"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Forecasting inflation with AutoML in Amazon SageMaker Autopilot" href="autopilot-inflation-forecasting.html" /><link rel="prev" title="Building a time series forecasting assistant with Amazon Bedrock and LibreChat" href="librechat-clickhouse-forecasting.html" />
+      <link rel="canonical" href="https://flaviagiammarino.com/blog/lambda-clickhouse-forecasting.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
@@ -24,15 +24,15 @@
 </style>
     <meta name="title" content="Forecasting time series in ClickHouse with Chronos on Amazon Bedrock">
     <meta name="description" content="Forecast time series data stored in ClickHouse using Chronos on Amazon Bedrock.">
-    <meta name="thumbnail" content="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/architecture_diagram.png">
+    <meta name="thumbnail" content="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/lambda-clickhouse-forecasting/architecture_diagram.png">
     <meta property="og:description" content="Forecast time series data stored in ClickHouse using Chronos on Amazon Bedrock.">
-    <meta property="og:image" content="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/architecture_diagram.png">
+    <meta property="og:image" content="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/lambda-clickhouse-forecasting/architecture_diagram.png">
     <script type="application/ld+json">
         {
       "@context": "https://schema.org",
       "@type": "BlogPosting",
       "headline": "Forecasting time series in ClickHouse with Chronos on Amazon Bedrock",
-      "image": "https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/architecture_diagram.png",
+      "image": "https://machine-learning-blog.s3.eu-west-2.amazonaws.com/lambda-clickhouse-forecasting/architecture_diagram.png",
       "datePublished": "2025-08-22 00:00:00T00:00:00Z",
       "dateModified": "T00:00:00Z",
       "author": {
@@ -197,7 +197,7 @@ data-aria-dark="Switch to auto color mode">
           <section id="forecasting-time-series-in-clickhouse-with-chronos-on-amazon-bedrock">
 <h1>Forecasting time series in ClickHouse with Chronos on Amazon Bedrock<a class="headerlink" href="#forecasting-time-series-in-clickhouse-with-chronos-on-amazon-bedrock" title="Link to this heading">¶</a></h1>
 <img
-    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/architecture_diagram.png"
+    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/lambda-clickhouse-forecasting/architecture_diagram.png"
     style="width:100%"
     alt="Architecture diagram showing Chronos on Amazon Bedrock integrated with ClickHouse in AWS Lambda."
 ><section id="overview">
@@ -231,7 +231,7 @@ this solution can be applied to any other time series.</p>
 <div style="margin: 2em 0em 2em 0em">
 
 <img
-    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/total_load_data.png"
+    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/lambda-clickhouse-forecasting/total_load_data.png"
     style="width:50%"
     alt="Last 10 rows of total_load_data ClickHouse table"
 >
@@ -595,7 +595,7 @@ In both cases, we use a 3-week context window to generate 1-day-ahead forecasts.
 <div style="margin: 2em 0em 2em 0em">
 
 <img
-    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/predictions_table.png"
+    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/lambda-clickhouse-forecasting/predictions_table.png"
     style="width:100%"
     alt="Last 10 rows of Pandas DataFrame with Amazon Chronos forecasts of the Italian electricity system's total demand for August 17, 2025"
 >
@@ -622,7 +622,7 @@ In both cases, we use a 3-week context window to generate 1-day-ahead forecasts.
 <div style="margin: 2em 0em 2em 0em">
 
 <img
-    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/forecasts_table.png"
+    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/lambda-clickhouse-forecasting/forecasts_table.png"
     style="width:100%"
     alt="Last 10 rows of Pandas DataFrame with Amazon Chronos forecasts of the Italian electricity system's total demand for August 18, 2025"
 >
@@ -695,7 +695,7 @@ highlighting its strength in capturing complex temporal patterns.</p>
 <div style="margin: 2em 0em 2em 0em">
 
 <img
-    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/chronos_bedrock/forecasts_plot.png"
+    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/lambda-clickhouse-forecasting/forecasts_plot.png"
     style="width:100%"
     alt="Line chart of Amazon Chronos zero-shot probabilistic forecasts of the Italian electricity system's total demand for August 17-18, 2025 against historical data"
 >
@@ -725,13 +725,13 @@ Fast and accurate zero-shot forecasting with Chronos-Bolt and AutoGluon.
   </svg>
   <span>Back to top</span>
 </button><!--<div class="navigation flex print:hidden"><div class="navigation-prev">
-    <a href="forecasting_assistant.html">
+    <a href="librechat-clickhouse-forecasting.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
         <span>Previous</span><div class="title">Building a time series forecasting assistant with Amazon Bedrock and LibreChat</div></div>
     </a>
   </div><div class="navigation-next">
-    <a href="inflation_autopilot.html">
+    <a href="autopilot-inflation-forecasting.html">
       <div class="page-info">
         <span>Next</span>
         <div class="title">Forecasting inflation with AutoML in Amazon SageMaker Autopilot</div>

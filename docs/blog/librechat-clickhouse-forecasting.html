@@ -2,8 +2,8 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Building a time series forecasting assistant with Amazon Bedrock and LibreChat - FlaviaGiammarino.com | AI/ML Consultant | PhD, AWS-Certified</title><link rel="shortcut icon" href="../_static/favicon.ico"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Forecasting time series in ClickHouse with Chronos on Amazon Bedrock" href="chronos_bedrock.html" /><link rel="prev" title="&lt;no title&gt;" href="../blog.html" />
-      <link rel="canonical" href="https://flaviagiammarino.com/blog/forecasting_assistant.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Building a time series forecasting assistant with Amazon Bedrock and LibreChat - FlaviaGiammarino.com | AI/ML Consultant | PhD, AWS-Certified</title><link rel="shortcut icon" href="../_static/favicon.ico"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Forecasting time series in ClickHouse with Chronos on Amazon Bedrock" href="lambda-clickhouse-forecasting.html" /><link rel="prev" title="Deploying a text-to-SQL agent with private VPC access to RDS PostgreSQL on Amazon Bedrock AgentCore" href="agentcore-postgres-agent.html" />
+      <link rel="canonical" href="https://flaviagiammarino.com/blog/librechat-clickhouse-forecasting.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
@@ -24,15 +24,15 @@
 </style>
     <meta name="title" content="Building a time series forecasting assistant with Amazon Bedrock and LibreChat">
     <meta name="description" content="Build a conversational time series forecasting assistant with ClickHouse, Amazon Bedrock, and LibreChat.">
-    <meta name="thumbnail" content="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/forecasting-assistant/architecture_diagram.png">
+    <meta name="thumbnail" content="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/librechat-clickhouse-forecasting/architecture_diagram.png">
     <meta property="og:description" content="Build a conversational time series forecasting assistant with ClickHouse, Amazon Bedrock, and LibreChat.">
-    <meta property="og:image" content="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/forecasting-assistant/architecture_diagram.png">
+    <meta property="og:image" content="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/librechat-clickhouse-forecasting/architecture_diagram.png">
     <script type="application/ld+json">
         {
       "@context": "https://schema.org",
       "@type": "BlogPosting",
       "headline": "Building a time series forecasting assistant with Amazon Bedrock and LibreChat",
-      "image": "https://machine-learning-blog.s3.eu-west-2.amazonaws.com/forecasting-assistant/architecture_diagram.png",
+      "image": "https://machine-learning-blog.s3.eu-west-2.amazonaws.com/librechat-clickhouse-forecasting/architecture_diagram.png",
       "datePublished": "2026-03-15 00:00:00T00:00:00Z",
       "dateModified": "T00:00:00Z",
       "author": {
@@ -196,7 +196,7 @@ data-aria-dark="Switch to auto color mode">
           <section id="building-a-time-series-forecasting-assistant-with-amazon-bedrock-and-librechat">
 <h1>Building a time series forecasting assistant with Amazon Bedrock and LibreChat<a class="headerlink" href="#building-a-time-series-forecasting-assistant-with-amazon-bedrock-and-librechat" title="Link to this heading">¶</a></h1>
 <img
-    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/forecasting-assistant/architecture_diagram.png"
+    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/librechat-clickhouse-forecasting/architecture_diagram.png"
     style="width:100%"
     alt="Architecture diagram showing a user interacting with LibreChat, which routes requests to Claude Sonnet 4.6 on Amazon Bedrock to query a ClickHouse database and generate forecasts using Chronos on Amazon Bedrock."
 ><section id="overview">
@@ -218,7 +218,7 @@ to any time series dataset. In the rest of the post, we walk through the impleme
 the assistant configuration. We also illustrate a typical conversation with the assistant, which is shown in the video below;
 the transcript is reported at the end of this post.</p>
 <video width="100%" controls style="border-radius: 0.5rem; mask-image: radial-gradient(white, white); -webkit-mask-image: -webkit-radial-gradient(white, white);">
-    <source src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/forecasting-assistant/video.mp4" type="video/mp4">
+    <source src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/librechat-clickhouse-forecasting/video.mp4" type="video/mp4">
     A conversation with a time series forecasting assistant built using Amazon Bedrock and LibreChat.
     The assistant retrieves the data from ClickHouse and uses Amazon Chronos deployed on Amazon Bedrock to generate forecasts.
 </video></section>
@@ -230,7 +230,7 @@ and <code class="docutils literal notranslate"><span class="pre">sales</span></c
 <div style="margin: 2em 0em 2em 0em">
 
 <img
-    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/forecasting-assistant/products.png"
+    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/librechat-clickhouse-forecasting/products.png"
     style="width:90%"
     alt="products ClickHouse table"
 >
@@ -246,7 +246,7 @@ and <code class="docutils literal notranslate"><span class="pre">sales</span></c
 </div><div style="margin: 2em 0em 2em 0em">
 
 <img
-    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/forecasting-assistant/sales.png"
+    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/librechat-clickhouse-forecasting/sales.png"
     style="width:90%"
     alt="Last 9 rows of sales ClickHouse table"
 >
@@ -316,7 +316,7 @@ we create a <code class="docutils literal notranslate"><span class="pre">docker-
 The server exposes a <code class="docutils literal notranslate"><span class="pre">generate_forecasts</span></code> tool that takes a list of historical values, a prediction length, and a
 list of quantile levels, and returns probabilistic time series forecasts by invoking the Chronos endpoint
 via <code class="docutils literal notranslate"><span class="pre">boto3</span></code>. For instructions on deploying Chronos to Amazon Bedrock, we refer to
-<a class="reference external" href="https://flaviagiammarino.com/blog/chronos_bedrock.html#create-the-bedrock-endpoint">our previous blog post</a>.</p>
+<a class="reference external" href="https://flaviagiammarino.com/blog/lambda-clickhouse-forecasting.html#create-the-bedrock-endpoint">our previous blog post</a>.</p>
 <p>We configure the forecasting MCP server in the <code class="docutils literal notranslate"><span class="pre">docker-compose.override.yml</span></code> file
 that we previously created for configuring the ClickHouse MCP server:</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="nt">services</span><span class="p">:</span>
@@ -10695,13 +10695,13 @@ Fast and accurate zero-shot forecasting with Chronos-Bolt and AutoGluon.
   </svg>
   <span>Back to top</span>
 </button><!--<div class="navigation flex print:hidden"><div class="navigation-prev">
-    <a href="../blog.html">
+    <a href="agentcore-postgres-agent.html">
       <i class="i-lucide chevron-left"></i>
       <div class="page-info">
-        <span>Previous</span><div class="title">&lt;no title&gt;</div></div>
+        <span>Previous</span><div class="title">Deploying a text-to-SQL agent with private VPC access to RDS PostgreSQL on Amazon Bedrock AgentCore</div></div>
     </a>
   </div><div class="navigation-next">
-    <a href="chronos_bedrock.html">
+    <a href="lambda-clickhouse-forecasting.html">
       <div class="page-info">
         <span>Next</span>
         <div class="title">Forecasting time series in ClickHouse with Chronos on Amazon Bedrock</div>

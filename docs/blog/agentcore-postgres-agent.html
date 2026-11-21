@@ -2,8 +2,8 @@
 <html lang="en" data-accent-color="violet" data-content_root="../">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Deploying a text-to-SQL agent with private VPC access to RDS PostgreSQL on Amazon Bedrock AgentCore - FlaviaGiammarino.com | AI/ML Consultant | PhD, AWS-Certified</title><link rel="shortcut icon" href="../_static/favicon.ico"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
-      <link rel="canonical" href="https://flaviagiammarino.com/blog/postgresql_agent.html" /><script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Deploying a text-to-SQL agent with private VPC access to RDS PostgreSQL on Amazon Bedrock AgentCore - FlaviaGiammarino.com | AI/ML Consultant | PhD, AWS-Certified</title><link rel="shortcut icon" href="../_static/favicon.ico"/><link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Building a time series forecasting assistant with Amazon Bedrock and LibreChat" href="librechat-clickhouse-forecasting.html" /><link rel="prev" title="&lt;no title&gt;" href="../blog.html" />
+      <link rel="canonical" href="https://flaviagiammarino.com/blog/agentcore-postgres-agent.html" /><script>
     function setColorMode(t){let e=document.documentElement;e.setAttribute("data-color-mode",t);let a=window.matchMedia&&window.matchMedia("(prefers-color-scheme: dark)").matches,s=t;"auto"===t&&(s=a?"dark":"light"),"light"===s?(e.classList.remove("dark"),e.classList.add("light")):(e.classList.remove("light"),e.classList.add("dark"))}
     setColorMode(localStorage._theme||"auto");
   </script><link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=e1a1ceaf" />
@@ -24,15 +24,15 @@
 </style>
     <meta name="title" content="Deploying a text-to-SQL agent with private VPC access to RDS PostgreSQL on Amazon Bedrock AgentCore">
     <meta name="description" content="Build and deploy a PostgreSQL text-to-SQL agent with Amazon Bedrock AgentCore and Strands Agents">
-    <meta name="thumbnail" content="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/postgresql_agent/architecture_diagram.png">
+    <meta name="thumbnail" content="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/agentcore-postgres-agent/architecture_diagram.png">
     <meta property="og:description" content="Build and deploy a PostgreSQL text-to-SQL agent with Amazon Bedrock AgentCore and Strands Agents">
-    <meta property="og:image" content="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/postgresql_agent/architecture_diagram.png">
+    <meta property="og:image" content="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/agentcore-postgres-agent/architecture_diagram.png">
     <script type="application/ld+json">
         {
       "@context": "https://schema.org",
       "@type": "BlogPosting",
       "headline": "Deploying a text-to-SQL agent with private VPC access to RDS PostgreSQL on Amazon Bedrock AgentCore",
-      "image": "https://machine-learning-blog.s3.eu-west-2.amazonaws.com/postgresql_agent/architecture_diagram.png",
+      "image": "https://machine-learning-blog.s3.eu-west-2.amazonaws.com/agentcore-postgres-agent/architecture_diagram.png",
       "datePublished": "2026-06-06 00:00:00T00:00:00Z",
       "dateModified": "T00:00:00Z",
       "author": {
@@ -193,7 +193,7 @@ data-aria-dark="Switch to auto color mode">
           <section id="deploying-a-text-to-sql-agent-with-private-vpc-access-to-rds-postgresql-on-amazon-bedrock-agentcore">
 <h1>Deploying a text-to-SQL agent with private VPC access to RDS PostgreSQL on Amazon Bedrock AgentCore<a class="headerlink" href="#deploying-a-text-to-sql-agent-with-private-vpc-access-to-rds-postgresql-on-amazon-bedrock-agentcore" title="Link to this heading">¶</a></h1>
 <img
-    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/postgresql_agent/architecture_diagram.png"
+    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/agentcore-postgres-agent/architecture_diagram.png"
     style="width:100%"
     alt="Architecture diagram showing a user invoking a Strands agent on Amazon Bedrock AgentCore Runtime in a private VPC subnet where the agent queries an Amazon RDS PostgreSQL database."
 ><section id="overview">
@@ -222,7 +222,7 @@ The instance runs within the default VPC, which has three public subnets, an int
 <div style="margin: 2em 0em 2em 0em">
 
 <img
-    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/postgresql_agent/products_table.png"
+    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/agentcore-postgres-agent/products_table.png"
     style="width:70%"
     alt="products PostgreSQL table"
 >
@@ -238,7 +238,7 @@ The instance runs within the default VPC, which has three public subnets, an int
 </div><div style="margin: 2em 0em 2em 0em">
 
 <img
-    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/postgresql_agent/sales_table.png"
+    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/agentcore-postgres-agent/sales_table.png"
     style="width:70%"
     alt="sales PostgreSQL table"
 >
@@ -1010,7 +1010,21 @@ Combine the two tables and add the percentage of total sales for each product.
     <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
   </svg>
   <span>Back to top</span>
-</button><!--<div class="navigation flex print:hidden"></div>--></div>
+</button><!--<div class="navigation flex print:hidden"><div class="navigation-prev">
+    <a href="../blog.html">
+      <i class="i-lucide chevron-left"></i>
+      <div class="page-info">
+        <span>Previous</span><div class="title">&lt;no title&gt;</div></div>
+    </a>
+  </div><div class="navigation-next">
+    <a href="librechat-clickhouse-forecasting.html">
+      <div class="page-info">
+        <span>Next</span>
+        <div class="title">Building a time series forecasting assistant with Amazon Bedrock and LibreChat</div>
+      </div>
+      <i class="i-lucide chevron-right"></i>
+    </a>
+  </div></div>--></div>
     </div>
   </main>
 
