@@ -1,7 +1,7 @@
 {% if ablog.tags %}
 <div class="ablog-sidebar-item ablog__tagcloud">
   <h3 style="color: var(--sy-c-light);">
-      <a href="{{ pathto(ablog.tags.path) }}">{{ gettext('Tags') }}</a>
+    {{ gettext('Tags') }}
   </h3>
   <ul class="ablog-cloud"">
     {% for coll in ablog.tags %} {% if coll %}

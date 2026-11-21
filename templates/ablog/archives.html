@@ -1,7 +1,7 @@
 {% if ablog.archive %}
 <div class="ablog-sidebar-item ablog__archives">
   <h3 style="color: var(--sy-c-light);">
-    <a href="{{ pathto(ablog.archive.docname) }}">{{ gettext('Archives') }}</a>
+    {{ gettext('Archives') }}
   </h3>
   <ul>
     {% for coll in ablog.archive %} {% if coll %}
