@@ -93,6 +93,28 @@ a:hover, .nav-link:hover, #sun-icon:hover, #moon-icon:hover {
     font-size: 0.9em !important;
 }
 
+/* Right sidebar on post listing pages */
+.post-toc.localtoc > ul > li {
+    margin-top: 0;
+    margin-bottom: 1em;
+    line-height: 1.4;
+}
+
+.post-toc.localtoc > ul > li > a {
+    color: var(--sy-c-light);
+    font-weight: 300;
+}
+
+.post-toc.localtoc > ul > li.active > a {
+    color: var(--sy-c-link);
+    font-weight: 500;
+}
+
+/* Hover darkens the text instead of turning it blue, so it can't be mistaken for the highlight */
+.post-toc.localtoc > ul > li:not(.active) > a:hover {
+    color: var(--sy-c-text);
+}
+
 .blog-info-container{
     display: flex;
 }

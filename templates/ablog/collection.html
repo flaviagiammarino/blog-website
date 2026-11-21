@@ -47,14 +47,14 @@
           <i class="i-lucide close"></i>
         </button>
         <div class="sy-scrollbar sy-rside-inner px-6 xl:top-16 xl:sticky xl:pl-0 pt-6 pb-4">
-            <div class="localtoc" style="font-size: 90%;">
+            <div class="localtoc post-toc" style="font-size: 90%;">
                 <h3 style="color: var(--sy-c-light);">
                     {{ header }} {{ collection }}
                 </h3>
                 <ul>
                 {% for post in collection %}
                     <li>
-                    <a class="reference internal" href="{{ postlink(post) }}">{{ post.title }}</a>
+                    <a class="reference internal" href="#{{ post.docname.split('/')[-1] }}">{{ post.title }}</a>
                     </li>
                 {% endfor %}
                 </ul>
@@ -66,6 +66,7 @@
     <div class="flex flex-col break-words justify-between">
       <div class="min-w-0 max-w-6xl px-6 pb-6 pt-8 xl:px-12">
         <article class="yue{% if dark_code %} dark-code{% endif %}" role="main">
+          <section>
            <h1 class="heading">
             <span>
                 {{ header }}
@@ -77,7 +78,7 @@
             </span>
            </h1>
             {% for post in collection %}
-                <div>
+                <section id="{{ post.docname.split('/')[-1] }}">
                 <h2 class="sub-heading">
                   <a href="{{ postlink(post) }}">{{ post.title }}</a>
                 </h2>
@@ -114,8 +115,9 @@
                     </div>
                     <img src="{{ post.image_src }}" alt="{{ post.image_alt }}" style="margin: 1em 0em 1em 0em; width:100%">
                     <hr>
-              </div>
+              </section>
               {% endfor %}
+          </section>
 
             {% block content %}{{ body }}{% endblock %}
 

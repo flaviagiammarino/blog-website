@@ -28,3 +28,38 @@ document.addEventListener('DOMContentLoaded', function () {
     setMode(current);
   });
 });
+
+// Post listing pages: Shibuya only highlights a post once it reaches the top of
+// the viewport, so keep the first post highlighted while the page is above it.
+document.addEventListener('DOMContentLoaded', function () {
+  const items = document.querySelectorAll('.post-toc li');
+  const first = document.querySelector('.yue > section section[id]');
+  if (!items.length || !first) return;
+
+  const offset = parseFloat(getComputedStyle(first).scrollMarginTop) || 80;
+
+  function highlightFirst() {
+    const atBottom = window.innerHeight + Math.round(window.scrollY) >= document.body.offsetHeight;
+    if (first.getBoundingClientRect().top > offset && !atBottom) {
+      items.forEach(function (li) { li.classList.remove('active'); });
+      items[0].classList.add('active');
+    }
+  }
+
+  highlightFirst();
+  window.addEventListener('scroll', highlightFirst);
+
+  // Jump straight to the clicked post. Smooth scrolling would pass through the
+  // posts in between, briefly highlighting each of them on the way.
+  document.querySelectorAll('.post-toc li a').forEach(function (link) {
+    link.addEventListener('click', function (event) {
+      const target = document.getElementById(link.getAttribute('href').slice(1));
+      if (!target) return;
+      event.preventDefault();
+      target.scrollIntoView({ behavior: 'instant', block: 'start' });
+      history.pushState(null, '', link.getAttribute('href'));
+      items.forEach(function (li) { li.classList.remove('active'); });
+      link.parentNode.classList.add('active');
+    });
+  });
+});
