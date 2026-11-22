@@ -29,25 +29,40 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
-// Post listing pages: Shibuya only highlights a post once it reaches the top of
-// the viewport, so keep the first post highlighted while the page is above it.
+// Right sidebar on post listing pages and post pages. Shibuya highlights the
+// first section that contains the top of the viewport, which is always the
+// outer section when sections are nested (so subsections never light up), and
+// nothing at all while the page is above the first section. Instead, highlight
+// the last TOC section whose top has scrolled past the offset (the deepest one
+// for nested sections), the first one above it and the last one at the bottom.
 document.addEventListener('DOMContentLoaded', function () {
   const items = document.querySelectorAll('.post-toc li');
-  const first = document.querySelector('.yue > section section[id]');
-  if (!items.length || !first) return;
+  if (!items.length) return;
 
-  const offset = parseFloat(getComputedStyle(first).scrollMarginTop) || 80;
+  const toc = document.querySelector('.post-toc');
+  const sections = Array.from(document.querySelectorAll('.yue > section section[id]')).filter(function (section) {
+    return toc.querySelector('a[href="#' + CSS.escape(section.id) + '"]');
+  });
+  if (!sections.length) return;
 
-  function highlightFirst() {
+  const offset = parseFloat(getComputedStyle(sections[0]).scrollMarginTop) || 80;
+
+  function highlight() {
     const atBottom = window.innerHeight + Math.round(window.scrollY) >= document.body.offsetHeight;
-    if (first.getBoundingClientRect().top > offset && !atBottom) {
-      items.forEach(function (li) { li.classList.remove('active'); });
-      items[0].classList.add('active');
+    let current = sections[0];
+    if (atBottom) {
+      current = sections[sections.length - 1];
+    } else {
+      sections.forEach(function (section) {
+        if (section.getBoundingClientRect().top <= offset + 1) current = section;
+      });
     }
+    items.forEach(function (li) { li.classList.remove('active'); });
+    toc.querySelector('a[href="#' + CSS.escape(current.id) + '"]').parentNode.classList.add('active');
   }
 
-  highlightFirst();
-  window.addEventListener('scroll', highlightFirst);
+  highlight();
+  window.addEventListener('scroll', highlight);
 
   // Jump straight to the clicked post. Smooth scrolling would pass through the
   // posts in between, briefly highlighting each of them on the way.
