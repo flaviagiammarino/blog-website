@@ -8825,16 +8825,22 @@ forecasts in a single chart.
     </div>
     </div>
 
-The assistant consistently followed all instructions and used the correct tools in the right order.
-One limitation worth noting is that rather than joining the ``sales`` and ``products`` tables to resolve product names, the assistant
+The assistant followed the instructions and called the correct tools in the right order,
+but its responses show several shortcomings.
+First, rather than joining the ``sales`` and ``products`` tables to resolve product names, the assistant
 memorized the product IDs from the ``products`` table and used them directly in subsequent queries.
 While this approach worked correctly in this case, it is not robust, as the ``products`` table may change over time.
-We also note that the model's thinking is occasionally too verbose and shows domain slips in the last turn, though neither affected the final output.
+Second, in the last turn the assistant omitted the predicted median when passing the forecasts to the ``visualize_data`` tool,
+which caused the tool to fall back to the predicted mean.
+Third, in the same turn, the assistant stated that Product C sells 2× more than Product B at peak,
+while the data show a ratio of approximately 1.5×.
+Finally, the model's thinking is occasionally too verbose and shows domain slips in the last turn,
+though these did not carry over into its responses.
 
 3. Conclusion
 ***************************************************************************************************************
 
-In this post, we demonstrated how to build a conversational time series forecasting assistant with LibreChat and Amazon Bedrock, using three MCP servers to retrieve time series from ClickHouse, generate probabilistic forecasts with Chronos, and visualize the results as interactive charts, with Claude Sonnet 4.6 orchestrating the tools.
+In this post, we demonstrated how to build a conversational time series forecasting assistant with LibreChat and Amazon Bedrock, using three MCP servers to retrieve time series from ClickHouse, generate probabilistic forecasts with Chronos, and visualize the results as interactive charts using Plotly, with Claude Sonnet 4.6 orchestrating the tools.
 
 The main limitation of this approach is token consumption. The time series pass through the language model's context window multiple times: the values returned by ClickHouse are read as input tokens, written out again as output tokens when the model calls the forecasting and visualization tools, and then retained in the conversation history, where they are counted as input tokens again on each subsequent model call. As a result, cost and latency grow with both the length of the time series and the length of the conversation, which makes this design unsuitable for long time series or large-scale forecasting.
 
