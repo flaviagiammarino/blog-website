@@ -34,9 +34,9 @@ accurate time series solutions faster.
 
 In this post, we will focus on Chronos `[1] <#references>`_, a family of TSFMs for probabilistic time series
 forecasting developed by Amazon.
-In contrast to other TSFMs, that rely on LLMs pre-trained on text, Chronos models are trained from scratch
+In contrast to other TSFMs that rely on LLMs pre-trained on text, Chronos models are trained from scratch
 on a large collection of time series datasets.
-Moreover, Chronos models do not require fine-tuning on in-domain data, and generate zero-shot forecasts,
+Moreover, Chronos models do not require fine-tuning on in-domain data, and generate zero-shot forecasts
 without any task-specific adjustments.
 
 Recently, the Chronos family of TSFMs has been extended with Chronos-Bolt `[2] <#references>`_,
