@@ -40,7 +40,6 @@ Moreover, Chronos models do not require fine-tuning on in-domain data, and gener
 without any task-specific adjustments.
 Recently, the Chronos family of TSFMs has been extended with Chronos-Bolt `[2] <#references>`_,
 a faster, more accurate, and more memory-efficient Chronos model that can also be used on CPU.
-Chronos-Bolt is available in AutoGluon-TimeSeries, Amazon SageMaker JumpStart and Amazon Bedrock.
 
 In the rest of this post, we will walk through a practical example of using Chronos-Bolt with time series data
 stored in ClickHouse. We will deploy Chronos-Bolt to a Bedrock endpoint, then build a Lambda function that invokes the Bedrock
