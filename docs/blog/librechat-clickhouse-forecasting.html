@@ -183,6 +183,7 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#chat-with-the-assistant">2.3 Chat with the assistant</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#conclusion">3. Conclusion</a></li>
 <li><a class="reference internal" href="#references">References</a></li>
 </ul>
 
@@ -8928,9 +8929,13 @@ One limitation worth noting is that rather than joining the <code class="docutil
 memorized the product IDs from the <code class="docutils literal notranslate"><span class="pre">products</span></code> table and used them directly in subsequent queries.
 While this approach worked correctly in this case, it is not robust, as the <code class="docutils literal notranslate"><span class="pre">products</span></code> table may change over time.
 We also note that the model’s thinking is occasionally too verbose and shows domain slips in the last turn, though neither affected the final output.</p>
+</section>
+</section>
+<section id="conclusion">
+<h2>3. Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">¶</a></h2>
+<p>In this post, we demonstrated how to build a conversational time series forecasting assistant with LibreChat and Amazon Bedrock, using three MCP servers to retrieve time series from ClickHouse, generate probabilistic forecasts with Chronos, and visualize the results as interactive charts, with Claude Sonnet 4.6 orchestrating the tools.</p>
 <p>The main limitation of this approach is token consumption. The time series pass through the language model’s context window multiple times: the values returned by ClickHouse are read as input tokens, written out again as output tokens when the model calls the forecasting and visualization tools, and then retained in the conversation history, where they are counted as input tokens again on each subsequent model call. As a result, cost and latency grow with both the length of the time series and the length of the conversation, which makes this design unsuitable for long time series or large-scale forecasting.</p>
 <p>The full code is available on <a class="reference external" href="https://github.com/flaviagiammarino/librechat-clickhouse-forecasting/">GitHub</a>.</p>
-</section>
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Link to this heading">¶</a></h2>

@@ -8831,6 +8831,11 @@ memorized the product IDs from the ``products`` table and used them directly in 
 While this approach worked correctly in this case, it is not robust, as the ``products`` table may change over time.
 We also note that the model's thinking is occasionally too verbose and shows domain slips in the last turn, though neither affected the final output.
 
+3. Conclusion
+***************************************************************************************************************
+
+In this post, we demonstrated how to build a conversational time series forecasting assistant with LibreChat and Amazon Bedrock, using three MCP servers to retrieve time series from ClickHouse, generate probabilistic forecasts with Chronos, and visualize the results as interactive charts, with Claude Sonnet 4.6 orchestrating the tools.
+
 The main limitation of this approach is token consumption. The time series pass through the language model's context window multiple times: the values returned by ClickHouse are read as input tokens, written out again as output tokens when the model calls the forecasting and visualization tools, and then retained in the conversation history, where they are counted as input tokens again on each subsequent model call. As a result, cost and latency grow with both the length of the time series and the length of the conversation, which makes this design unsuitable for long time series or large-scale forecasting.
 
 The full code is available on `GitHub <https://github.com/flaviagiammarino/librechat-clickhouse-forecasting/>`__.
