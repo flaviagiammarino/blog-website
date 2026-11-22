@@ -38,6 +38,7 @@ In contrast to other TSFMs that rely on LLMs pre-trained on text, Chronos models
 on a large collection of time series datasets.
 Moreover, Chronos models do not require fine-tuning on in-domain data, and generate zero-shot forecasts
 without any task-specific adjustments.
+
 Recently, the Chronos family of TSFMs has been extended with Chronos-Bolt `[2] <#references>`_,
 a faster, more accurate, and more memory-efficient Chronos model that can also be used on CPU.
 Chronos-Bolt is available in AutoGluon-TimeSeries, Amazon SageMaker JumpStart and Amazon Bedrock.
