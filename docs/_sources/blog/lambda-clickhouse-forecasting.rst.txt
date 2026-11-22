@@ -274,7 +274,7 @@ In this case, the ``event`` object is expected to include the following fields:
 
 - ``"initialization_timestamp"``: The first timestamp for which the forecasts should be generated.
 - ``"frequency"``: The frequency of the time series, in number of minutes.
-- ``"context_length"``: The number past time series values to use as context.
+- ``"context_length"``: The number of past time series values to use as context.
 - ``"prediction_length"``: The number of future time series values to predict.
 - ``"quantile_levels"``: The quantiles to be predicted at each future time step.
 
