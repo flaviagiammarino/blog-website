@@ -210,7 +210,7 @@ The lack of labelled data also makes hyperparameter tuning difficult, as there i
 Time series foundation models avoid these difficulties, as they are pre-trained on large and diverse collections of time series and can be applied to new data without further training.</p>
 <p>This post shows how to deploy the MOMENT <a class="reference external" href="#references">[1]</a> foundation model on Amazon SageMaker for reconstruction-based time series anomaly detection.
 The model is used zero-shot, that is, with the pre-trained weights and without fine-tuning.
-The deployment therefore includes only an inference image, which supports real-time, asynchronous and batch inference on single-GPU and multi-GPU instances.</p>
+The deployment therefore includes only an inference image, which supports batch, real-time and asynchronous inference on single-GPU and multi-GPU instances.</p>
 </section>
 <section id="background">
 <h2>2. Background<a class="headerlink" href="#background" title="Link to this heading">¶</a></h2>
@@ -230,7 +230,7 @@ each patch attends to all the patches in the window, both before and after it, s
 The feed-forward network has 2816 hidden units and a gated GELU activation.</p>
 <p>Pre-training uses masked reconstruction: patches are masked uniformly at random, and the model is trained to reconstruct them from the remaining patches.
 The reconstruction head is pre-trained together with the encoder, so the model can be used zero-shot for reconstruction, and therefore for anomaly detection and imputation.
-The forecasting and classification heads are not pre-trained and must be fine-tuned.</p>
+The forecasting and classification heads are not pre-trained.</p>
 <div style="margin: 2em 0em 2em 0em">
 
 <img
@@ -294,7 +294,7 @@ On instances with more than one GPU, the model is replicated on all the GPUs, an
 <h5>3.2.2.2 Model request<a class="headerlink" href="#model-request" title="Link to this heading">¶</a></h5>
 <p>The request is CSV text with one or more univariate time series in long format, with three columns:
 <code class="docutils literal notranslate"><span class="pre">id</span></code>, the identifier of the time series, <code class="docutils literal notranslate"><span class="pre">timestamp</span></code>, the time stamp, and <code class="docutils literal notranslate"><span class="pre">value</span></code>, the observed value.
-Each time series must have at least 512 time steps and cannot contain missing or infinite values.</p>
+Each time series must have at least 512 time steps and cannot contain missing values.</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span data-line="1">id,timestamp,value
 </span><span data-line="2">A,2026-01-01 00:00:00,26
 </span><span data-line="3">A,2026-01-01 00:30:00,28
@@ -374,8 +374,7 @@ and the endpoint can be scaled down to zero instances when there are no requests
 <p>The notebook provided in this post’s
 <a class="reference external" href="https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/tree/main/sample_notebook.ipynb">GitHub repository</a>
 walks through the usage of the model with the three inference options, from the upload of the data to the retrieval of the reconstructions.
-In the notebook, the model is applied to three synthetic time series of 1,000 half-hourly observations each.
-The three time series are synthetic, and each anomaly was designed to illustrate one type of anomaly.</p>
+In the notebook, the model is applied to three synthetic time series of 1,000 half-hourly observations each.</p>
 <ul class="simple">
 <li><p>Time series A contains a global point anomaly, a single value far above the range of the rest of the time series.</p></li>
 <li><p>Time series B contains a contextual point anomaly, a single value which is within the range of the time series, but is too high for the time of the day at which it occurs.</p></li>
@@ -420,7 +419,7 @@ which still needs to be calibrated on a period of the time series that is consid
 for instance as a high percentile of the errors in that period.</p>
 <p>The approach has three main practical limitations.
 First, the most recent time steps are reconstructed from past observations only,
-so their reconstructions are less reliable and can change when more recent data becomes available.
+so their reconstructions are less reliable and can change when new data becomes available.
 Second, each time series is reconstructed window by window, and an anomaly that is only visible over a longer period spanning multiple windows can therefore go undetected.
 Third, each time series is reconstructed independently of the others,
 so an anomaly that is only visible in the relationship between several time series is not detected.</p>

@@ -35,7 +35,7 @@ Time series foundation models avoid these difficulties, as they are pre-trained 
 
 This post shows how to deploy the MOMENT `[1] <#references>`_ foundation model on Amazon SageMaker for reconstruction-based time series anomaly detection.
 The model is used zero-shot, that is, with the pre-trained weights and without fine-tuning.
-The deployment therefore includes only an inference image, which supports real-time, asynchronous and batch inference on single-GPU and multi-GPU instances.
+The deployment therefore includes only an inference image, which supports batch, real-time and asynchronous inference on single-GPU and multi-GPU instances.
 
 2. Background
 **************************************************************************************************************
@@ -59,7 +59,7 @@ The feed-forward network has 2816 hidden units and a gated GELU activation.
 
 Pre-training uses masked reconstruction: patches are masked uniformly at random, and the model is trained to reconstruct them from the remaining patches.
 The reconstruction head is pre-trained together with the encoder, so the model can be used zero-shot for reconstruction, and therefore for anomaly detection and imputation.
-The forecasting and classification heads are not pre-trained and must be fine-tuned.
+The forecasting and classification heads are not pre-trained.
 
 .. raw:: html
 
@@ -137,7 +137,7 @@ On instances with more than one GPU, the model is replicated on all the GPUs, an
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 The request is CSV text with one or more univariate time series in long format, with three columns:
 ``id``, the identifier of the time series, ``timestamp``, the time stamp, and ``value``, the observed value.
-Each time series must have at least 512 time steps and cannot contain missing or infinite values.
+Each time series must have at least 512 time steps and cannot contain missing values.
 
 .. code:: text
 
@@ -224,7 +224,6 @@ The notebook provided in this post's
 `GitHub repository <https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/tree/main/sample_notebook.ipynb>`__
 walks through the usage of the model with the three inference options, from the upload of the data to the retrieval of the reconstructions.
 In the notebook, the model is applied to three synthetic time series of 1,000 half-hourly observations each.
-The three time series are synthetic, and each anomaly was designed to illustrate one type of anomaly.
 
 - Time series A contains a global point anomaly, a single value far above the range of the rest of the time series.
 - Time series B contains a contextual point anomaly, a single value which is within the range of the time series, but is too high for the time of the day at which it occurs.
@@ -276,7 +275,7 @@ for instance as a high percentile of the errors in that period.
 
 The approach has three main practical limitations.
 First, the most recent time steps are reconstructed from past observations only,
-so their reconstructions are less reliable and can change when more recent data becomes available.
+so their reconstructions are less reliable and can change when new data becomes available.
 Second, each time series is reconstructed window by window, and an anomaly that is only visible over a longer period spanning multiple windows can therefore go undetected.
 Third, each time series is reconstructed independently of the others,
 so an anomaly that is only visible in the relationship between several time series is not detected.
