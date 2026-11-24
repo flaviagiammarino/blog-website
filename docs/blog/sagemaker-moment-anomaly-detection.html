@@ -409,12 +409,13 @@ As the model artifacts are stored in Amazon S3 and nothing is downloaded at runt
 The time steps to flag are selected by comparing the reconstruction errors with a threshold,
 which still needs to be calibrated on a period of the time series that is considered normal,
 for instance as a high percentile of the errors in that period.</p>
-<p>The approach has three main practical limitations:</p>
-<ul class="simple">
-<li><p>The most recent time steps are reconstructed from past observations only, so their reconstructions are less reliable and can change when more recent data becomes available.</p></li>
-<li><p>Each time series is reconstructed window by window, and the model sees only the 512 time steps of each window. An anomaly that is only visible over a longer period can therefore go undetected.</p></li>
-<li><p>Each time series is reconstructed independently of the others, so an anomaly that is only visible in the relationship between several time series is not detected.</p></li>
-</ul>
+<p>The approach has three main practical limitations.
+First, the most recent time steps are reconstructed from past observations only,
+so their reconstructions are less reliable and can change when more recent data becomes available.
+Second, each time series is reconstructed window by window, and the model sees only the 512 time steps of each window.
+An anomaly that is only visible over a longer period can therefore go undetected.
+Third, each time series is reconstructed independently of the others,
+so an anomaly that is only visible in the relationship between several time series is not detected.</p>
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Link to this heading">¶</a></h2>

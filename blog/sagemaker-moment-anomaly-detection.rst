@@ -266,13 +266,13 @@ The time steps to flag are selected by comparing the reconstruction errors with 
 which still needs to be calibrated on a period of the time series that is considered normal,
 for instance as a high percentile of the errors in that period.
 
-The approach has three main practical limitations:
-
-- The most recent time steps are reconstructed from past observations only, so their reconstructions are less reliable and can change when more recent data becomes available.
-
-- Each time series is reconstructed window by window, and the model sees only the 512 time steps of each window. An anomaly that is only visible over a longer period can therefore go undetected.
-
-- Each time series is reconstructed independently of the others, so an anomaly that is only visible in the relationship between several time series is not detected.
+The approach has three main practical limitations.
+First, the most recent time steps are reconstructed from past observations only,
+so their reconstructions are less reliable and can change when more recent data becomes available.
+Second, each time series is reconstructed window by window, and the model sees only the 512 time steps of each window.
+An anomaly that is only visible over a longer period can therefore go undetected.
+Third, each time series is reconstructed independently of the others,
+so an anomaly that is only visible in the relationship between several time series is not detected.
 
 References
 ***************************************************************************************************************
