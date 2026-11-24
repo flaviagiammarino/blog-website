@@ -27,7 +27,7 @@ Deploying a text-to-SQL agent with private VPC access to RDS PostgreSQL on Amazo
 
 Text-to-SQL translates natural language queries into structured SQL statements, allowing users without specialized database knowledge to interactively explore and analyze data, beyond the pre-configured queries of static dashboards and reports, and without depending on technical teams to write and run custom queries.
 
-In this post, we build a text-to-SQL agent using Strands Agents and deploy it to Amazon Bedrock AgentCore Runtime in a private VPC.
+This post builds a text-to-SQL agent using Strands Agents and deploys it to Amazon Bedrock AgentCore Runtime in a private VPC.
 The agent accesses an Amazon RDS PostgreSQL instance in the same VPC via an MCP server and communicates with other AWS services through a NAT Gateway.
 
 The agent translates user questions into SQL queries, executes them against the database, and explains the results in natural language, with full visibility into the tool calls and their output. The agent session preserves the conversation context between requests, allowing users to ask follow-up questions.
@@ -49,9 +49,9 @@ To follow along, you will need an AWS account with sufficient IAM permissions to
 2.1 Create the PostgreSQL database in RDS
 ===============================================================================================================
 
-For this demonstration, we use two small tables: ``products`` and ``sales``,
+This demonstration uses two small tables: ``products`` and ``sales``,
 containing product names and unit sales for three items.
-We create the two tables in a PostgreSQL RDS instance with public access disabled and store the database credentials in AWS Secrets Manager.
+The two tables are created in a PostgreSQL RDS instance with public access disabled, and the database credentials are stored in AWS Secrets Manager.
 The instance runs within the default VPC, which has three public subnets, an internet gateway, and DNS resolution and DNS hostnames enabled.
 
 .. raw:: html
@@ -97,9 +97,9 @@ The instance runs within the default VPC, which has three public subnets, an int
 2.2 Update the default VPC configuration
 ===============================================================================================================
 
-To allow the agent to reach other AWS services such as Amazon Bedrock, AWS Secrets Manager and Amazon CloudWatch, we create a private subnet in the default VPC where the RDS instance is running. Since resources in a private subnet have no public IP and cannot reach the internet directly, we place a NAT Gateway in one of the existing public subnets with an Elastic IP.
+To allow the agent to reach other AWS services such as Amazon Bedrock, AWS Secrets Manager and Amazon CloudWatch, a private subnet is created in the default VPC where the RDS instance is running. Since resources in a private subnet have no public IP and cannot reach the internet directly, a NAT Gateway with an Elastic IP is placed in one of the existing public subnets.
 
-We then create a route table that sends all outbound traffic to the NAT Gateway and associate it with the private subnet.
+A route table that sends all outbound traffic to the NAT Gateway is then created and associated with the private subnet.
 This gives the agent outbound internet access through the NAT Gateway while keeping it on the same private network as the RDS database. Multiple private subnets across different AZs could additionally be set up to improve agent availability.
 
 For more details on the VPC configuration, see `this article in the AWS Builders Center <https://builder.aws.com/content/2xQRB09BKuwZ7aMcLZBh4ycoTvV/deploying-amazon-bedrock-agentcore-runtime-in-a-vpc-a-step-by-step-guide>`__.
@@ -109,8 +109,8 @@ For more details on the VPC configuration, see `this article in the AWS Builders
 
 The agent connects to the database with the `postgres-mcp <https://github.com/crystaldba/postgres-mcp>`__ server, which includes tools for listing schemas, describing tables and running SQL queries. The agent retrieves the database user and password from AWS Secrets Manager. The secret ID, the database host, and the database name are passed as environment variables to the AgentCore Runtime by the deployment script in the next section.
 
-We configure the ``postgres-mcp`` server to run as a subprocess via ``uv``. The database URI, including the SSL certificate path for secure connections to RDS, is passed to the subprocess as an environment variable. The MCP client communicates with the server over standard input/output.
-We start the client at module level and keep it alive for the lifetime of the session.
+The ``postgres-mcp`` server is configured to run as a subprocess via ``uv``. The database URI, including the SSL certificate path for secure connections to RDS, is passed to the subprocess as an environment variable. The MCP client communicates with the server over standard input/output.
+The client is started at module level and kept alive for the lifetime of the session.
 
 .. important::
 
@@ -187,7 +187,7 @@ The agent is wrapped in a ``BedrockAgentCoreApp`` with an async streaming entryp
     if __name__ == "__main__":
         app.run()
 
-We deploy the agent using Docker. The ``Dockerfile`` uses ``uv``'s ARM64 Python 3.13 base image. We copy the ``pyproject.toml`` and ``uv.lock`` files and install the dependencies, then download the RDS CA certificate bundle required for SSL connections to PostgreSQL. Finally, we copy the agent code, expose port 8080 and run the application. The ``pyproject.toml`` and ``uv.lock`` files referenced in the Dockerfile are generated by the deployment script in the next section. The ``Dockerfile`` is shown below.
+The agent is deployed using Docker. The ``Dockerfile`` uses ``uv``'s ARM64 Python 3.13 base image. It copies the ``pyproject.toml`` and ``uv.lock`` files and installs the dependencies, then downloads the RDS CA certificate bundle required for SSL connections to PostgreSQL. Finally, it copies the agent code, exposes port 8080 and runs the application. The ``pyproject.toml`` and ``uv.lock`` files referenced in the Dockerfile are generated by the deployment script in the next section. The ``Dockerfile`` is shown below.
 
 .. code:: docker
 
@@ -255,7 +255,7 @@ The ID of the secret with the database user and password, the database host, and
     # Private subnet
     subnet_id="<private-subnet-id>"
 
-    # Security group 
+    # Security group
     security_group_id="<vpc-security-group>"
 
     # Project setup
@@ -292,11 +292,11 @@ The ID of the secret with the database user and password, the database host, and
 2.5 Test the agent in a Jupyter Notebook
 ===============================================================================================================
 
-After the agent has been deployed, we test it in a Jupyter Notebook.
-We invoke the agent over four conversational turns, demonstrating schema discovery, short-term memory, and a multi-table query.
+After the agent has been deployed, it is tested in a Jupyter Notebook.
+The agent is invoked over four conversational turns, demonstrating schema discovery, short-term memory, and a multi-table query.
 To avoid ongoing charges, delete the AgentCore runtime, ECR repository, RDS instance, NAT Gateway, Elastic IP, private subnet and route table after testing.
 
-We start by importing the required libraries: ``boto3`` to invoke the agent on Bedrock AgentCore,
+The first step is to import the required libraries: ``boto3`` to invoke the agent on Bedrock AgentCore,
 ``json`` to serialize the request payload and deserialize the response, ``uuid`` to generate unique session
 identifiers, and ``IPython.display`` to render the agent's responses as formatted Markdown in the notebook.
 
@@ -308,9 +308,9 @@ identifiers, and ``IPython.display`` to render the agent's responses as formatte
     import uuid
     from IPython.display import Markdown, display
 
-Next, we set up the client and helper functions. We define the AgentCore
-Runtime ARN and region, create a ``boto3`` client for invoking the
-agent, and implement three helper functions:
+Next, the client and helper functions are set up. The code defines the AgentCore
+Runtime ARN and region, creates a ``boto3`` client for invoking the
+agent, and implements three helper functions:
 ``parse_streaming_response`` to extract agent messages from the response
 stream, ``get_streaming_response`` to invoke the agent and return the
 parsed messages, and ``print_messages`` to render a conversation turn in
@@ -420,7 +420,7 @@ the notebook with formatted text, tool calls and tool results.
                         display(Markdown("🔨 Output:"))
                         print({"output": tool_output})
 
-We generate a unique session ID to identify this conversation. The same
+A unique session ID is generated to identify this conversation. The same
 session ID will be reused across all turns to maintain conversation
 context and short-term memory.
 
@@ -429,7 +429,7 @@ context and short-term memory.
     # Generate the session ID
     session_id = str(uuid.uuid4())
 
-We start the conversation by asking the agent what it can do.
+The conversation starts by asking the agent what it can do.
 
 .. code:: ipython3
 
@@ -501,7 +501,7 @@ We start the conversation by asking the agent what it can do.
     </div>
     </div>
 
-We then ask the agent to list the tables in the database.
+The second turn asks the agent to list the tables in the database.
 The initial connection to PostgreSQL fails due to an SSL handshake timing issue, but the agent identifies the error and retries successfully.
 
 .. code:: ipython3
@@ -611,7 +611,7 @@ The initial connection to PostgreSQL fails due to an SSL handshake timing issue,
     </div>
     </div>
 
-Next, we ask the agent a question that relies on context from the previous turn to demonstrate short-term memory capabilities.
+The third turn asks a question that relies on context from the previous turn, to demonstrate short-term memory capabilities.
 
 .. code:: ipython3
 
@@ -718,7 +718,7 @@ Next, we ask the agent a question that relies on context from the previous turn 
     </div>
     </div>
 
-Finally, we ask the agent to join the two tables and compute a simple derived metric.
+Finally, the fourth turn asks the agent to join the two tables and compute a simple derived metric.
 
 .. code:: ipython3
 
@@ -882,7 +882,7 @@ Finally, we ask the agent to join the two tables and compute a simple derived me
 3. Conclusion
 ***************************************************************************************************************
 
-In this post, we deployed a text-to-SQL agent using Strands Agents on Amazon Bedrock AgentCore Runtime with private VPC access to an RDS PostgreSQL database. The agent translates natural language questions into SQL queries, executes them against the database, and explains the results, with full visibility into the tool calls and their output.
+This post deployed a text-to-SQL agent using Strands Agents on Amazon Bedrock AgentCore Runtime with private VPC access to an RDS PostgreSQL database. The agent translates natural language questions into SQL queries, executes them against the database, and explains the results, with full visibility into the tool calls and their output.
 
 This is a basic implementation intended as a starting point. A production deployment would require additional controls, such as SQL validation to verify generated queries for correctness before execution, access controls to ensure that users can only query data they are authorized to access, caching to reduce latency and model invocation costs for frequent queries, and ongoing monitoring of quality, latency, throughput, errors and costs.
 

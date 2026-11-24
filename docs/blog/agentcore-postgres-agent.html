@@ -104,7 +104,7 @@ data-aria-dark="Switch to auto color mode">
     </li>
       
     <li>
-      <a style="font-size: 85%" href="category/foundation-models.html">Foundation Models (2)</a>
+      <a style="font-size: 85%" href="category/foundation-models.html">Foundation Models (1)</a>
     </li>
      
   </ul>
@@ -120,7 +120,7 @@ data-aria-dark="Switch to auto color mode">
       <a style="font-size: 85%" href="tag/amazon-bedrock.html">Amazon Bedrock</a>
     </li>
       
-    <li class="ablog-cloud ablog-cloud-3">
+    <li class="ablog-cloud ablog-cloud-1">
       <a style="font-size: 85%" href="tag/amazon-chronos.html">Amazon Chronos</a>
     </li>
       
@@ -143,10 +143,6 @@ data-aria-dark="Switch to auto color mode">
      
     <li>
       <a style="font-size: 85%" href="2026.html">2026 (3)</a>
-    </li>
-      
-    <li>
-      <a style="font-size: 85%" href="2025.html">2025 (1)</a>
     </li>
      
   </ul>
@@ -191,7 +187,7 @@ data-aria-dark="Switch to auto color mode">
 ><section id="overview">
 <h2>1. Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
 <p>Text-to-SQL translates natural language queries into structured SQL statements, allowing users without specialized database knowledge to interactively explore and analyze data, beyond the pre-configured queries of static dashboards and reports, and without depending on technical teams to write and run custom queries.</p>
-<p>In this post, we build a text-to-SQL agent using Strands Agents and deploy it to Amazon Bedrock AgentCore Runtime in a private VPC.
+<p>This post builds a text-to-SQL agent using Strands Agents and deploys it to Amazon Bedrock AgentCore Runtime in a private VPC.
 The agent accesses an Amazon RDS PostgreSQL instance in the same VPC via an MCP server and communicates with other AWS services through a NAT Gateway.</p>
 <p>The agent translates user questions into SQL queries, executes them against the database, and explains the results in natural language, with full visibility into the tool calls and their output. The agent session preserves the conversation context between requests, allowing users to ask follow-up questions.</p>
 </section>
@@ -207,9 +203,9 @@ The agent accesses an Amazon RDS PostgreSQL instance in the same VPC via an MCP 
 <p>To follow along, you will need an AWS account with sufficient IAM permissions to create and manage the resources described in this post, the AWS CLI installed and configured with appropriate credentials, Docker for building and pushing the container image, and Python 3.13 with <code class="docutils literal notranslate"><span class="pre">uv</span></code> for project setup and dependency management.</p>
 <section id="create-the-postgresql-database-in-rds">
 <h3>2.1 Create the PostgreSQL database in RDS<a class="headerlink" href="#create-the-postgresql-database-in-rds" title="Link to this heading">¶</a></h3>
-<p>For this demonstration, we use two small tables: <code class="docutils literal notranslate"><span class="pre">products</span></code> and <code class="docutils literal notranslate"><span class="pre">sales</span></code>,
+<p>This demonstration uses two small tables: <code class="docutils literal notranslate"><span class="pre">products</span></code> and <code class="docutils literal notranslate"><span class="pre">sales</span></code>,
 containing product names and unit sales for three items.
-We create the two tables in a PostgreSQL RDS instance with public access disabled and store the database credentials in AWS Secrets Manager.
+The two tables are created in a PostgreSQL RDS instance with public access disabled, and the database credentials are stored in AWS Secrets Manager.
 The instance runs within the default VPC, which has three public subnets, an internet gateway, and DNS resolution and DNS hostnames enabled.</p>
 <div style="margin: 2em 0em 2em 0em">
 
@@ -246,16 +242,16 @@ The instance runs within the default VPC, which has three public subnets, an int
 </div></section>
 <section id="update-the-default-vpc-configuration">
 <h3>2.2 Update the default VPC configuration<a class="headerlink" href="#update-the-default-vpc-configuration" title="Link to this heading">¶</a></h3>
-<p>To allow the agent to reach other AWS services such as Amazon Bedrock, AWS Secrets Manager and Amazon CloudWatch, we create a private subnet in the default VPC where the RDS instance is running. Since resources in a private subnet have no public IP and cannot reach the internet directly, we place a NAT Gateway in one of the existing public subnets with an Elastic IP.</p>
-<p>We then create a route table that sends all outbound traffic to the NAT Gateway and associate it with the private subnet.
+<p>To allow the agent to reach other AWS services such as Amazon Bedrock, AWS Secrets Manager and Amazon CloudWatch, a private subnet is created in the default VPC where the RDS instance is running. Since resources in a private subnet have no public IP and cannot reach the internet directly, a NAT Gateway with an Elastic IP is placed in one of the existing public subnets.</p>
+<p>A route table that sends all outbound traffic to the NAT Gateway is then created and associated with the private subnet.
 This gives the agent outbound internet access through the NAT Gateway while keeping it on the same private network as the RDS database. Multiple private subnets across different AZs could additionally be set up to improve agent availability.</p>
 <p>For more details on the VPC configuration, see <a class="reference external" href="https://builder.aws.com/content/2xQRB09BKuwZ7aMcLZBh4ycoTvV/deploying-amazon-bedrock-agentcore-runtime-in-a-vpc-a-step-by-step-guide">this article in the AWS Builders Center</a>.</p>
 </section>
 <section id="build-the-agent-with-strands-agents">
 <h3>2.3 Build the agent with Strands Agents<a class="headerlink" href="#build-the-agent-with-strands-agents" title="Link to this heading">¶</a></h3>
 <p>The agent connects to the database with the <a class="reference external" href="https://github.com/crystaldba/postgres-mcp">postgres-mcp</a> server, which includes tools for listing schemas, describing tables and running SQL queries. The agent retrieves the database user and password from AWS Secrets Manager. The secret ID, the database host, and the database name are passed as environment variables to the AgentCore Runtime by the deployment script in the next section.</p>
-<p>We configure the <code class="docutils literal notranslate"><span class="pre">postgres-mcp</span></code> server to run as a subprocess via <code class="docutils literal notranslate"><span class="pre">uv</span></code>. The database URI, including the SSL certificate path for secure connections to RDS, is passed to the subprocess as an environment variable. The MCP client communicates with the server over standard input/output.
-We start the client at module level and keep it alive for the lifetime of the session.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">postgres-mcp</span></code> server is configured to run as a subprocess via <code class="docutils literal notranslate"><span class="pre">uv</span></code>. The database URI, including the SSL certificate path for secure connections to RDS, is passed to the subprocess as an environment variable. The MCP client communicates with the server over standard input/output.
+The client is started at module level and kept alive for the lifetime of the session.</p>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
 <p>By default, the <code class="docutils literal notranslate"><span class="pre">postgres-mcp</span></code> server runs in <code class="docutils literal notranslate"><span class="pre">unrestricted</span></code> access mode, allowing both read and write access to the database. For production use, set the access mode to <code class="docutils literal notranslate"><span class="pre">restricted</span></code> to limit the agent to read-only queries.</p>
@@ -329,7 +325,7 @@ The agent is wrapped in a <code class="docutils literal notranslate"><span class
 </span><span data-line="65">    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 </span></pre></div>
 </div>
-<p>We deploy the agent using Docker. The <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> uses <code class="docutils literal notranslate"><span class="pre">uv</span></code>’s ARM64 Python 3.13 base image. We copy the <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> and <code class="docutils literal notranslate"><span class="pre">uv.lock</span></code> files and install the dependencies, then download the RDS CA certificate bundle required for SSL connections to PostgreSQL. Finally, we copy the agent code, expose port 8080 and run the application. The <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> and <code class="docutils literal notranslate"><span class="pre">uv.lock</span></code> files referenced in the Dockerfile are generated by the deployment script in the next section. The <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> is shown below.</p>
+<p>The agent is deployed using Docker. The <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> uses <code class="docutils literal notranslate"><span class="pre">uv</span></code>’s ARM64 Python 3.13 base image. It copies the <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> and <code class="docutils literal notranslate"><span class="pre">uv.lock</span></code> files and installs the dependencies, then downloads the RDS CA certificate bundle required for SSL connections to PostgreSQL. Finally, it copies the agent code, exposes port 8080 and runs the application. The <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code> and <code class="docutils literal notranslate"><span class="pre">uv.lock</span></code> files referenced in the Dockerfile are generated by the deployment script in the next section. The <code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> is shown below.</p>
 <div class="highlight-docker notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c"># Use uv&#39;s ARM64 Python 3.13 base image</span>
 </span><span data-line="2"><span class="k">FROM</span><span class="w"> </span><span class="s">--platform=linux/arm64</span><span class="w"> </span>ghcr.io/astral-sh/uv:python3.13-bookworm-slim
 </span><span data-line="3">
@@ -430,10 +426,10 @@ The ID of the secret with the database user and password, the database host, and
 </section>
 <section id="test-the-agent-in-a-jupyter-notebook">
 <h3>2.5 Test the agent in a Jupyter Notebook<a class="headerlink" href="#test-the-agent-in-a-jupyter-notebook" title="Link to this heading">¶</a></h3>
-<p>After the agent has been deployed, we test it in a Jupyter Notebook.
-We invoke the agent over four conversational turns, demonstrating schema discovery, short-term memory, and a multi-table query.
+<p>After the agent has been deployed, it is tested in a Jupyter Notebook.
+The agent is invoked over four conversational turns, demonstrating schema discovery, short-term memory, and a multi-table query.
 To avoid ongoing charges, delete the AgentCore runtime, ECR repository, RDS instance, NAT Gateway, Elastic IP, private subnet and route table after testing.</p>
-<p>We start by importing the required libraries: <code class="docutils literal notranslate"><span class="pre">boto3</span></code> to invoke the agent on Bedrock AgentCore,
+<p>The first step is to import the required libraries: <code class="docutils literal notranslate"><span class="pre">boto3</span></code> to invoke the agent on Bedrock AgentCore,
 <code class="docutils literal notranslate"><span class="pre">json</span></code> to serialize the request payload and deserialize the response, <code class="docutils literal notranslate"><span class="pre">uuid</span></code> to generate unique session
 identifiers, and <code class="docutils literal notranslate"><span class="pre">IPython.display</span></code> to render the agent’s responses as formatted Markdown in the notebook.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Import the required libraries</span>
@@ -443,9 +439,9 @@ identifiers, and <code class="docutils literal notranslate"><span class="pre">IP
 </span><span data-line="5"><span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">Markdown</span><span class="p">,</span> <span class="n">display</span>
 </span></pre></div>
 </div>
-<p>Next, we set up the client and helper functions. We define the AgentCore
-Runtime ARN and region, create a <code class="docutils literal notranslate"><span class="pre">boto3</span></code> client for invoking the
-agent, and implement three helper functions:
+<p>Next, the client and helper functions are set up. The code defines the AgentCore
+Runtime ARN and region, creates a <code class="docutils literal notranslate"><span class="pre">boto3</span></code> client for invoking the
+agent, and implements three helper functions:
 <code class="docutils literal notranslate"><span class="pre">parse_streaming_response</span></code> to extract agent messages from the response
 stream, <code class="docutils literal notranslate"><span class="pre">get_streaming_response</span></code> to invoke the agent and return the
 parsed messages, and <code class="docutils literal notranslate"><span class="pre">print_messages</span></code> to render a conversation turn in
@@ -553,14 +549,14 @@ the notebook with formatted text, tool calls and tool results.</p>
 </span><span data-line="101">                    <span class="nb">print</span><span class="p">({</span><span class="s2">&quot;output&quot;</span><span class="p">:</span> <span class="n">tool_output</span><span class="p">})</span>
 </span></pre></div>
 </div>
-<p>We generate a unique session ID to identify this conversation. The same
+<p>A unique session ID is generated to identify this conversation. The same
 session ID will be reused across all turns to maintain conversation
 context and short-term memory.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Generate the session ID</span>
 </span><span data-line="2"><span class="n">session_id</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
 </span></pre></div>
 </div>
-<p>We start the conversation by asking the agent what it can do.</p>
+<p>The conversation starts by asking the agent what it can do.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Turn 1 / 4</span>
 </span><span data-line="2"><span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 </span><span data-line="3"><span class="s2">What can you help me with?</span>
@@ -626,7 +622,7 @@ What can you help me with?
 <hr/>
 <p><strong>Just ask your question in plain English, and I'll take it from there!</strong> 🚀</p>
 </div>
-</div><p>We then ask the agent to list the tables in the database.
+</div><p>The second turn asks the agent to list the tables in the database.
 The initial connection to PostgreSQL fails due to an SSL handshake timing issue, but the agent identifies the error and retries successfully.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Turn 2 / 4</span>
 </span><span data-line="2"><span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -730,7 +726,7 @@ What tables are in the database?
 <li>📊 <strong>Query the data</strong> — e.g., row counts, sample rows, or something more specific?</li>
 </ul>
 </div>
-</div><p>Next, we ask the agent a question that relies on context from the previous turn to demonstrate short-term memory capabilities.</p>
+</div><p>The third turn asks a question that relies on context from the previous turn, to demonstrate short-term memory capabilities.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Turn 3 / 4</span>
 </span><span data-line="2"><span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 </span><span data-line="3"><span class="s2">Show me the data in the second table.</span>
@@ -831,7 +827,7 @@ Show me the data in the second table.
 </ul>
 <p>Would you like me to <strong>join this with the products table</strong> to see more details, or do any further analysis on this data?</p>
 </div>
-</div><p>Finally, we ask the agent to join the two tables and compute a simple derived metric.</p>
+</div><p>Finally, the fourth turn asks the agent to join the two tables and compute a simple derived metric.</p>
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Turn 4 / 4</span>
 </span><span data-line="2"><span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 </span><span data-line="3"><span class="s2">Combine the two tables and add the percentage of total sales for each product.</span>
@@ -990,7 +986,7 @@ Combine the two tables and add the percentage of total sales for each product.
 </section>
 <section id="conclusion">
 <h2>3. Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">¶</a></h2>
-<p>In this post, we deployed a text-to-SQL agent using Strands Agents on Amazon Bedrock AgentCore Runtime with private VPC access to an RDS PostgreSQL database. The agent translates natural language questions into SQL queries, executes them against the database, and explains the results, with full visibility into the tool calls and their output.</p>
+<p>This post deployed a text-to-SQL agent using Strands Agents on Amazon Bedrock AgentCore Runtime with private VPC access to an RDS PostgreSQL database. The agent translates natural language questions into SQL queries, executes them against the database, and explains the results, with full visibility into the tool calls and their output.</p>
 <p>This is a basic implementation intended as a starting point. A production deployment would require additional controls, such as SQL validation to verify generated queries for correctness before execution, access controls to ensure that users can only query data they are authorized to access, caching to reduce latency and model invocation costs for frequent queries, and ongoing monitoring of quality, latency, throughput, errors and costs.</p>
 <p>The NAT Gateway could also be replaced with interface VPC endpoints for each AWS service the agent calls, such as Amazon Bedrock, AWS Secrets Manager and Amazon CloudWatch Logs, removing the need for internet access from the private subnet entirely.</p>
 <p>The full code is available on <a class="reference external" href="https://github.com/flaviagiammarino/agentcore-postgres-agent/">GitHub</a>.</p>
