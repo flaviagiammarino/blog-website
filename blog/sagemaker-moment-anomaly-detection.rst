@@ -30,8 +30,7 @@ The model is trained on data without anomalies, and is then used to reconstruct 
 The reconstruction represents the expected normal pattern, and large deviations from it are flagged as anomalies.
 
 In practice, anomaly labels are rarely available, making it difficult to select an appropriate training set.
-The lack of labelled data also makes model selection and hyperparameter tuning difficult,
-as there is no clear metric to optimize.
+The lack of labelled data also makes hyperparameter tuning difficult, as there is no clear metric to optimize.
 Time series foundation models avoid these difficulties, as they are pre-trained on large and diverse collections of time series and can be applied to new data without further training.
 
 This post shows how to deploy the MOMENT `[1] <#references>`_ foundation model on Amazon SageMaker for reconstruction-based time series anomaly detection.
