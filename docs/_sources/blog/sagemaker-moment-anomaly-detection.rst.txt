@@ -41,7 +41,7 @@ The model weights are stored in Amazon S3, so the model can be deployed with net
 2. Background
 **************************************************************************************************************
 
-MOMENT `[1] <#references>`_ is a family of open-source time series foundation models
+MOMENT (`[1] <#references>`_) is a family of open-source time series foundation models
 pre-trained on a large collection of public time series datasets.
 MOMENT models support reconstruction, forecasting and classification.
 The models process the time series in windows of 512 time steps.
@@ -50,7 +50,7 @@ A linear layer maps each patch to an embedding, and the 64 embeddings are proces
 A task-specific head then maps the encoder output to the final prediction.
 
 MOMENT models are released in three sizes, small, base and large, which differ in the size of the encoder.
-This post uses MOMENT-1-large, whose encoder has the Flan-T5-large `[2] <#references>`_ architecture,
+This post uses MOMENT-1-large, whose encoder has the Flan-T5-large architecture (`[2] <#references>`_, `[3] <#references>`_),
 with 1024-dimensional embeddings and a stack of 24 blocks, each made of a self-attention layer followed by a feed-forward network.
 The self-attention layer has 16 heads of 64 units each, resulting in 1024 units in total, and uses fully visible masking:
 each patch attends to all the patches in the window, both before and after it, so that its representation takes into account the context on both sides.
@@ -219,8 +219,8 @@ walks through the usage of the model with the three inference options, from the 
 In the notebook, the model is applied to three synthetic time series of 1,000 half-hourly observations each.
 The three time series are synthetic, and each anomaly was designed to illustrate one type of anomaly.
 
-- Time series A contains a point anomaly, a single value far above the range of the rest of the time series.
-- Time series B contains a contextual anomaly, a single value which is within the range of the time series, but is too high for the time of the day at which it occurs.
+- Time series A contains a global point anomaly, a single value far above the range of the rest of the time series.
+- Time series B contains a contextual point anomaly, a single value which is within the range of the time series, but is too high for the time of the day at which it occurs.
 - Time series C contains a subsequence anomaly, an interval in which the fluctuations around the daily cycle are much larger than in the rest of the time series.
 
 The figure below shows the three time series with their reconstructions.
@@ -266,11 +266,13 @@ The time steps to flag are selected by comparing the reconstruction errors with 
 which still needs to be calibrated on a period of the time series that is considered normal,
 for instance as a high percentile of the errors in that period.
 
-The approach has two main limitations.
-Each time series is reconstructed window by window, and the model sees only the 512 time steps of each window.
-An anomaly that is only visible over a longer period can therefore go undetected.
-Each time series is also reconstructed independently of the others,
-so an anomaly that is only visible in the relationship between several time series is not detected.
+The approach has three main practical limitations:
+
+- The most recent time steps are reconstructed from past observations only, so their reconstructions are less reliable and can change when more recent data becomes available.
+
+- Each time series is reconstructed window by window, and the model sees only the 512 time steps of each window. An anomaly that is only visible over a longer period can therefore go undetected.
+
+- Each time series is reconstructed independently of the others, so an anomaly that is only visible in the relationship between several time series is not detected.
 
 References
 ***************************************************************************************************************
@@ -280,6 +282,11 @@ MOMENT: A family of open time-series foundation models.
 In *Proceedings of the 41st International Conference on Machine Learning*.
 https://doi.org/10.48550/arXiv.2402.03885.
 
-[2] Chung, Hyung Won, et al. "Scaling instruction-finetuned language models." *Journal of machine learning research*, 25.70 (2024): 1-53.
+[2] Raffel, C., Shazeer, N., Roberts, A., Lee, K., Narang, S., Matena, M., Zhou, Y., Li, W., & Liu, P. J. (2020).
+Exploring the limits of transfer learning with a unified text-to-text transformer.
+*Journal of Machine Learning Research*, 21(140), 1-67.
+https://doi.org/10.48550/arXiv.1910.10683.
+
+[3] Chung, Hyung Won, et al. "Scaling instruction-finetuned language models." *Journal of machine learning research*, 25.70 (2024): 1-53.
 https://doi.org/10.48550/arXiv.2210.11416.
 

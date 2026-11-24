@@ -219,7 +219,7 @@ The model weights are stored in Amazon S3, so the model can be deployed with net
 </section>
 <section id="background">
 <h2>2. Background<a class="headerlink" href="#background" title="Link to this heading">¶</a></h2>
-<p>MOMENT <a class="reference external" href="#references">[1]</a> is a family of open-source time series foundation models
+<p>MOMENT (<a class="reference external" href="#references">[1]</a>) is a family of open-source time series foundation models
 pre-trained on a large collection of public time series datasets.
 MOMENT models support reconstruction, forecasting and classification.
 The models process the time series in windows of 512 time steps.
@@ -227,7 +227,7 @@ Each window is split into 64 non-overlapping subsequences of 8 time steps, calle
 A linear layer maps each patch to an embedding, and the 64 embeddings are processed by a T5 encoder.
 A task-specific head then maps the encoder output to the final prediction.</p>
 <p>MOMENT models are released in three sizes, small, base and large, which differ in the size of the encoder.
-This post uses MOMENT-1-large, whose encoder has the Flan-T5-large <a class="reference external" href="#references">[2]</a> architecture,
+This post uses MOMENT-1-large, whose encoder has the Flan-T5-large architecture (<a class="reference external" href="#references">[2]</a>, <a class="reference external" href="#references">[3]</a>),
 with 1024-dimensional embeddings and a stack of 24 blocks, each made of a self-attention layer followed by a feed-forward network.
 The self-attention layer has 16 heads of 64 units each, resulting in 1024 units in total, and uses fully visible masking:
 each patch attends to all the patches in the window, both before and after it, so that its representation takes into account the context on both sides.
@@ -373,8 +373,8 @@ walks through the usage of the model with the three inference options, from the 
 In the notebook, the model is applied to three synthetic time series of 1,000 half-hourly observations each.
 The three time series are synthetic, and each anomaly was designed to illustrate one type of anomaly.</p>
 <ul class="simple">
-<li><p>Time series A contains a point anomaly, a single value far above the range of the rest of the time series.</p></li>
-<li><p>Time series B contains a contextual anomaly, a single value which is within the range of the time series, but is too high for the time of the day at which it occurs.</p></li>
+<li><p>Time series A contains a global point anomaly, a single value far above the range of the rest of the time series.</p></li>
+<li><p>Time series B contains a contextual point anomaly, a single value which is within the range of the time series, but is too high for the time of the day at which it occurs.</p></li>
 <li><p>Time series C contains a subsequence anomaly, an interval in which the fluctuations around the daily cycle are much larger than in the rest of the time series.</p></li>
 </ul>
 <p>The figure below shows the three time series with their reconstructions.
@@ -409,11 +409,12 @@ As the model artifacts are stored in Amazon S3 and nothing is downloaded at runt
 The time steps to flag are selected by comparing the reconstruction errors with a threshold,
 which still needs to be calibrated on a period of the time series that is considered normal,
 for instance as a high percentile of the errors in that period.</p>
-<p>The approach has two main limitations.
-Each time series is reconstructed window by window, and the model sees only the 512 time steps of each window.
-An anomaly that is only visible over a longer period can therefore go undetected.
-Each time series is also reconstructed independently of the others,
-so an anomaly that is only visible in the relationship between several time series is not detected.</p>
+<p>The approach has three main practical limitations:</p>
+<ul class="simple">
+<li><p>The most recent time steps are reconstructed from past observations only, so their reconstructions are less reliable and can change when more recent data becomes available.</p></li>
+<li><p>Each time series is reconstructed window by window, and the model sees only the 512 time steps of each window. An anomaly that is only visible over a longer period can therefore go undetected.</p></li>
+<li><p>Each time series is reconstructed independently of the others, so an anomaly that is only visible in the relationship between several time series is not detected.</p></li>
+</ul>
 </section>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Link to this heading">¶</a></h2>
@@ -421,7 +422,11 @@ so an anomaly that is only visible in the relationship between several time seri
 MOMENT: A family of open time-series foundation models.
 In <em>Proceedings of the 41st International Conference on Machine Learning</em>.
 <a class="reference external" href="https://doi.org/10.48550/arXiv.2402.03885">https://doi.org/10.48550/arXiv.2402.03885</a>.</p>
-<p>[2] Chung, Hyung Won, et al. “Scaling instruction-finetuned language models.” <em>Journal of machine learning research</em>, 25.70 (2024): 1-53.
+<p>[2] Raffel, C., Shazeer, N., Roberts, A., Lee, K., Narang, S., Matena, M., Zhou, Y., Li, W., &amp; Liu, P. J. (2020).
+Exploring the limits of transfer learning with a unified text-to-text transformer.
+<em>Journal of Machine Learning Research</em>, 21(140), 1-67.
+<a class="reference external" href="https://doi.org/10.48550/arXiv.1910.10683">https://doi.org/10.48550/arXiv.1910.10683</a>.</p>
+<p>[3] Chung, Hyung Won, et al. “Scaling instruction-finetuned language models.” <em>Journal of machine learning research</em>, 25.70 (2024): 1-53.
 <a class="reference external" href="https://doi.org/10.48550/arXiv.2210.11416">https://doi.org/10.48550/arXiv.2210.11416</a>.</p>
 </section>
 </section>
