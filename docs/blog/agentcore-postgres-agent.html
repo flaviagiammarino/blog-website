@@ -989,7 +989,6 @@ Combine the two tables and add the percentage of total sales for each product.
 <p>This post deployed a text-to-SQL agent using Strands Agents on Amazon Bedrock AgentCore Runtime with private VPC access to an RDS PostgreSQL database. The agent translates natural language questions into SQL queries, executes them against the database, and explains the results, with full visibility into the tool calls and their output.</p>
 <p>This is a basic implementation intended as a starting point. A production deployment would require additional controls, such as SQL validation to verify generated queries for correctness before execution, access controls to ensure that users can only query data they are authorized to access, caching to reduce latency and model invocation costs for frequent queries, and ongoing monitoring of quality, latency, throughput, errors and costs.</p>
 <p>The NAT Gateway could also be replaced with interface VPC endpoints for each AWS service the agent calls, such as Amazon Bedrock, AWS Secrets Manager and Amazon CloudWatch Logs, removing the need for internet access from the private subnet entirely.</p>
-<p>The full code is available on <a class="reference external" href="https://github.com/flaviagiammarino/agentcore-postgres-agent/">GitHub</a>.</p>
 </section>
 </section>
 
