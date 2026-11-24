@@ -259,26 +259,6 @@ The reconstructions follow the daily and weekly cycles of the time series and do
 - In time series B, the reconstruction is at the bottom of the daily cycle, while the observed value is close to the top of the daily cycle.
 - In time series C, the reconstruction follows the daily cycle, while the observed values fluctuate widely around it.
 
-In all three series, the largest error is several times larger than the errors elsewhere.
-In practice, the threshold for flagging an anomaly still needs to be selected, for instance as a high percentile of the error over a period without anomalies.
-
-.. raw:: html
-
-    <div style="margin: 2em 0em 2em 0em">
-
-    <img
-        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/sagemaker-moment-anomaly-detection/table.png"
-        style="width:100%;"
-        alt="Peak squared reconstruction error within the highlighted window of each series, compared with the 99th percentile of the squared reconstruction error outside the window."
-    >
-
-    <p>
-    <span style="font-weight:600">Figure 3:</span>
-    <span>Peak squared reconstruction error within the highlighted window of each series, compared with the 99th percentile of the squared reconstruction error outside the window.</span>
-    </p>
-
-    </div>
-
 This example is a demonstration of how the model could be used and is not an evaluation of its accuracy.
 A full benchmark study of MOMENT on anomaly detection, including the comparison with other methods,
 is provided in the original paper `[1] <#references>`_.
@@ -309,14 +289,16 @@ References
 
 [1] Goswami, M., Szafer, K., Choudhry, A., Cai, Y., Li, S., & Dubrawski, A. (2024).
 MOMENT: A family of open time-series foundation models.
-In *Proceedings of the 41st International Conference on Machine Learning*.
-https://doi.org/10.48550/arXiv.2402.03885.
+In *Proceedings of the 41st International Conference on Machine Learning*, PMLR 235, 16115-16152.
+`doi: 10.48550/arXiv.2402.03885 <https://doi.org/10.48550/arXiv.2402.03885>`__.
 
 [2] Raffel, C., Shazeer, N., Roberts, A., Lee, K., Narang, S., Matena, M., Zhou, Y., Li, W., & Liu, P. J. (2020).
 Exploring the limits of transfer learning with a unified text-to-text transformer.
 *Journal of Machine Learning Research*, 21(140), 1-67.
-https://doi.org/10.48550/arXiv.1910.10683.
+`doi: 10.48550/arXiv.1910.10683 <https://doi.org/10.48550/arXiv.1910.10683>`__.
 
-[3] Chung, Hyung Won, et al. "Scaling instruction-finetuned language models." *Journal of machine learning research*, 25.70 (2024): 1-53.
-https://doi.org/10.48550/arXiv.2210.11416.
+[3] Chung, H. W., Hou, L., Longpre, S., Zoph, B., Tay, Y., Fedus, W., Li, Y., Wang, X., Dehghani, M., Brahma, S., et al. (2024).
+Scaling instruction-finetuned language models.
+*Journal of Machine Learning Research*, 25(70), 1-53.
+`doi: 10.48550/arXiv.2210.11416 <https://doi.org/10.48550/arXiv.2210.11416>`__.
 

@@ -26,7 +26,7 @@ Building a time series forecasting assistant with Amazon Bedrock and LibreChat
 ***************************************************************************************************************
 
 Most forecasting systems expose their outputs through dashboards and reports, limiting the user's interaction and visibility
-to predefined queries anticipated at development time. In this post, we address this limitation by building
+to predefined queries anticipated at development time. This post addresses this limitation with
 a conversational time series forecasting assistant using ClickHouse, Amazon Bedrock, and `LibreChat <https://www.librechat.ai/>`__.
 The assistant allows the user to explore the underlying data, select specific time series, and adjust forecast parameters - such as
 quantile levels and prediction horizons - through natural language.
@@ -36,12 +36,12 @@ which defines a standard interface for connecting language models to external to
 the `ClickHouse MCP server <https://github.com/ClickHouse/mcp-clickhouse>`__ for retrieving the time series,
 a custom MCP server that generates probabilistic time series forecasts using Chronos `[1, 2] <#references>`_ - a time series foundation model developed by Amazon -
 deployed on Amazon Bedrock, and an additional custom MCP server that creates interactive Plotly charts of the time series and their forecasts.
-We use LibreChat as the chat UI, with Claude Sonnet 4.6 on Amazon Bedrock as the orchestrating model.
+LibreChat is used as the chat UI, with Claude Sonnet 4.6 on Amazon Bedrock as the orchestrating model.
 
 For simplicity, this demonstration uses artificially generated sales data for three products.
 However, as Chronos performs zero-shot forecasting without fine-tuning, this solution can be applied
-to any time series dataset. In the rest of the post, we walk through the implementation of the three MCP servers and
-the assistant configuration. We also illustrate a typical conversation with the assistant, which is shown in the video below;
+to any time series dataset. The rest of the post walks through the implementation of the three MCP servers and
+the assistant configuration, and illustrates a typical conversation with the assistant, which is shown in the video below;
 the transcript is reported at the end of this post.
 
 .. raw:: html
@@ -55,7 +55,7 @@ the transcript is reported at the end of this post.
 2. Solution
 ***************************************************************************************************************
 
-For this example, we use synthetic hourly sales data for three products: Product A, Product B and Product C.
+This example uses synthetic hourly sales data for three products: Product A, Product B and Product C.
 The time series span 90 days, and are stored in two ClickHouse tables: ``products``, which maps product IDs to names,
 and ``sales``, which records hourly units sold per product.
 
@@ -104,10 +104,10 @@ and ``sales``, which records hourly units sold per product.
 2.1 Set up the MCP servers
 ===============================================================================================================
 
-We start by cloning the `LibreChat GitHub repository <https://github.com/danny-avila/LibreChat>`__ and configuring
-Claude Sonnet 4.6 on Amazon Bedrock as the underlying model. We use the ``eu.anthropic.claude-sonnet-4-6``
+The first step is to clone the `LibreChat GitHub repository <https://github.com/danny-avila/LibreChat>`__ and configure
+Claude Sonnet 4.6 on Amazon Bedrock as the underlying model, using the ``eu.anthropic.claude-sonnet-4-6``
 cross-region inference profile in ``eu-west-1``. As outlined in the `LibreChat documentation <https://www.librechat.ai/docs/configuration/pre_configured_ai/bedrock>`__,
-we update the following environment variables in the ``.env`` file:
+the following environment variables are set in the ``.env`` file:
 
 .. code-block:: text
 
@@ -116,7 +116,7 @@ we update the following environment variables in the ``.env`` file:
     BEDROCK_AWS_ACCESS_KEY_ID=<AWS_ACCESS_KEY_ID>
     BEDROCK_AWS_SECRET_ACCESS_KEY=<AWS_SECRET_ACCESS_KEY>
 
-We also include the model's inference profile ARN in ``librechat.yaml``:
+The model's inference profile ARN is also included in ``librechat.yaml``:
 
 .. code-block:: yaml
 
@@ -128,8 +128,8 @@ We also include the model's inference profile ARN in ``librechat.yaml``:
 2.1.1 Configure the ClickHouse MCP server
 ---------------------------------------------------------------------------------------------------------------
 
-Next, we configure the ClickHouse MCP server. As detailed in the `ClickHouse documentation <https://clickhouse.com/docs/use-cases/AI/MCP/librechat>`__,
-we create a ``docker-compose.override.yml`` file and add the following configuration to it:
+The next step is to configure the ClickHouse MCP server. As detailed in the `ClickHouse documentation <https://clickhouse.com/docs/use-cases/AI/MCP/librechat>`__,
+the following configuration is added to a new ``docker-compose.override.yml`` file:
 
 .. code-block:: yaml
 
@@ -151,7 +151,7 @@ we create a ``docker-compose.override.yml`` file and add the following configura
           - CLICKHOUSE_MCP_SERVER_TRANSPORT=sse
           - CLICKHOUSE_MCP_BIND_HOST=0.0.0.0
 
-We also register the ClickHouse MCP server in ``librechat.yaml`` to run on port 8001:
+The ClickHouse MCP server is also registered in ``librechat.yaml`` to run on port 8001:
 
 .. code-block:: yaml
 
@@ -163,14 +163,14 @@ We also register the ClickHouse MCP server in ``librechat.yaml`` to run on port 
 2.1.2 Create the forecasting MCP server
 ---------------------------------------------------------------------------------------------------------------
 
-After that, we create the forecasting MCP server using the `FastMCP <https://github.com/jlowin/fastmcp>`__ library.
+The forecasting MCP server is created using the `FastMCP <https://github.com/jlowin/fastmcp>`__ library.
 The server exposes a ``generate_forecasts`` tool that takes a list of historical values, a prediction length, and a
 list of quantile levels, and returns probabilistic time series forecasts by invoking the Chronos endpoint
-via ``boto3``. For instructions on deploying Chronos to Amazon Bedrock, we refer to
-`our previous blog post <https://flaviagiammarino.com/blog/lambda-clickhouse-forecasting.html#create-the-bedrock-endpoint>`__.
+via ``boto3``. Instructions for deploying Chronos to Amazon Bedrock are provided in
+`a previous blog post <https://flaviagiammarino.com/blog/lambda-clickhouse-forecasting.html#create-the-bedrock-endpoint>`__.
 
-We configure the forecasting MCP server in the ``docker-compose.override.yml`` file
-that we previously created for configuring the ClickHouse MCP server:
+The forecasting MCP server is configured in the ``docker-compose.override.yml`` file
+previously created for the ClickHouse MCP server:
 
 .. code-block:: yaml
 
@@ -186,7 +186,7 @@ that we previously created for configuring the ClickHouse MCP server:
           - AWS_ACCESS_KEY_ID=<AWS_ACCESS_KEY_ID>
           - AWS_SECRET_ACCESS_KEY=<AWS_SECRET_ACCESS_KEY>
 
-We also register the forecasting MCP server in ``librechat.yaml`` to run on port 8002:
+The forecasting MCP server is also registered in ``librechat.yaml`` to run on port 8002:
 
 .. code-block:: yaml
 
@@ -320,8 +320,8 @@ on port 8004. The tool returns the URL of the interactive HTML chart, that Libre
     However, a dedicated server ensures consistent styling and reproducible outputs, which cannot be guaranteed
     when the language model generates the charts on its own.
 
-Like the forecasting server, the data visualization server is built using FastMCP.
-As we did for the forecasting server, we configure it in ``docker-compose.override.yml``:
+Like the forecasting server, the data visualization server is built using FastMCP,
+and is configured in ``docker-compose.override.yml``:
 
 .. code-block:: yaml
 
@@ -337,7 +337,7 @@ As we did for the forecasting server, we configure it in ``docker-compose.overri
         volumes:
           - ./plots:/plots
 
-We also register the data visualization MCP server in ``librechat.yaml`` to run on port 8003:
+The data visualization MCP server is also registered in ``librechat.yaml`` to run on port 8003:
 
 .. code-block:: yaml
 
@@ -671,7 +671,7 @@ The code used for building the Docker image of the data visualization MCP server
 .. raw:: html
 
     <p>
-    Finally, we configure the assistant in <code>librechat.yaml</code> using a
+    Finally, the assistant is configured in <code>librechat.yaml</code> using a
     <a href="https://www.librechat.ai/docs/configuration/librechat_yaml/object_structure/model_specs">LibreChat <code>modelSpecs</code> object</a>
     that combines the language model, the three MCP servers, and a system prompt.
     </p>
@@ -714,10 +714,10 @@ The code used for building the Docker image of the data visualization MCP server
 2.3 Chat with the assistant
 ===============================================================================================================
 
-To demonstrate a typical interaction, we walk through a short conversation with the assistant covering data
-exploration, visualization, and forecasting. We start by asking which time series are available in the database,
-then request a plot of Product A's hourly sales over the most recent week, use that data as context to forecast
-the next 48 hours, and finally repeat the analysis for Products B and C, visualizing all three series and their
+To demonstrate a typical interaction, this section walks through a short conversation with the assistant covering data
+exploration, visualization, and forecasting. The user starts by asking which time series are available in the database,
+then requests a plot of Product A's hourly sales over the most recent week, uses that data as context to forecast
+the next 48 hours, and finally repeats the analysis for Products B and C, visualizing all three series and their
 forecasts in a single chart.
 
 .. raw:: html
@@ -8840,7 +8840,7 @@ though these did not carry over into its responses.
 3. Conclusion
 ***************************************************************************************************************
 
-In this post, we demonstrated how to build a conversational time series forecasting assistant with LibreChat and Amazon Bedrock, using three MCP servers to retrieve time series from ClickHouse, generate probabilistic forecasts with Chronos, and visualize the results as interactive charts using Plotly, with Claude Sonnet 4.6 orchestrating the tools.
+This post demonstrated how to build a conversational time series forecasting assistant with LibreChat and Amazon Bedrock, using three MCP servers to retrieve time series from ClickHouse, generate probabilistic forecasts with Chronos, and visualize the results as interactive charts using Plotly, with Claude Sonnet 4.6 orchestrating the tools.
 
 The main limitation of this approach is token consumption. The time series pass through the language model's context window multiple times: the values returned by ClickHouse are read as input tokens, written out again as output tokens when the model calls the forecasting and visualization tools, and then retained in the conversation history, where they are counted as input tokens again on each subsequent model call. As a result, cost and latency grow with both the length of the time series and the length of the conversation, which makes this design unsuitable for long time series or large-scale forecasting.
 
