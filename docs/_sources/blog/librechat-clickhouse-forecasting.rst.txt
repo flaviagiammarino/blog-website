@@ -28,14 +28,13 @@ Building a time series forecasting assistant with Amazon Bedrock and LibreChat
 Most forecasting systems expose their outputs through dashboards and reports, limiting the user's interaction and visibility
 to predefined queries anticipated at development time. This post addresses this limitation with
 a conversational time series forecasting assistant using ClickHouse, Amazon Bedrock, and `LibreChat <https://www.librechat.ai/>`__.
-The assistant allows the user to explore the underlying data, select specific time series, and adjust forecast parameters - such as
-quantile levels and prediction horizons - through natural language.
+The assistant allows the user to explore the underlying data, select specific time series, and adjust forecast parameters, such as
+quantile levels and prediction horizons, through natural language.
 
 The solution is built around the `Model Context Protocol (MCP) <https://modelcontextprotocol.io>`__,
 which defines a standard interface for connecting language models to external tools and services, and relies on three servers:
 the `ClickHouse MCP server <https://github.com/ClickHouse/mcp-clickhouse>`__ for retrieving the time series,
-a custom MCP server that generates probabilistic time series forecasts using Chronos `[1, 2] <#references>`_ - a time series foundation model developed by Amazon -
-deployed on Amazon Bedrock, and an additional custom MCP server that creates interactive Plotly charts of the time series and their forecasts.
+a custom MCP server that generates probabilistic time series forecasts using Chronos `[1, 2] <#references>`_ on Amazon Bedrock, and an additional custom MCP server that creates interactive Plotly charts of the time series and their forecasts.
 LibreChat is used as the chat UI, with Claude Sonnet 4.6 on Amazon Bedrock as the orchestrating model.
 
 For simplicity, this demonstration uses artificially generated sales data for three products.

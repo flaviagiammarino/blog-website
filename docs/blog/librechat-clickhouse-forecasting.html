@@ -193,13 +193,12 @@ data-aria-dark="Switch to auto color mode">
 <p>Most forecasting systems expose their outputs through dashboards and reports, limiting the user’s interaction and visibility
 to predefined queries anticipated at development time. This post addresses this limitation with
 a conversational time series forecasting assistant using ClickHouse, Amazon Bedrock, and <a class="reference external" href="https://www.librechat.ai/">LibreChat</a>.
-The assistant allows the user to explore the underlying data, select specific time series, and adjust forecast parameters - such as
-quantile levels and prediction horizons - through natural language.</p>
+The assistant allows the user to explore the underlying data, select specific time series, and adjust forecast parameters, such as
+quantile levels and prediction horizons, through natural language.</p>
 <p>The solution is built around the <a class="reference external" href="https://modelcontextprotocol.io">Model Context Protocol (MCP)</a>,
 which defines a standard interface for connecting language models to external tools and services, and relies on three servers:
 the <a class="reference external" href="https://github.com/ClickHouse/mcp-clickhouse">ClickHouse MCP server</a> for retrieving the time series,
-a custom MCP server that generates probabilistic time series forecasts using Chronos <a class="reference external" href="#references">[1, 2]</a> - a time series foundation model developed by Amazon -
-deployed on Amazon Bedrock, and an additional custom MCP server that creates interactive Plotly charts of the time series and their forecasts.
+a custom MCP server that generates probabilistic time series forecasts using Chronos <a class="reference external" href="#references">[1, 2]</a> on Amazon Bedrock, and an additional custom MCP server that creates interactive Plotly charts of the time series and their forecasts.
 LibreChat is used as the chat UI, with Claude Sonnet 4.6 on Amazon Bedrock as the orchestrating model.</p>
 <p>For simplicity, this demonstration uses artificially generated sales data for three products.
 However, as Chronos performs zero-shot forecasting without fine-tuning, this solution can be applied
