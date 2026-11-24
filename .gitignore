@@ -136,6 +136,10 @@ __pycache__/
 .Rhistory
 .Rproj.user
 
+# Claude
+.claude
+
 # MacOS
 .DS_Store
 __MACOSX/
+
