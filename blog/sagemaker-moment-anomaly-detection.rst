@@ -8,7 +8,7 @@
     :keywords: Time Series, Anomaly Detection, Foundation Model, MOMENT, Amazon SageMaker
     :image_src: https://machine-learning-blog.s3.eu-west-2.amazonaws.com/sagemaker-moment-anomaly-detection/architecture_diagram.png
     :image_alt: Architecture diagram of a SageMaker AI model, built from a PyTorch inference image in ECR and model artifacts in S3, serving a real-time endpoint, an asynchronous endpoint and a batch transform job.
-    :summary: An Amazon SageMaker model that detects time series anomalies from the reconstruction error of the pre-trained MOMENT foundation model, with no training or fine-tuning.
+    :summary: A deployment of the pre-trained MOMENT foundation model on Amazon SageMaker for zero-shot time series anomaly detection, with real-time, asynchronous and batch inference.
 
 ###############################################################################################################
 Zero-shot time series anomaly detection with the MOMENT foundation model on Amazon SageMaker
@@ -30,27 +30,31 @@ The model is trained on data without anomalies, and is then used to reconstruct 
 The reconstruction represents the expected normal pattern, and large deviations from it are flagged as anomalies.
 
 In practice, anomaly labels are rarely available, making it difficult to select an appropriate training set.
-The lack of labelled data also makes hyperparameter tuning difficult, as there is no clear objective function to optimize,
-and if the model is too complex or is overfitted, it reconstructs the anomalies, which then go undetected.
+The lack of labelled data also makes model selection and hyperparameter tuning difficult,
+as there is no clear metric to optimize.
+Minimizing the reconstruction error can lead to a model that is too complex or overfitted,
+and that reconstructs anomalous patterns as accurately as normal ones, in which case the reconstruction error no longer discriminates between the two.
 
-This post shows how to detect anomalies in time series data using the MOMENT foundation model.
-The model takes the time series as input and returns their reconstructions in a zero-shot manner, with no fine-tuning on the data.
-The model is deployed on Amazon SageMaker for real-time, asynchronous and batch inference, on single-GPU and multi-GPU instances.
-The model weights are stored in Amazon S3, so the model can be deployed with network isolation.
+Time series foundation models avoid this problem, as they are pre-trained on large and diverse collections of time series and can be applied to new data without further training.
+This post shows how to deploy the MOMENT `[1] <#references>`_ foundation model on Amazon SageMaker for reconstruction-based time series anomaly detection.
+The model is used zero-shot, that is, with the pre-trained weights and without fine-tuning.
+The deployment therefore includes only an inference image, which supports real-time, asynchronous and batch inference on single-GPU and multi-GPU instances.
 
 2. Background
 **************************************************************************************************************
 
-MOMENT (`[1] <#references>`_) is a family of open-source time series foundation models
-pre-trained on a large collection of public time series datasets.
-MOMENT models support reconstruction, forecasting and classification.
+MOMENT `[1] <#references>`_ is a family of open-source time series foundation models
+pre-trained on a large collection of public time series datasets and supporting multiple time series analysis tasks,
+such as reconstruction, forecasting and classification.
+Both the source code and the weights of the MOMENT models were released by the authors under the MIT License.
+
 The models process the time series in windows of 512 time steps.
 Each window is split into 64 non-overlapping subsequences of 8 time steps, called patches.
-A linear layer maps each patch to an embedding, and the 64 embeddings are processed by a T5 encoder.
+A linear layer maps each patch to an embedding, and the 64 embeddings are processed by a T5 encoder `[2] <#references>`_.
 A task-specific head then maps the encoder output to the final prediction.
 
 MOMENT models are released in three sizes, small, base and large, which differ in the size of the encoder.
-This post uses MOMENT-1-large, whose encoder has the Flan-T5-large architecture (`[2] <#references>`_, `[3] <#references>`_),
+This post uses MOMENT-1-large, whose encoder has the Flan-T5-large architecture `[3] <#references>`_,
 with 1024-dimensional embeddings and a stack of 24 blocks, each made of a self-attention layer followed by a feed-forward network.
 The self-attention layer has 16 heads of 64 units each, resulting in 1024 units in total, and uses fully visible masking:
 each patch attends to all the patches in the window, both before and after it, so that its representation takes into account the context on both sides.
@@ -60,15 +64,22 @@ Pre-training uses masked reconstruction: patches are masked uniformly at random,
 The reconstruction head is pre-trained together with the encoder, so the model can be used zero-shot for reconstruction, and therefore for anomaly detection and imputation.
 The forecasting and classification heads are not pre-trained and must be fine-tuned.
 
-Both the source code and the weights of the MOMENT models were released by the authors under the MIT License.
-
 .. raw:: html
+
+    <div style="margin: 2em 0em 2em 0em">
 
     <img
         src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/sagemaker-moment-anomaly-detection/model_architecture.png"
-        style="width:100%;margin-top:60px;margin-bottom:50px"
-        alt="Architecture diagram of MOMENT-1-large for reconstruction: the input sequence is normalized, split into 64 patches of 8 time steps, embedded, processed by a T5 encoder with 24 blocks, mapped back to patches by a linear reconstruction head, and denormalized. A second panel shows one encoder block, with a self-attention layer and a gated GELU feed-forward network."
+        style="width:100%;"
+        alt="Architecture of the MOMENT-1-large reconstruction model."
     >
+
+    <p>
+    <span style="font-weight:600">Figure 1:</span>
+    <span>Architecture of the MOMENT-1-large reconstruction model.</span>
+    </p>
+
+    </div>
 
 3. Solution
 ***************************************************************************************************************
@@ -82,7 +93,6 @@ The model artifacts are the configuration (``config.json``) and the weights (``m
 which are downloaded from `Hugging Face <https://huggingface.co/AutonLab/MOMENT-1-large>`__,
 packaged into a ``model.tar.gz`` file and stored in an S3 bucket.
 This post uses commit ``ca58581bc7bea2ebed4e80dc0a3e4b8b609c6ecc``.
-
 SageMaker downloads the model artifacts from S3 and extracts them in the container when the model starts.
 This step does not require internet access, so the model can be deployed with network isolation enabled.
 
@@ -228,27 +238,48 @@ For each time series, the shaded area marks the 24 hours around the largest reco
 
 .. raw:: html
 
+    <div style="margin: 2em 0em 2em 0em">
+
     <img
         src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/sagemaker-moment-anomaly-detection/plot.png"
-        style="width:100%;margin-top:30px;margin-bottom:30px"
-        alt="Three time series with their MOMENT reconstructions, with the 24 hour window around the largest reconstruction error highlighted in yellow."
+        style="width:100%;"
+        alt="Three synthetic time series and their MOMENT reconstructions. The highlighted windows mark the 24-hour window centred on the largest squared reconstruction error of each series."
     >
 
-The reconstructions follow the daily and weekly cycles of the time series and do not reproduce the noise, and the largest reconstruction error occurs at the anomaly.
+    <p>
+    <span style="font-weight:600">Figure 2:</span>
+    <span>Three synthetic time series and their MOMENT reconstructions. The highlighted windows mark the 24-hour window centred on the largest squared reconstruction error of each series.</span>
+    </p>
+
+    </div>
+
+The reconstructions follow the daily and weekly cycles of the time series and do not reproduce the noise, and the largest error occurs at the anomaly.
 
 - In time series A, the reconstruction stays within the normal range of the time series, while the observed value is more than twice the largest normal value.
 - In time series B, the reconstruction is at the bottom of the daily cycle, while the observed value is close to the top of the daily cycle.
 - In time series C, the reconstruction follows the daily cycle, while the observed values fluctuate widely around it.
 
+In all three series, the largest error is several times larger than the errors elsewhere.
+In practice, the threshold for flagging an anomaly still needs to be selected, for instance as a high percentile of the error over a period without anomalies.
+
 .. raw:: html
+
+    <div style="margin: 2em 0em 2em 0em">
 
     <img
         src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/sagemaker-moment-anomaly-detection/table.png"
-        style="width:100%;margin-top:30px;margin-bottom:30px"
-        alt="Table with one row for each of the three time series, showing the peak squared reconstruction error at the anomaly, and the 99th percentile of the squared reconstruction error in the rest of the time series."
+        style="width:100%;"
+        alt="Peak squared reconstruction error within the highlighted window of each series, compared with the 99th percentile of the squared reconstruction error outside the window."
     >
 
-This example is a demonstration of how the model is used and is not an evaluation of its accuracy.
+    <p>
+    <span style="font-weight:600">Figure 3:</span>
+    <span>Peak squared reconstruction error within the highlighted window of each series, compared with the 99th percentile of the squared reconstruction error outside the window.</span>
+    </p>
+
+    </div>
+
+This example is a demonstration of how the model could be used and is not an evaluation of its accuracy.
 A full benchmark study of MOMENT on anomaly detection, including the comparison with other methods,
 is provided in the original paper `[1] <#references>`_.
 
@@ -269,8 +300,7 @@ for instance as a high percentile of the errors in that period.
 The approach has three main practical limitations.
 First, the most recent time steps are reconstructed from past observations only,
 so their reconstructions are less reliable and can change when more recent data becomes available.
-Second, each time series is reconstructed window by window, and the model sees only the 512 time steps of each window.
-An anomaly that is only visible over a longer period can therefore go undetected.
+Second, each time series is reconstructed window by window, and an anomaly that is only visible over a longer period spanning multiple windows can therefore go undetected.
 Third, each time series is reconstructed independently of the others,
 so an anomaly that is only visible in the relationship between several time series is not detected.
 

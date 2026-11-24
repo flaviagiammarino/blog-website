@@ -104,3 +104,11 @@ myst_enable_extensions = [
     'dollarmath',
     'colon_fence'
 ]
+
+# -- MathJax settings ---------------------------------------------------
+
+mathjax3_config = {
+    "chtml": {
+        "matchFontHeight": False
+    },
+}
