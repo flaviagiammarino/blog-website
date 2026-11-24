@@ -4,7 +4,7 @@
     :tags: Amazon SageMaker
     :category: Foundation Models
     :author: Flavia
-    :description: Zero-shot time series anomaly detection with the pre-trained MOMENT foundation model on Amazon SageMaker.
+    :description: Deploy the MOMENT time series foundation model on Amazon SageMaker
     :keywords: Time Series, Anomaly Detection, Foundation Model, MOMENT, Amazon SageMaker
     :image_src: https://machine-learning-blog.s3.eu-west-2.amazonaws.com/sagemaker-moment-anomaly-detection/architecture_diagram.png
     :image_alt: Architecture diagram of a SageMaker AI model, built from a PyTorch inference image in ECR and model artifacts in S3, serving a real-time endpoint, an asynchronous endpoint and a batch transform job.
