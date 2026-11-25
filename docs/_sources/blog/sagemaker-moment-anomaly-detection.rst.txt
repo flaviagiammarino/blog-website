@@ -128,13 +128,14 @@ The mask that marks missing and padded values is also removed.
 The original source code does not support missing values in the ``detect_anomalies`` method. It does support padding for
 time series shorter than 512 time steps, but the paper `[1] <#references>`_ does not explicitly discuss the quality of the model's reconstructions
 on shorter time series, where less context is available.
+This implementation therefore requires each time series to have at least 512 time steps and no missing values.
 
 Unlike the original source code, normalization is implemented as a function that returns the mean and standard deviation of each window, instead of a class that stores them as attributes, to make sure they are never overwritten by a concurrent request.
 
 3.2.2 Inference handler
 ---------------------------------------------------------------------------------------------------------------
 
-The inference handler (``inference.py``) replaces the default functions for loading the model (``model_fn``), decoding the request (``input_fn``), running the model (``predict_fn``) and encoding the response (``output_fn``) and is provided in this post's `GitHub repository <https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/blob/main/container/inference.py>`__.
+The inference handler (``inference.py``) replaces the default functions for loading the model (``model_fn``), decoding the request (``input_fn``), running the model (``predict_fn``) and encoding the response (``output_fn``), and is provided in this post's `GitHub repository <https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/blob/main/container/inference.py>`__.
 
 The inference handler expects requests with content type ``text/csv``, and returns responses in the same format.
 When the container starts, ``model_fn`` loads the model and moves it to the GPU.
@@ -152,7 +153,7 @@ As the windows overlap, most time steps are reconstructed several times, at diff
 This makes the final reconstruction less dependent on the position of the time step in the window,
 especially for time steps near the edges of the window, where there is context on one side only.
 
-The reconstructions generated with this implementation were compared with those of the original code on a set of sample time series,
+The reconstructions generated with this implementation were compared with those of the original code on the sample data in Section 4,
 and the largest absolute difference was found to be less than :math:`10^{-5}`.
 
 4 Model usage
@@ -164,7 +165,7 @@ walks through the usage of the model for batch transform, real-time and asynchro
 Inference is performed on a sample dataset of three synthetic time series of 1,000 half-hourly observations each;
 these are used for illustration only, to show the format of the model inputs and outputs.
 
-4.1 Environment set-up
+4.1 Setup
 ==============================================================================================================
 
 The notebook uses version 3.30.0 of the SageMaker Python SDK.
@@ -219,8 +220,8 @@ As a first step, it sets up the SageMaker environment, as shown below.
 As a next step, it loads the sample data provided in this post's `GitHub repository <https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/blob/main/sample_data/data.csv>`__,
 converts it to CSV text, and uploads it to S3.
 
-The batch transform job and asynchronous endpoint will use the S3 URI (the ``data`` variable in the code below) as input,
-while the real-time endpoint will use directly the CSV text (the ``request`` variable in the code below).
+The batch transform job and asynchronous endpoint use the S3 URI (the ``data`` variable in the code below) as input,
+while the real-time endpoint uses the CSV text (the ``request`` variable in the code below) directly.
 
 .. code:: python
 
@@ -254,7 +255,7 @@ while the real-time endpoint will use directly the CSV text (the ``request`` var
 ==============================================================================================================
 
 After that, the notebook creates the model, which combines the inference image with the model artifacts.
-As the container loads the model weights from S3 as opposed to downloading them from Hugging Face, the model can run with network isolation enabled.
+As SageMaker loads the model weights from S3 as opposed to downloading them from Hugging Face, the model can run with network isolation enabled.
 
 .. code:: python
 
@@ -373,7 +374,7 @@ The real-time endpoint is invoked with the same CSV text that was uploaded to S3
 
 An asynchronous endpoint queues the request, passes its contents to the container, and writes the response to S3.
 The invocation returns immediately, with the S3 location where the response will be written.
-This option fits larger payloads (up to 1GB) and longer processing times (up to one hour),
+This option fits larger payloads (up to 1 GB) and longer processing times (up to one hour),
 and the endpoint can be scaled down to zero instances when there are no requests.
 
 The endpoint is invoked with the S3 URI of the same file used by the batch transform job.
@@ -463,7 +464,7 @@ All three inference options return the input data, sorted by ``id`` and ``timest
 
 The reconstructions are the same across the three options, up to a largest absolute difference of :math:`1.5 \times 10^{-5}`.
 
-The reconstructions follow the daily and weekly cycles of the time series and do not reproduce the noise,
+As shown in Figure 2, reconstructions follow the daily and weekly cycles of the time series and do not reproduce the noise,
 so the largest reconstruction error occurs at the anomaly in each time series.
 
 - Time series A contains a global point anomaly, a single value far above the range of the rest of the time series.
@@ -493,11 +494,36 @@ so the largest reconstruction error occurs at the anomaly in each time series.
 This example is not an evaluation of the model's accuracy,
 which is assessed on benchmark datasets in the original paper `[1] <#references>`_.
 
+4.8 Cleanup
+===============================================================================================================
+
+The endpoints and their configurations are deleted at the end of each inference option, so only the model remains.
+The model does not incur charges, but it can be deleted when it is no longer needed.
+
+.. code:: python
+
+    # Delete the model
+    model.delete()
+
+The input data and the reconstructions remain in S3 and incur storage charges until they are deleted.
+The code below deletes the objects written in this example, and leaves the model artifacts in place.
+
+.. code:: python
+
+    import boto3
+
+    # Delete the input data and the reconstructions from S3
+    s3_bucket = boto3.resource("s3").Bucket(bucket)
+    for prefix in ["sample_data/", "batch_predictions/", "async_predictions/", "async_failures/"]:
+        s3_bucket.objects.filter(Prefix=prefix).delete()
+
+The model artifacts in S3 and the inference image in ECR can be kept to create the model again, or deleted from the S3 and ECR consoles.
+
 5. Conclusion
 ***************************************************************************************************************
 
 This post showed how to deploy the pre-trained MOMENT-1-large model on Amazon SageMaker
-and how to use its reconstructions for zero-shot time series anomaly detection.
+and how to use it for zero-shot time series anomaly detection.
 The model weights are used as released, with no training or fine-tuning,
 and the same model serves batch transform jobs, real-time endpoints and asynchronous endpoints.
 As the model artifacts are stored in Amazon S3 and nothing is downloaded at runtime, the model runs with network isolation.
