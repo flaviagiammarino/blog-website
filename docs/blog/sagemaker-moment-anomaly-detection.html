@@ -24,15 +24,15 @@
 </style>
     <meta name="title" content="Zero-shot time series anomaly detection with the MOMENT foundation model on Amazon SageMaker">
     <meta name="description" content="Deploy the MOMENT time series foundation model on Amazon SageMaker">
-    <meta name="thumbnail" content="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/sagemaker-moment-anomaly-detection/architecture_diagram.png">
+    <meta name="thumbnail" content="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/sagemaker-moment-anomaly-detection/aws-architecture.png">
     <meta property="og:description" content="Deploy the MOMENT time series foundation model on Amazon SageMaker">
-    <meta property="og:image" content="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/sagemaker-moment-anomaly-detection/architecture_diagram.png">
+    <meta property="og:image" content="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/sagemaker-moment-anomaly-detection/aws-architecture.png">
     <script type="application/ld+json">
         {
       "@context": "https://schema.org",
       "@type": "BlogPosting",
       "headline": "Zero-shot time series anomaly detection with the MOMENT foundation model on Amazon SageMaker",
-      "image": "https://machine-learning-blog.s3.eu-west-2.amazonaws.com/sagemaker-moment-anomaly-detection/architecture_diagram.png",
+      "image": "https://machine-learning-blog.s3.eu-west-2.amazonaws.com/sagemaker-moment-anomaly-detection/aws-architecture.png",
       "datePublished": "2026-11-24 00:00:00T00:00:00Z",
       "dateModified": "T00:00:00Z",
       "author": {
@@ -144,30 +144,18 @@ data-aria-dark="Switch to auto color mode">
             </h3>
             <ul>
 <li><a class="reference internal" href="#overview">1. Overview</a></li>
-<li><a class="reference internal" href="#background">2. Background</a></li>
-<li><a class="reference internal" href="#solution">3. Solution</a><ul>
+<li><a class="reference internal" href="#model-description">2. Model description</a></li>
+<li><a class="reference internal" href="#model-deployment">3. Model deployment</a><ul>
 <li><a class="reference internal" href="#model-artifacts">3.1 Model artifacts</a></li>
 <li><a class="reference internal" href="#inference-image">3.2 Inference image</a><ul>
 <li><a class="reference internal" href="#model-code">3.2.1 Model code</a></li>
-<li><a class="reference internal" href="#inference-handler">3.2.2 Inference handler</a><ul>
-<li><a class="reference internal" href="#model-loading">3.2.2.1 Model loading</a></li>
-<li><a class="reference internal" href="#model-request">3.2.2.2 Model request</a></li>
-<li><a class="reference internal" href="#model-predictions">3.2.2.3 Model predictions</a></li>
-<li><a class="reference internal" href="#model-response">3.2.2.4 Model response</a></li>
+<li><a class="reference internal" href="#inference-handler">3.2.2 Inference handler</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a class="reference internal" href="#inference-options">3.3 Inference options</a><ul>
-<li><a class="reference internal" href="#batch-transform">3.3.1 Batch transform</a></li>
-<li><a class="reference internal" href="#real-time-inference">3.3.2 Real-time inference</a></li>
-<li><a class="reference internal" href="#asynchronous-inference">3.3.3 Asynchronous inference</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#example">3.4 Example</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#conclusion">4. Conclusion</a></li>
+<li><a class="reference internal" href="#model-usage">4 Model usage</a></li>
+<li><a class="reference internal" href="#conclusion">5. Conclusion</a></li>
 <li><a class="reference internal" href="#references">References</a></li>
 </ul>
 
@@ -181,44 +169,49 @@ data-aria-dark="Switch to auto color mode">
           <section id="zero-shot-time-series-anomaly-detection-with-the-moment-foundation-model-on-amazon-sagemaker">
 <h1>Zero-shot time series anomaly detection with the MOMENT foundation model on Amazon SageMaker<a class="headerlink" href="#zero-shot-time-series-anomaly-detection-with-the-moment-foundation-model-on-amazon-sagemaker" title="Link to this heading">¶</a></h1>
 <img
-    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/sagemaker-moment-anomaly-detection/architecture_diagram.png"
+    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/sagemaker-moment-anomaly-detection/aws-architecture.png"
     style="width:100%"
     alt="Architecture diagram of a SageMaker AI model, built from a PyTorch inference image in ECR and model artifacts in S3, serving a real-time endpoint, an asynchronous endpoint and a batch transform job."
 ><section id="overview">
 <h2>1. Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
-<p>Reconstruction-based time series anomaly detection requires training a model to reproduce the normal behavior of the data.
-The model is trained on data without anomalies, and is then used to reconstruct new data.
-The reconstruction represents the expected normal pattern, and large deviations from it are flagged as anomalies.</p>
-<p>In practice, anomaly labels are rarely available, making it difficult to select an appropriate training set.
-The lack of labelled data also makes hyperparameter tuning difficult, as there is no clear metric to optimize.
-Time series foundation models avoid these difficulties, as they are pre-trained on large and diverse collections of time series and can be applied to new data without further training.</p>
-<p>This post shows how to deploy the MOMENT <a class="reference external" href="#references">[1]</a> foundation model on Amazon SageMaker for reconstruction-based time series anomaly detection.
-The model is used zero-shot, that is, with the pre-trained weights and without fine-tuning.
-The deployment therefore includes only an inference image, which supports batch, real-time and asynchronous inference on single-GPU and multi-GPU instances.</p>
+<p>Organizations that monitor sensors, devices or metrics need to detect anomalies across thousands of time series.
+With standard methods, this typically requires training and maintaining a separate model for each time series, or for each group of related time series.
+Time series foundation models remove this requirement, as they are pre-trained on large and diverse collections of time series,
+and can be applied directly to new data.</p>
+<p>This post shows how to deploy the MOMENT <a class="reference external" href="#references">[1]</a> foundation model on Amazon SageMaker for anomaly detection.
+The model takes a time series as input and returns its reconstruction, which represents the expected normal pattern of the data.
+The reconstruction error, which measures the deviation between the data and the reconstruction, can be used as an anomaly score
+to detect the observations that deviate substantially from their expected values.</p>
+<p>MOMENT generates the reconstruction zero-shot, that is, without further training or fine-tuning.
+Since no training is involved, the Amazon SageMaker deployment includes only an inference image, and no training image.
+The inference image supports batch, real-time and asynchronous inference on single-GPU and multi-GPU instances.</p>
 </section>
-<section id="background">
-<h2>2. Background<a class="headerlink" href="#background" title="Link to this heading">¶</a></h2>
+<section id="model-description">
+<h2>2. Model description<a class="headerlink" href="#model-description" title="Link to this heading">¶</a></h2>
 <p>MOMENT <a class="reference external" href="#references">[1]</a> is a family of open-source time series foundation models
-pre-trained on a large collection of public time series datasets and supporting multiple time series analysis tasks,
-such as reconstruction, forecasting and classification.
+pre-trained on a large collection of public time series datasets.
+MOMENT models support multiple time series analysis tasks, such as reconstruction, forecasting and classification.
 Both the source code and the weights of the MOMENT models were released by the authors under the MIT License.</p>
 <p>The models process the time series in windows of 512 time steps.
-Each window is split into 64 non-overlapping subsequences of 8 time steps, called patches.
+Each window is normalized by subtracting the mean and dividing by the standard deviation.
+After that, it is split into 64 non-overlapping subsequences of 8 time steps, called patches.
 A linear layer maps each patch to an embedding, and the 64 embeddings are processed by a T5 encoder <a class="reference external" href="#references">[2]</a>.
-A task-specific head then maps the encoder output to the final prediction.</p>
+A task-specific head then maps the encoder output to the final prediction.
+For reconstruction and forecasting tasks, the prediction is transformed back to the original scale by multiplying by the standard deviation and adding the mean.</p>
 <p>MOMENT models are released in three sizes, small, base and large, which differ in the size of the encoder.
 This post uses MOMENT-1-large, whose encoder has the Flan-T5-large architecture <a class="reference external" href="#references">[3]</a>,
 with 1024-dimensional embeddings and a stack of 24 blocks, each made of a self-attention layer followed by a feed-forward network.
 The self-attention layer has 16 heads of 64 units each, resulting in 1024 units in total, and uses fully visible masking:
 each patch attends to all the patches in the window, both before and after it, so that its representation takes into account the context on both sides.
 The feed-forward network has 2816 hidden units and a gated GELU activation.</p>
-<p>Pre-training uses masked reconstruction: patches are masked uniformly at random, and the model is trained to reconstruct them from the remaining patches.
-The reconstruction head is pre-trained together with the encoder, so the model can be used zero-shot for reconstruction, and therefore for anomaly detection and imputation.
+<p>Pre-training uses masked reconstruction: patches are masked uniformly at random,
+and the model is trained to reconstruct them from the remaining patches.
+The reconstruction head is pre-trained together with the encoder, so the model can be used zero-shot for this task.
 The forecasting and classification heads are not pre-trained.</p>
 <div style="margin: 2em 0em 2em 0em">
 
 <img
-    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/sagemaker-moment-anomaly-detection/model_architecture.png"
+    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/sagemaker-moment-anomaly-detection/model-architecture.png"
     style="width:100%;"
     alt="Architecture of the MOMENT-1-large reconstruction model."
 >
@@ -229,8 +222,8 @@ The forecasting and classification heads are not pre-trained.</p>
 </p>
 
 </div></section>
-<section id="solution">
-<h2>3. Solution<a class="headerlink" href="#solution" title="Link to this heading">¶</a></h2>
+<section id="model-deployment">
+<h2>3. Model deployment<a class="headerlink" href="#model-deployment" title="Link to this heading">¶</a></h2>
 <p>The Amazon SageMaker model is built from two components: the model artifacts stored in Amazon S3 and an inference image stored in Amazon ECR.</p>
 <section id="model-artifacts">
 <h3>3.1 Model artifacts<a class="headerlink" href="#model-artifacts" title="Link to this heading">¶</a></h3>
@@ -243,9 +236,7 @@ This step does not require internet access, so the model can be deployed with ne
 </section>
 <section id="inference-image">
 <h3>3.2 Inference image<a class="headerlink" href="#inference-image" title="Link to this heading">¶</a></h3>
-<p>The source code of the inference image is provided in this post’s
-<a class="reference external" href="https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/tree/main/container">GitHub repository</a>.
-The image is built from four files:</p>
+<p>The inference image is built from four files:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span data-line="1">container/
 </span><span data-line="2">├── Dockerfile
 </span><span data-line="3">├── build_and_push.sh
@@ -254,31 +245,110 @@ The image is built from four files:</p>
 </span></pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> extends the AWS Deep Learning Container for PyTorch 2.5.1 GPU inference (Python 3.11, CUDA 12.4)
-with the model code (<code class="docutils literal notranslate"><span class="pre">modules.py</span></code>) and the inference handler (<code class="docutils literal notranslate"><span class="pre">inference.py</span></code>),
-and <code class="docutils literal notranslate"><span class="pre">build_and_push.sh</span></code> builds the image and pushes it to ECR.
+with the model code (<code class="docutils literal notranslate"><span class="pre">modules.py</span></code>) and the inference handler (<code class="docutils literal notranslate"><span class="pre">inference.py</span></code>).
+<code class="docutils literal notranslate"><span class="pre">build_and_push.sh</span></code> builds the image and pushes it to ECR.
 The only dependencies added to the base container are <code class="docutils literal notranslate"><span class="pre">transformers</span></code> 4.54.1 and <code class="docutils literal notranslate"><span class="pre">safetensors</span></code>.</p>
 <section id="model-code">
 <h4>3.2.1 Model code<a class="headerlink" href="#model-code" title="Link to this heading">¶</a></h4>
-<p><code class="docutils literal notranslate"><span class="pre">modules.py</span></code> is a reduced version of the <a class="reference external" href="https://github.com/moment-timeseries-foundation-model/moment">original source code</a>.
-The forecasting and classification tasks are removed, together with their heads and with the code for pre-training and fine-tuning,
-including the mask that hides patches during pre-training.
-The model is loaded with frozen weights and is used for inference only.
-The mask that marks padded and missing values is also removed: the container does not support them, as unobserved values cannot be classified as normal or anomalous.</p>
+<p>The model code (<code class="docutils literal notranslate"><span class="pre">modules.py</span></code>) is a reduced version of the <a class="reference external" href="https://github.com/moment-timeseries-foundation-model/moment">original source code</a> and is provided in this post’s <a class="reference external" href="https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/blob/main/container/modules.py">GitHub repository</a>.</p>
+<p>The forecasting and classification tasks are dropped, together with their heads, as the model is used for reconstruction only.
+The code for pre-training and fine-tuning, including the mask that hides patches during pre-training, is removed, as the model is loaded with frozen weights and is used for inference only.</p>
+<p>The mask that marks missing and padded values is also removed.
+The original source code does not support missing values in the <code class="docutils literal notranslate"><span class="pre">detect_anomalies</span></code> method. It does support padding for
+time series shorter than 512 time steps, but the paper <a class="reference external" href="#references">[1]</a> does not explicitly discuss the quality of the model’s reconstructions
+on shorter time series, where less context is available.</p>
+<p>Unlike the original source code, normalization is implemented as a function that returns the mean and standard deviation of each window, instead of a class that stores them as attributes, to make sure they are never overwritten by a concurrent request.</p>
 </section>
 <section id="inference-handler">
 <h4>3.2.2 Inference handler<a class="headerlink" href="#inference-handler" title="Link to this heading">¶</a></h4>
-<p>The inference handler replaces the default functions for loading the model (<code class="docutils literal notranslate"><span class="pre">model_fn</span></code>), decoding the request (<code class="docutils literal notranslate"><span class="pre">input_fn</span></code>), running the model (<code class="docutils literal notranslate"><span class="pre">predict_fn</span></code>) and encoding the response (<code class="docutils literal notranslate"><span class="pre">output_fn</span></code>).</p>
-<section id="model-loading">
-<h5>3.2.2.1 Model loading<a class="headerlink" href="#model-loading" title="Link to this heading">¶</a></h5>
-<p>The model is loaded once, when the container starts, from the default <code class="docutils literal notranslate"><span class="pre">/opt/ml/model</span></code> directory with the model artifacts.
-It is loaded by a single worker and is moved to the GPU.
-On instances with more than one GPU, the model is replicated on all the GPUs, and each batch is split across them.</p>
+<p>The inference handler (<code class="docutils literal notranslate"><span class="pre">inference.py</span></code>) replaces the default functions for loading the model (<code class="docutils literal notranslate"><span class="pre">model_fn</span></code>), decoding the request (<code class="docutils literal notranslate"><span class="pre">input_fn</span></code>), running the model (<code class="docutils literal notranslate"><span class="pre">predict_fn</span></code>) and encoding the response (<code class="docutils literal notranslate"><span class="pre">output_fn</span></code>) and is provided in this post’s <a class="reference external" href="https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/blob/main/container/inference.py">GitHub repository</a>.</p>
+<p>The inference handler expects requests with content type <code class="docutils literal notranslate"><span class="pre">text/csv</span></code>, and returns responses in the same format.
+When the container starts, <code class="docutils literal notranslate"><span class="pre">model_fn</span></code> loads the model and moves it to the GPU.
+On instances with more than one GPU, the model is replicated on all the GPUs.
+When the container receives a request, <code class="docutils literal notranslate"><span class="pre">predict_fn</span></code> runs the model to generate the reconstructions of the input time series.</p>
+<p><code class="docutils literal notranslate"><span class="pre">predict_fn</span></code> splits each time series into overlapping windows of 512 time steps,
+with a stride of 128 time steps. The last window ends at the end of the time series, so that no window needs to be padded.
+The windows of all the time series are stacked together and passed to the model in batches of 256 windows.
+A batch can contain windows of different time series, as the model processes each window independently.
+For each window, the model returns a reconstruction of the same length.</p>
+<p>As the windows overlap, most time steps are reconstructed several times, at different positions in the window.
+<code class="docutils literal notranslate"><span class="pre">predict_fn</span></code> averages the reconstructions of each time step across all the windows that contain it.
+This makes the final reconstruction less dependent on the position of the time step in the window,
+especially for time steps near the edges of the window, where there is context on one side only.</p>
+<p>The reconstructions generated with this implementation were compared with those of the original code on a set of sample time series,
+and the largest absolute difference was found to be less than <span class="math notranslate nohighlight">\(10^{-5}\)</span>.</p>
 </section>
-<section id="model-request">
-<h5>3.2.2.2 Model request<a class="headerlink" href="#model-request" title="Link to this heading">¶</a></h5>
-<p>The request is CSV text with one or more univariate time series in long format, with three columns:
-<code class="docutils literal notranslate"><span class="pre">id</span></code>, the identifier of the time series, <code class="docutils literal notranslate"><span class="pre">timestamp</span></code>, the time stamp, and <code class="docutils literal notranslate"><span class="pre">value</span></code>, the observed value.
-Each time series must have at least 512 time steps and cannot contain missing values.</p>
+</section>
+</section>
+<section id="model-usage">
+<h2>4 Model usage<a class="headerlink" href="#model-usage" title="Link to this heading">¶</a></h2>
+<p>The notebook provided in this post’s
+<a class="reference external" href="https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/tree/main/sample_notebook.ipynb">GitHub repository</a>
+walks through the usage of the model for batch transform, real-time and asynchronous inference.
+Inference is performed on a sample dataset of three synthetic time series of 1,000 half-hourly observations each;
+these are used for illustration only, to show the format of the model inputs and outputs.</p>
+<p>The notebook uses version 3.30.0 of the SageMaker Python SDK.
+As a first step, it sets up the SageMaker environment, as shown below.
+<code class="docutils literal notranslate"><span class="pre">&lt;ecr-uri&gt;</span></code> is the URI of the inference image pushed to ECR, and <code class="docutils literal notranslate"><span class="pre">&lt;s3-uri&gt;</span></code> is the S3 URI of the <code class="docutils literal notranslate"><span class="pre">model.tar.gz</span></code> file with the model artifacts.
+<code class="docutils literal notranslate"><span class="pre">&lt;s3-bucket&gt;</span></code> is the S3 bucket where the data and the reconstructions are stored, and can alternatively be set to the SageMaker default bucket with <code class="docutils literal notranslate"><span class="pre">session.default_bucket()</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+</span><span data-line="2"><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+</span><span data-line="3"><span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+</span><span data-line="4"><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+</span><span data-line="5"><span class="kn">from</span><span class="w"> </span><span class="nn">sagemaker.core.helper.session_helper</span><span class="w"> </span><span class="kn">import</span> <span class="n">Session</span><span class="p">,</span> <span class="n">get_execution_role</span>
+</span><span data-line="6"><span class="kn">from</span><span class="w"> </span><span class="nn">sagemaker.core.resources</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">TransformJob</span><span class="p">,</span> <span class="n">EndpointConfig</span><span class="p">,</span> <span class="n">Endpoint</span>
+</span><span data-line="7"><span class="kn">from</span><span class="w"> </span><span class="nn">sagemaker.core.shapes</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+</span><span data-line="8">    <span class="n">ContainerDefinition</span><span class="p">,</span>
+</span><span data-line="9">    <span class="n">TransformInput</span><span class="p">,</span>
+</span><span data-line="10">    <span class="n">TransformDataSource</span><span class="p">,</span>
+</span><span data-line="11">    <span class="n">TransformS3DataSource</span><span class="p">,</span>
+</span><span data-line="12">    <span class="n">TransformOutput</span><span class="p">,</span>
+</span><span data-line="13">    <span class="n">TransformResources</span><span class="p">,</span>
+</span><span data-line="14">    <span class="n">ProductionVariant</span><span class="p">,</span>
+</span><span data-line="15">    <span class="n">AsyncInferenceConfig</span><span class="p">,</span>
+</span><span data-line="16">    <span class="n">AsyncInferenceOutputConfig</span><span class="p">,</span>
+</span><span data-line="17"><span class="p">)</span>
+</span><span data-line="18">
+</span><span data-line="19"><span class="c1"># SageMaker session</span>
+</span><span data-line="20"><span class="n">session</span> <span class="o">=</span> <span class="n">Session</span><span class="p">()</span>
+</span><span data-line="21">
+</span><span data-line="22"><span class="c1"># SageMaker role</span>
+</span><span data-line="23"><span class="n">role</span> <span class="o">=</span> <span class="n">get_execution_role</span><span class="p">()</span>
+</span><span data-line="24">
+</span><span data-line="25"><span class="c1"># S3 bucket</span>
+</span><span data-line="26"><span class="n">bucket</span> <span class="o">=</span> <span class="s2">&quot;&lt;s3-bucket&gt;&quot;</span>
+</span><span data-line="27">
+</span><span data-line="28"><span class="c1"># EC2 instance</span>
+</span><span data-line="29"><span class="n">instance_type</span> <span class="o">=</span> <span class="s2">&quot;ml.g4dn.12xlarge&quot;</span>
+</span><span data-line="30">
+</span><span data-line="31"><span class="c1"># Model ECR image</span>
+</span><span data-line="32"><span class="n">ecr_uri</span> <span class="o">=</span> <span class="s2">&quot;&lt;ecr-uri&gt;&quot;</span>
+</span><span data-line="33">
+</span><span data-line="34"><span class="c1"># Model S3 URI</span>
+</span><span data-line="35"><span class="n">s3_uri</span> <span class="o">=</span> <span class="s2">&quot;&lt;s3-uri&gt;&quot;</span>
+</span><span data-line="36">
+</span><span data-line="37"><span class="c1"># Suffix for the names of the model, the batch transform job and the endpoints</span>
+</span><span data-line="38"><span class="n">suffix</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">-%H-%M-%S&quot;</span><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>As a next step, it loads the sample data provided in this post’s <a class="reference external" href="https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/tree/main/sample_data/data.csv">GitHub repository</a>,
+converts it to CSV text, and uploads it to S3.</p>
+<p>The batch transform job and asynchronous endpoint will use the S3 URI (the <cite>data</cite> variable in the code below) as input,
+while the real-time endpoint will use directly the CSV text (the <cite>request</cite> variable in the code below).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Load the sample data</span>
+</span><span data-line="2"><span class="n">dataset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;sample_data/data.csv&quot;</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">])</span>
+</span><span data-line="3">
+</span><span data-line="4"><span class="c1"># Convert the data to CSV text</span>
+</span><span data-line="5"><span class="n">request</span> <span class="o">=</span> <span class="n">dataset</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</span><span data-line="6">
+</span><span data-line="7"><span class="c1"># Upload the CSV text to S3</span>
+</span><span data-line="8"><span class="n">data</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">upload_string_as_file_body</span><span class="p">(</span>
+</span><span data-line="9">    <span class="n">body</span><span class="o">=</span><span class="n">request</span><span class="p">,</span>
+</span><span data-line="10">    <span class="n">bucket</span><span class="o">=</span><span class="n">bucket</span><span class="p">,</span>
+</span><span data-line="11">    <span class="n">key</span><span class="o">=</span><span class="s2">&quot;sample_data/data.csv&quot;</span>
+</span><span data-line="12"><span class="p">)</span>
+</span></pre></div>
+</div>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span data-line="1">id,timestamp,value
 </span><span data-line="2">A,2026-01-01 00:00:00,26
 </span><span data-line="3">A,2026-01-01 00:30:00,28
@@ -291,24 +361,177 @@ Each time series must have at least 512 time steps and cannot contain missing va
 </span><span data-line="10">...
 </span></pre></div>
 </div>
-</section>
-<section id="model-predictions">
-<h5>3.2.2.3 Model predictions<a class="headerlink" href="#model-predictions" title="Link to this heading">¶</a></h5>
-<p>Each time series is split into overlapping windows of 512 time steps, with a stride of 128 time steps.
-The last window ends at the end of the time series, so that no window needs to be padded.
-The windows of all the time series in the request are stacked together and passed to the model in batches of 256 windows.
-A batch can contain windows of different time series, as the model processes each window independently.</p>
-<p>For each window, the model returns its reconstruction, which has the same length as the window.
-As the windows overlap, most time steps are reconstructed several times, at different positions in the window.
-The reconstruction of each time step is the average of its reconstructions across the windows that contain it.
-The average depends less on the position of the time step in the window,
-for instance near the edges of the window, where the time step has context on one side only.</p>
-</section>
-<section id="model-response">
-<h5>3.2.2.4 Model response<a class="headerlink" href="#model-response" title="Link to this heading">¶</a></h5>
-<p>The response is CSV text with the rows of the request and an additional column, <code class="docutils literal notranslate"><span class="pre">reconstruction</span></code>, the reconstructed value.
-The reconstructions were compared with those of the original code on the sample data,
-and the largest absolute difference is less than <span class="math notranslate nohighlight">\(10^{-5}\)</span>.</p>
+<p>After that, the notebook creates the model, which combines the inference image with the model artifacts.
+As the container loads the model weights from S3 as opposed to downloading them from Hugging Face, the model can run with network isolation enabled.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+</span><span data-line="2">    <span class="n">model_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;moment-model-</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+</span><span data-line="3">    <span class="n">primary_container</span><span class="o">=</span><span class="n">ContainerDefinition</span><span class="p">(</span>
+</span><span data-line="4">        <span class="n">image</span><span class="o">=</span><span class="n">ecr_uri</span><span class="p">,</span>
+</span><span data-line="5">        <span class="n">model_data_url</span><span class="o">=</span><span class="n">s3_uri</span><span class="p">,</span>
+</span><span data-line="6">        <span class="n">environment</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;SAGEMAKER_MODEL_SERVER_WORKERS&quot;</span><span class="p">:</span> <span class="s2">&quot;1&quot;</span><span class="p">},</span>
+</span><span data-line="7">    <span class="p">),</span>
+</span><span data-line="8">    <span class="n">execution_role_arn</span><span class="o">=</span><span class="n">role</span><span class="p">,</span>
+</span><span data-line="9">    <span class="n">enable_network_isolation</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+</span><span data-line="10"><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>A batch transform job starts a temporary instance, sends the content of the file to the container as one request,
+and writes the response to S3, in a file with the same name as the input file and the <code class="docutils literal notranslate"><span class="pre">.out</span></code> extension.
+The input file is not split into smaller requests, as each request must contain complete time series.
+This option fits periodic processing, for instance a daily or weekly scan of the time series.</p>
+<p>The batch transform job reads the input data from S3 and writes the reconstructions to S3.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Create the batch transform job</span>
+</span><span data-line="2"><span class="n">transform_job</span> <span class="o">=</span> <span class="n">TransformJob</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+</span><span data-line="3">    <span class="n">transform_job_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;moment-transform-</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+</span><span data-line="4">    <span class="n">model_name</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span>
+</span><span data-line="5">    <span class="n">transform_input</span><span class="o">=</span><span class="n">TransformInput</span><span class="p">(</span>
+</span><span data-line="6">        <span class="n">data_source</span><span class="o">=</span><span class="n">TransformDataSource</span><span class="p">(</span>
+</span><span data-line="7">            <span class="n">s3_data_source</span><span class="o">=</span><span class="n">TransformS3DataSource</span><span class="p">(</span><span class="n">s3_data_type</span><span class="o">=</span><span class="s2">&quot;S3Prefix&quot;</span><span class="p">,</span> <span class="n">s3_uri</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+</span><span data-line="8">        <span class="p">),</span>
+</span><span data-line="9">        <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;text/csv&quot;</span><span class="p">,</span>
+</span><span data-line="10">    <span class="p">),</span>
+</span><span data-line="11">    <span class="n">transform_output</span><span class="o">=</span><span class="n">TransformOutput</span><span class="p">(</span>
+</span><span data-line="12">        <span class="n">s3_output_path</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;s3://</span><span class="si">{</span><span class="n">bucket</span><span class="si">}</span><span class="s2">/batch_predictions&quot;</span><span class="p">,</span>
+</span><span data-line="13">        <span class="n">accept</span><span class="o">=</span><span class="s2">&quot;text/csv&quot;</span><span class="p">,</span>
+</span><span data-line="14">    <span class="p">),</span>
+</span><span data-line="15">    <span class="n">transform_resources</span><span class="o">=</span><span class="n">TransformResources</span><span class="p">(</span>
+</span><span data-line="16">        <span class="n">instance_type</span><span class="o">=</span><span class="n">instance_type</span><span class="p">,</span>
+</span><span data-line="17">        <span class="n">instance_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+</span><span data-line="18">    <span class="p">),</span>
+</span><span data-line="19"><span class="p">)</span>
+</span><span data-line="20">
+</span><span data-line="21"><span class="c1"># Wait for the batch transform job to complete</span>
+</span><span data-line="22"><span class="n">session</span><span class="o">.</span><span class="n">sagemaker_client</span><span class="o">.</span><span class="n">get_waiter</span><span class="p">(</span><span class="s2">&quot;transform_job_completed_or_stopped&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span>
+</span><span data-line="23">    <span class="n">TransformJobName</span><span class="o">=</span><span class="n">transform_job</span><span class="o">.</span><span class="n">transform_job_name</span>
+</span><span data-line="24"><span class="p">)</span>
+</span><span data-line="25">
+</span><span data-line="26"><span class="c1"># Load the reconstructions from S3</span>
+</span><span data-line="27"><span class="n">batch_predictions</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">read_s3_file</span><span class="p">(</span>
+</span><span data-line="28">    <span class="n">bucket</span><span class="o">=</span><span class="n">bucket</span><span class="p">,</span>
+</span><span data-line="29">    <span class="n">key_prefix</span><span class="o">=</span><span class="s2">&quot;batch_predictions/data.csv.out&quot;</span>
+</span><span data-line="30"><span class="p">)</span>
+</span><span data-line="31">
+</span><span data-line="32"><span class="n">batch_predictions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+</span><span data-line="33">    <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">batch_predictions</span><span class="p">),</span>
+</span><span data-line="34">    <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">]</span>
+</span><span data-line="35"><span class="p">)</span>
+</span></pre></div>
+</div>
+<p>A real-time endpoint keeps the model running on a persistent instance.
+This option fits applications that need the result immediately, with payloads of up to 25 MB and processing times of up to 60 seconds.</p>
+<p>The real-time endpoint is invoked with the same CSV text that was uploaded to S3, and returns CSV text in the response.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Create the endpoint configuration</span>
+</span><span data-line="2"><span class="n">endpoint_config</span> <span class="o">=</span> <span class="n">EndpointConfig</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+</span><span data-line="3">    <span class="n">endpoint_config_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;moment-endpoint-config-</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+</span><span data-line="4">    <span class="n">production_variants</span><span class="o">=</span><span class="p">[</span>
+</span><span data-line="5">        <span class="n">ProductionVariant</span><span class="p">(</span>
+</span><span data-line="6">            <span class="n">variant_name</span><span class="o">=</span><span class="s2">&quot;AllTraffic&quot;</span><span class="p">,</span>
+</span><span data-line="7">            <span class="n">model_name</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span>
+</span><span data-line="8">            <span class="n">instance_type</span><span class="o">=</span><span class="n">instance_type</span><span class="p">,</span>
+</span><span data-line="9">            <span class="n">initial_instance_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+</span><span data-line="10">        <span class="p">)</span>
+</span><span data-line="11">    <span class="p">],</span>
+</span><span data-line="12"><span class="p">)</span>
+</span><span data-line="13">
+</span><span data-line="14"><span class="c1"># Create the endpoint</span>
+</span><span data-line="15"><span class="n">endpoint</span> <span class="o">=</span> <span class="n">Endpoint</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+</span><span data-line="16">    <span class="n">endpoint_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;moment-endpoint-</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+</span><span data-line="17">    <span class="n">endpoint_config_name</span><span class="o">=</span><span class="n">endpoint_config</span><span class="o">.</span><span class="n">endpoint_config_name</span><span class="p">,</span>
+</span><span data-line="18"><span class="p">)</span>
+</span><span data-line="19">
+</span><span data-line="20"><span class="c1"># Wait for the endpoint to be in service</span>
+</span><span data-line="21"><span class="n">session</span><span class="o">.</span><span class="n">sagemaker_client</span><span class="o">.</span><span class="n">get_waiter</span><span class="p">(</span><span class="s2">&quot;endpoint_in_service&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span>
+</span><span data-line="22">    <span class="n">EndpointName</span><span class="o">=</span><span class="n">endpoint</span><span class="o">.</span><span class="n">endpoint_name</span>
+</span><span data-line="23"><span class="p">)</span>
+</span><span data-line="24">
+</span><span data-line="25"><span class="c1"># Invoke the endpoint with the CSV text</span>
+</span><span data-line="26"><span class="n">response</span> <span class="o">=</span> <span class="n">endpoint</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
+</span><span data-line="27">    <span class="n">body</span><span class="o">=</span><span class="n">request</span><span class="p">,</span>
+</span><span data-line="28">    <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;text/csv&quot;</span><span class="p">,</span>
+</span><span data-line="29">    <span class="n">accept</span><span class="o">=</span><span class="s2">&quot;text/csv&quot;</span><span class="p">,</span>
+</span><span data-line="30"><span class="p">)</span>
+</span><span data-line="31">
+</span><span data-line="32"><span class="c1"># Extract the reconstructions from the response</span>
+</span><span data-line="33"><span class="n">real_time_predictions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+</span><span data-line="34">    <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">()),</span>
+</span><span data-line="35">    <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">]</span>
+</span><span data-line="36"><span class="p">)</span>
+</span><span data-line="37">
+</span><span data-line="38"><span class="c1"># Delete the endpoint and the endpoint configuration</span>
+</span><span data-line="39"><span class="n">endpoint</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+</span><span data-line="40"><span class="n">endpoint_config</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+</span></pre></div>
+</div>
+<p>An asynchronous endpoint queues the request, passes its contents to the container, and writes the response to S3.
+The invocation returns immediately, with the S3 location where the response will be written.
+This option fits larger payloads (up to 1GB) and longer processing times (up to one hour),
+and the endpoint can be scaled down to zero instances when there are no requests.</p>
+<p>The endpoint is invoked with the S3 URI of the same file used by the batch transform job.
+The S3 location of the response is specified in the endpoint configuration.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Create the endpoint configuration</span>
+</span><span data-line="2"><span class="n">async_endpoint_config</span> <span class="o">=</span> <span class="n">EndpointConfig</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+</span><span data-line="3">    <span class="n">endpoint_config_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;moment-async-endpoint-config-</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+</span><span data-line="4">    <span class="n">production_variants</span><span class="o">=</span><span class="p">[</span>
+</span><span data-line="5">        <span class="n">ProductionVariant</span><span class="p">(</span>
+</span><span data-line="6">            <span class="n">variant_name</span><span class="o">=</span><span class="s2">&quot;AllTraffic&quot;</span><span class="p">,</span>
+</span><span data-line="7">            <span class="n">model_name</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">model_name</span><span class="p">,</span>
+</span><span data-line="8">            <span class="n">instance_type</span><span class="o">=</span><span class="n">instance_type</span><span class="p">,</span>
+</span><span data-line="9">            <span class="n">initial_instance_count</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+</span><span data-line="10">        <span class="p">)</span>
+</span><span data-line="11">    <span class="p">],</span>
+</span><span data-line="12">    <span class="n">async_inference_config</span><span class="o">=</span><span class="n">AsyncInferenceConfig</span><span class="p">(</span>
+</span><span data-line="13">        <span class="n">output_config</span><span class="o">=</span><span class="n">AsyncInferenceOutputConfig</span><span class="p">(</span>
+</span><span data-line="14">            <span class="n">s3_output_path</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;s3://</span><span class="si">{</span><span class="n">bucket</span><span class="si">}</span><span class="s2">/async_predictions&quot;</span><span class="p">,</span>
+</span><span data-line="15">            <span class="n">s3_failure_path</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;s3://</span><span class="si">{</span><span class="n">bucket</span><span class="si">}</span><span class="s2">/async_failures&quot;</span><span class="p">,</span>
+</span><span data-line="16">        <span class="p">)</span>
+</span><span data-line="17">    <span class="p">),</span>
+</span><span data-line="18"><span class="p">)</span>
+</span><span data-line="19">
+</span><span data-line="20"><span class="c1"># Create the endpoint</span>
+</span><span data-line="21"><span class="n">async_endpoint</span> <span class="o">=</span> <span class="n">Endpoint</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
+</span><span data-line="22">    <span class="n">endpoint_name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;moment-async-endpoint-</span><span class="si">{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+</span><span data-line="23">    <span class="n">endpoint_config_name</span><span class="o">=</span><span class="n">async_endpoint_config</span><span class="o">.</span><span class="n">endpoint_config_name</span><span class="p">,</span>
+</span><span data-line="24"><span class="p">)</span>
+</span><span data-line="25">
+</span><span data-line="26"><span class="c1"># Wait for the endpoint to be in service</span>
+</span><span data-line="27"><span class="n">session</span><span class="o">.</span><span class="n">sagemaker_client</span><span class="o">.</span><span class="n">get_waiter</span><span class="p">(</span><span class="s2">&quot;endpoint_in_service&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span>
+</span><span data-line="28">    <span class="n">EndpointName</span><span class="o">=</span><span class="n">async_endpoint</span><span class="o">.</span><span class="n">endpoint_name</span>
+</span><span data-line="29"><span class="p">)</span>
+</span><span data-line="30">
+</span><span data-line="31"><span class="c1"># Invoke the endpoint with the S3 URI of the CSV file</span>
+</span><span data-line="32"><span class="n">async_response</span> <span class="o">=</span> <span class="n">async_endpoint</span><span class="o">.</span><span class="n">invoke_async</span><span class="p">(</span>
+</span><span data-line="33">    <span class="n">input_location</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+</span><span data-line="34">    <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;text/csv&quot;</span><span class="p">,</span>
+</span><span data-line="35">    <span class="n">accept</span><span class="o">=</span><span class="s2">&quot;text/csv&quot;</span><span class="p">,</span>
+</span><span data-line="36"><span class="p">)</span>
+</span><span data-line="37">
+</span><span data-line="38"><span class="c1"># Wait for the reconstructions, or for the error, to be written to S3</span>
+</span><span data-line="39"><span class="k">def</span><span class="w"> </span><span class="nf">s3_exists</span><span class="p">(</span><span class="n">s3_uri</span><span class="p">):</span>
+</span><span data-line="40">    <span class="n">bucket_name</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="n">s3_uri</span><span class="o">.</span><span class="n">removeprefix</span><span class="p">(</span><span class="s2">&quot;s3://&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</span><span data-line="41">    <span class="k">return</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">session</span><span class="o">.</span><span class="n">list_s3_files</span><span class="p">(</span><span class="n">bucket</span><span class="o">=</span><span class="n">bucket_name</span><span class="p">,</span> <span class="n">key_prefix</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
+</span><span data-line="42">
+</span><span data-line="43"><span class="k">while</span> <span class="ow">not</span> <span class="n">s3_exists</span><span class="p">(</span><span class="n">async_response</span><span class="o">.</span><span class="n">output_location</span><span class="p">):</span>
+</span><span data-line="44">    <span class="k">if</span> <span class="n">s3_exists</span><span class="p">(</span><span class="n">async_response</span><span class="o">.</span><span class="n">failure_location</span><span class="p">):</span>
+</span><span data-line="45">        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Asynchronous inference failed, see </span><span class="si">{</span><span class="n">async_response</span><span class="o">.</span><span class="n">failure_location</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span data-line="46">    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</span><span data-line="47">
+</span><span data-line="48"><span class="c1"># Load the reconstructions from S3</span>
+</span><span data-line="49"><span class="n">async_predictions</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">read_s3_file</span><span class="p">(</span>
+</span><span data-line="50">    <span class="n">bucket</span><span class="o">=</span><span class="n">bucket</span><span class="p">,</span>
+</span><span data-line="51">    <span class="n">key_prefix</span><span class="o">=</span><span class="n">async_response</span><span class="o">.</span><span class="n">output_location</span><span class="o">.</span><span class="n">removeprefix</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;s3://</span><span class="si">{</span><span class="n">bucket</span><span class="si">}</span><span class="s2">/&quot;</span><span class="p">)</span>
+</span><span data-line="52"><span class="p">)</span>
+</span><span data-line="53">
+</span><span data-line="54"><span class="n">async_predictions</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span>
+</span><span data-line="55">    <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">async_predictions</span><span class="p">),</span>
+</span><span data-line="56">    <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">]</span>
+</span><span data-line="57"><span class="p">)</span>
+</span><span data-line="58">
+</span><span data-line="59"><span class="c1"># Delete the endpoint and the endpoint configuration</span>
+</span><span data-line="60"><span class="n">async_endpoint</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+</span><span data-line="61"><span class="n">async_endpoint_config</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
+</span></pre></div>
+</div>
+<p>All three inference options return the input data, sorted by <code class="docutils literal notranslate"><span class="pre">id</span></code> and <code class="docutils literal notranslate"><span class="pre">timestamp</span></code>, with an additional <code class="docutils literal notranslate"><span class="pre">reconstruction</span></code> column containing the model output.</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span data-line="1">id,timestamp,value,reconstruction
 </span><span data-line="2">A,2026-01-01 00:00:00,26,21.56
 </span><span data-line="3">A,2026-01-01 00:30:00,28,22.41
@@ -321,86 +544,44 @@ and the largest absolute difference is less than <span class="math notranslate n
 </span><span data-line="10">...
 </span></pre></div>
 </div>
-</section>
-</section>
-</section>
-<section id="inference-options">
-<h3>3.3 Inference options<a class="headerlink" href="#inference-options" title="Link to this heading">¶</a></h3>
-<p>The same model is used for the different inference options supported by SageMaker, where the container receives the same CSV request and returns the same CSV response.
-The difference is in how the request reaches the container and in where the response is delivered.</p>
-<section id="batch-transform">
-<h4>3.3.1 Batch transform<a class="headerlink" href="#batch-transform" title="Link to this heading">¶</a></h4>
-<p>The input is a CSV file in S3.
-A batch transform job starts a temporary instance, sends the content of the file to the container as one request,
-and writes the response to S3, in a file with the same name and the <code class="docutils literal notranslate"><span class="pre">.out</span></code> extension.
-The file is not split into smaller requests, as each request must contain complete time series.
-The instance is stopped when the job completes.
-This option fits periodic processing, for instance a daily or weekly scan of all the time series.</p>
-</section>
-<section id="real-time-inference">
-<h4>3.3.2 Real-time inference<a class="headerlink" href="#real-time-inference" title="Link to this heading">¶</a></h4>
-<p>The input is the CSV text in the body of the request to the endpoint, and the output is the CSV text in the body of the response.
-The endpoint keeps the model running on a persistent instance.
-This option fits applications that need the result immediately,
-and requests that are within the payload size and response time limits of real-time endpoints.</p>
-</section>
-<section id="asynchronous-inference">
-<h4>3.3.3 Asynchronous inference<a class="headerlink" href="#asynchronous-inference" title="Link to this heading">¶</a></h4>
-<p>The input is a CSV file in S3, and the endpoint is invoked with the S3 location of the file.
-The endpoint queues the request, passes the content of the file to the container, and writes the response to S3.
-The invocation returns immediately, with the S3 location where the response will be written.
-This option fits larger payloads and longer processing times,
-and the endpoint can be scaled down to zero instances when there are no requests.</p>
-</section>
-</section>
-<section id="example">
-<h3>3.4 Example<a class="headerlink" href="#example" title="Link to this heading">¶</a></h3>
-<p>The notebook provided in this post’s
-<a class="reference external" href="https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/tree/main/sample_notebook.ipynb">GitHub repository</a>
-walks through the usage of the model with the three inference options, from the upload of the data to the retrieval of the reconstructions.
-In the notebook, the model is applied to three synthetic time series of 1,000 half-hourly observations each.</p>
+<p>The reconstructions are the same across the three options, up to a largest absolute difference of <span class="math notranslate nohighlight">\(1.5 \times 10^{-5}\)</span>.</p>
+<p>The reconstructions follow the daily and weekly cycles of the time series and do not reproduce the noise,
+so the largest reconstruction error occurs at the anomaly in each time series.</p>
 <ul class="simple">
-<li><p>Time series A contains a global point anomaly, a single value far above the range of the rest of the time series.</p></li>
-<li><p>Time series B contains a contextual point anomaly, a single value which is within the range of the time series, but is too high for the time of the day at which it occurs.</p></li>
-<li><p>Time series C contains a subsequence anomaly, an interval in which the fluctuations around the daily cycle are much larger than in the rest of the time series.</p></li>
+<li><p>Time series A contains a global point anomaly, a single value far above the range of the rest of the time series.
+The reconstruction stays within the normal range of the time series, while the observed value is more than twice the largest normal value.</p></li>
+<li><p>Time series B contains a contextual point anomaly, a single value which is within the range of the time series, but is too high for the time of the day at which it occurs.
+The reconstruction is at the bottom of the daily cycle, while the observed value is close to the top of the daily cycle.</p></li>
+<li><p>Time series C contains a subsequence anomaly, an interval in which the fluctuations around the daily cycle are much larger than in the rest of the time series.
+The reconstruction follows the daily cycle, while the observed values fluctuate widely around it.</p></li>
 </ul>
-<p>The figure below shows the three time series with their reconstructions.
-For each time series, the shaded area marks the 24 hours around the largest reconstruction error.</p>
 <div style="margin: 2em 0em 2em 0em">
 
 <img
-    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/sagemaker-moment-anomaly-detection/plot.png"
+    src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/sagemaker-moment-anomaly-detection/model-results.png"
     style="width:100%;"
-    alt="Three synthetic time series and their MOMENT reconstructions. The highlighted windows mark the 24-hour window centred on the largest squared reconstruction error of each series."
+    alt="Three synthetic time series and their MOMENT reconstructions. The shaded area marks the 24 hours around the largest squared reconstruction error of each time series."
 >
 
 <p>
 <span style="font-weight:600">Figure 2:</span>
-<span>Three synthetic time series and their MOMENT reconstructions. The highlighted windows mark the 24-hour window centred on the largest squared reconstruction error of each series.</span>
+<span>Three synthetic time series and their MOMENT reconstructions. The shaded area marks the 24 hours around the largest squared reconstruction error of each time series.</span>
 </p>
 
-</div><p>The reconstructions follow the daily and weekly cycles of the time series and do not reproduce the noise, and the largest error occurs at the anomaly.</p>
-<ul class="simple">
-<li><p>In time series A, the reconstruction stays within the normal range of the time series, while the observed value is more than twice the largest normal value.</p></li>
-<li><p>In time series B, the reconstruction is at the bottom of the daily cycle, while the observed value is close to the top of the daily cycle.</p></li>
-<li><p>In time series C, the reconstruction follows the daily cycle, while the observed values fluctuate widely around it.</p></li>
-</ul>
-<p>This example is a demonstration of how the model could be used and is not an evaluation of its accuracy.
-A full benchmark study of MOMENT on anomaly detection, including the comparison with other methods,
-is provided in the original paper <a class="reference external" href="#references">[1]</a>.</p>
-</section>
+</div><p>This example is not an evaluation of the model’s accuracy,
+which is assessed on benchmark datasets in the original paper <a class="reference external" href="#references">[1]</a>.</p>
 </section>
 <section id="conclusion">
-<h2>4. Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">¶</a></h2>
+<h2>5. Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">¶</a></h2>
 <p>This post showed how to deploy the pre-trained MOMENT-1-large model on Amazon SageMaker
 and how to use its reconstructions for zero-shot time series anomaly detection.
 The model weights are used as released, with no training or fine-tuning,
 and the same model serves batch transform jobs, real-time endpoints and asynchronous endpoints.
 As the model artifacts are stored in Amazon S3 and nothing is downloaded at runtime, the model runs with network isolation.</p>
 <p>The model returns the reconstructions and does not flag the anomalies.
-The time steps to flag are selected by comparing the reconstruction errors with a threshold,
+The time steps to flag are selected by comparing the reconstruction errors with an anomaly threshold,
 which still needs to be calibrated on a period of the time series that is considered normal,
-for instance as a high percentile of the errors in that period.</p>
+for instance as a high percentile of the reconstruction errors in that period.</p>
 <p>The approach has three main practical limitations.
 First, the most recent time steps are reconstructed from past observations only,
 so their reconstructions are less reliable and can change when new data becomes available.

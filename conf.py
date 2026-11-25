@@ -111,3 +111,30 @@ mathjax3_config = {
         "matchFontHeight": False
     },
 }
+# -- Right sidebar table of contents ---------------------------------------------------
+# Shibuya shortens dotted API names in the table of contents by deleting every
+# `<span class="pre">word.` it finds, which also truncates section headings
+# formatted as code (``model.py`` becomes "py") and leaves the HTML unbalanced.
+# Keep the original table of contents and redo Shibuya's processing (dropping
+# the page title level) without the deletion.
+import xml.etree.ElementTree as ET
+
+
+def _stash_toc(app, pagename, templatename, context, doctree):
+    context["_original_toc"] = context.get("toc")
+
+
+def _restore_toc(app, pagename, templatename, context, doctree):
+    toc = context.pop("_original_toc", None)
+    if not toc:
+        return
+    root = ET.fromstring(toc)
+    if len(root) == 1 and len(root[0]) == 2 and root[0][1].tag == "ul":
+        toc = ET.tostring(root[0][1], encoding="unicode", method="html")
+    context["toc"] = toc
+
+
+def setup(app):
+    # Shibuya's handler runs at the default priority (500)
+    app.connect("html-page-context", _stash_toc, priority=100)
+    app.connect("html-page-context", _restore_toc, priority=900)
