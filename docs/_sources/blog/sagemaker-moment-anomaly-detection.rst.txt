@@ -225,6 +225,9 @@ As a first step, it sets up the SageMaker environment, as shown below.
 As a next step, it loads the sample data provided in this post's `GitHub repository <https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/blob/main/sample_data/data.csv>`__,
 converts it to CSV text, and uploads it to S3.
 
+The input CSV contains one row per observation, with three columns: ``id``, the string identifier of the time series, ``timestamp``, the time of the observation, and ``value``, the observed value.
+Multiple time series can be included in the same file, as rows with different ``id`` values.
+
 The batch transform job and asynchronous endpoint use the S3 URI (the ``data`` variable in the code below) as input,
 while the real-time endpoint uses the CSV text (the ``request`` variable in the code below) directly.
 

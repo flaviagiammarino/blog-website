@@ -353,6 +353,8 @@ As a first step, it sets up the SageMaker environment, as shown below.
 <h3>4.2 Inference inputs<a class="headerlink" href="#inference-inputs" title="Link to this heading">¶</a></h3>
 <p>As a next step, it loads the sample data provided in this post’s <a class="reference external" href="https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/blob/main/sample_data/data.csv">GitHub repository</a>,
 converts it to CSV text, and uploads it to S3.</p>
+<p>The input CSV contains one row per observation, with three columns: <code class="docutils literal notranslate"><span class="pre">id</span></code>, the string identifier of the time series, <code class="docutils literal notranslate"><span class="pre">timestamp</span></code>, the time of the observation, and <code class="docutils literal notranslate"><span class="pre">value</span></code>, the observed value.
+Multiple time series can be included in the same file, as rows with different <code class="docutils literal notranslate"><span class="pre">id</span></code> values.</p>
 <p>The batch transform job and asynchronous endpoint use the S3 URI (the <code class="docutils literal notranslate"><span class="pre">data</span></code> variable in the code below) as input,
 while the real-time endpoint uses the CSV text (the <code class="docutils literal notranslate"><span class="pre">request</span></code> variable in the code below) directly.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Load the sample data</span>
