@@ -269,7 +269,7 @@ As the container loads the model weights from S3 as opposed to downloading them 
         enable_network_isolation=True,
     )
 
-4.3 Batch transform
+4.4 Batch transform
 ==============================================================================================================
 
 A batch transform job starts a temporary instance, sends the content of the file to the container as one request,
@@ -317,7 +317,7 @@ The batch transform job reads the input data from S3 and writes the reconstructi
         parse_dates=["timestamp"]
     )
 
-4.4 Real-time inference
+4.5 Real-time inference
 ==============================================================================================================
 
 A real-time endpoint keeps the model running on a persistent instance.
@@ -368,7 +368,7 @@ The real-time endpoint is invoked with the same CSV text that was uploaded to S3
     endpoint.delete()
     endpoint_config.delete()
 
-4.5 Asynchronous inference
+4.6 Asynchronous inference
 ==============================================================================================================
 
 An asynchronous endpoint queues the request, passes its contents to the container, and writes the response to S3.
@@ -443,7 +443,7 @@ The S3 location of the response is specified in the endpoint configuration.
     async_endpoint.delete()
     async_endpoint_config.delete()
 
-4.6 Inference outputs
+4.7 Inference outputs
 ==============================================================================================================
 
 All three inference options return the input data, sorted by ``id`` and ``timestamp``, with an additional ``reconstruction`` column containing the model output.

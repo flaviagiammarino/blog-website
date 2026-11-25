@@ -158,10 +158,10 @@ data-aria-dark="Switch to auto color mode">
 <li><a class="reference internal" href="#environment-set-up">4.1 Environment set-up</a></li>
 <li><a class="reference internal" href="#inference-inputs">4.2 Inference inputs</a></li>
 <li><a class="reference internal" href="#model-creation">4.3 Model creation</a></li>
-<li><a class="reference internal" href="#batch-transform">4.3 Batch transform</a></li>
-<li><a class="reference internal" href="#real-time-inference">4.4 Real-time inference</a></li>
-<li><a class="reference internal" href="#asynchronous-inference">4.5 Asynchronous inference</a></li>
-<li><a class="reference internal" href="#inference-outputs">4.6 Inference outputs</a></li>
+<li><a class="reference internal" href="#batch-transform">4.4 Batch transform</a></li>
+<li><a class="reference internal" href="#real-time-inference">4.5 Real-time inference</a></li>
+<li><a class="reference internal" href="#asynchronous-inference">4.6 Asynchronous inference</a></li>
+<li><a class="reference internal" href="#inference-outputs">4.7 Inference outputs</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#conclusion">5. Conclusion</a></li>
@@ -394,7 +394,7 @@ As the container loads the model weights from S3 as opposed to downloading them 
 </div>
 </section>
 <section id="batch-transform">
-<h3>4.3 Batch transform<a class="headerlink" href="#batch-transform" title="Link to this heading">¶</a></h3>
+<h3>4.4 Batch transform<a class="headerlink" href="#batch-transform" title="Link to this heading">¶</a></h3>
 <p>A batch transform job starts a temporary instance, sends the content of the file to the container as one request,
 and writes the response to S3, in a file with the same name as the input file and the <code class="docutils literal notranslate"><span class="pre">.out</span></code> extension.
 The input file is not split into smaller requests, as each request must contain complete time series.
@@ -439,7 +439,7 @@ This option fits periodic processing, for instance a daily or weekly scan of the
 </div>
 </section>
 <section id="real-time-inference">
-<h3>4.4 Real-time inference<a class="headerlink" href="#real-time-inference" title="Link to this heading">¶</a></h3>
+<h3>4.5 Real-time inference<a class="headerlink" href="#real-time-inference" title="Link to this heading">¶</a></h3>
 <p>A real-time endpoint keeps the model running on a persistent instance.
 This option fits applications that need the result immediately, with payloads of up to 25 MB and processing times of up to 60 seconds.</p>
 <p>The real-time endpoint is invoked with the same CSV text that was uploaded to S3, and returns CSV text in the response.</p>
@@ -487,7 +487,7 @@ This option fits applications that need the result immediately, with payloads of
 </div>
 </section>
 <section id="asynchronous-inference">
-<h3>4.5 Asynchronous inference<a class="headerlink" href="#asynchronous-inference" title="Link to this heading">¶</a></h3>
+<h3>4.6 Asynchronous inference<a class="headerlink" href="#asynchronous-inference" title="Link to this heading">¶</a></h3>
 <p>An asynchronous endpoint queues the request, passes its contents to the container, and writes the response to S3.
 The invocation returns immediately, with the S3 location where the response will be written.
 This option fits larger payloads (up to 1GB) and longer processing times (up to one hour),
@@ -559,7 +559,7 @@ The S3 location of the response is specified in the endpoint configuration.</p>
 </div>
 </section>
 <section id="inference-outputs">
-<h3>4.6 Inference outputs<a class="headerlink" href="#inference-outputs" title="Link to this heading">¶</a></h3>
+<h3>4.7 Inference outputs<a class="headerlink" href="#inference-outputs" title="Link to this heading">¶</a></h3>
 <p>All three inference options return the input data, sorted by <code class="docutils literal notranslate"><span class="pre">id</span></code> and <code class="docutils literal notranslate"><span class="pre">timestamp</span></code>, with an additional <code class="docutils literal notranslate"><span class="pre">reconstruction</span></code> column containing the model output.</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span data-line="1">id,timestamp,value,reconstruction
 </span><span data-line="2">A,2026-01-01 00:00:00,26,21.56
