@@ -305,9 +305,9 @@ these are used for illustration only, to show the format of the model inputs and
 <section id="setup">
 <h3>4.1 Setup<a class="headerlink" href="#setup" title="Link to this heading">¶</a></h3>
 <p>The notebook uses version 3.30.0 of the SageMaker Python SDK.
-As a first step, it sets up the SageMaker environment, as shown below.</p>
-<p><code class="docutils literal notranslate"><span class="pre">&lt;ecr-uri&gt;</span></code> is the URI of the inference image pushed to ECR, and <code class="docutils literal notranslate"><span class="pre">&lt;s3-uri&gt;</span></code> is the S3 URI of the <code class="docutils literal notranslate"><span class="pre">model.tar.gz</span></code> file with the model artifacts.</p>
-<p><code class="docutils literal notranslate"><span class="pre">&lt;s3-bucket&gt;</span></code> is the S3 bucket where the data and the reconstructions are stored, and can alternatively be set to the SageMaker default bucket with <code class="docutils literal notranslate"><span class="pre">session.default_bucket()</span></code>.</p>
+As a first step, it sets up the SageMaker environment, as shown below.
+<code class="docutils literal notranslate"><span class="pre">&lt;ecr-uri&gt;</span></code> is the URI of the inference image pushed to ECR, and <code class="docutils literal notranslate"><span class="pre">&lt;s3-uri&gt;</span></code> is the S3 URI of the <code class="docutils literal notranslate"><span class="pre">model.tar.gz</span></code> file with the model artifacts.
+<code class="docutils literal notranslate"><span class="pre">&lt;s3-bucket&gt;</span></code> is the S3 bucket where the data and the reconstructions are stored, and can alternatively be set to the SageMaker default bucket with <code class="docutils literal notranslate"><span class="pre">session.default_bucket()</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 </span><span data-line="2"><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 </span><span data-line="3"><span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
