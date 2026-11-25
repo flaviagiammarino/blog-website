@@ -568,7 +568,7 @@ The S3 location of the response is specified in the endpoint configuration.</p>
 </section>
 <section id="inference-outputs">
 <h3>4.7 Inference outputs<a class="headerlink" href="#inference-outputs" title="Link to this heading">¶</a></h3>
-<p>All three inference options return the input data, sorted by <code class="docutils literal notranslate"><span class="pre">id</span></code> and <code class="docutils literal notranslate"><span class="pre">timestamp</span></code>, with an additional <code class="docutils literal notranslate"><span class="pre">reconstruction</span></code> column containing the model output.</p>
+<p>All three inference options return the input data, sorted by <code class="docutils literal notranslate"><span class="pre">id</span></code> and <code class="docutils literal notranslate"><span class="pre">timestamp</span></code>, with an additional <code class="docutils literal notranslate"><span class="pre">reconstruction</span></code> column containing the model output. The reconstructions are the same across the three options, up to a largest absolute difference of <span class="math notranslate nohighlight">\(1.5 \times 10^{-5}\)</span>.</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span data-line="1">id,timestamp,value,reconstruction
 </span><span data-line="2">A,2026-01-01 00:00:00,26,21.56
 </span><span data-line="3">A,2026-01-01 00:30:00,28,22.41
@@ -581,7 +581,6 @@ The S3 location of the response is specified in the endpoint configuration.</p>
 </span><span data-line="10">...
 </span></pre></div>
 </div>
-<p>The reconstructions are the same across the three options, up to a largest absolute difference of <span class="math notranslate nohighlight">\(1.5 \times 10^{-5}\)</span>.</p>
 <p>As shown in <a class="reference external" href="#figure-2">Figure 2</a>, the reconstructions follow the daily and weekly cycles of the time series and do not reproduce the noise,
 so the largest reconstruction error occurs at the anomaly in each time series.</p>
 <ul class="simple">
