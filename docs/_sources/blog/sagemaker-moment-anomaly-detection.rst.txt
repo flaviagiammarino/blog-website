@@ -219,8 +219,8 @@ As a first step, it sets up the SageMaker environment, as shown below.
 As a next step, it loads the sample data provided in this post's `GitHub repository <https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/tree/main/sample_data/data.csv>`__,
 converts it to CSV text, and uploads it to S3.
 
-The batch transform job and asynchronous endpoint will use the S3 URI (the `data` variable in the code below) as input,
-while the real-time endpoint will use directly the CSV text (the `request` variable in the code below).
+The batch transform job and asynchronous endpoint will use the S3 URI (the ``data`` variable in the code below) as input,
+while the real-time endpoint will use directly the CSV text (the ``request`` variable in the code below).
 
 .. code:: python
 

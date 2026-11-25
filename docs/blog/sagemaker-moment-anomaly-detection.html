@@ -347,8 +347,8 @@ As a first step, it sets up the SageMaker environment, as shown below.
 <h3>4.2 Inference inputs<a class="headerlink" href="#inference-inputs" title="Link to this heading">¶</a></h3>
 <p>As a next step, it loads the sample data provided in this post’s <a class="reference external" href="https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/tree/main/sample_data/data.csv">GitHub repository</a>,
 converts it to CSV text, and uploads it to S3.</p>
-<p>The batch transform job and asynchronous endpoint will use the S3 URI (the <cite>data</cite> variable in the code below) as input,
-while the real-time endpoint will use directly the CSV text (the <cite>request</cite> variable in the code below).</p>
+<p>The batch transform job and asynchronous endpoint will use the S3 URI (the <code class="docutils literal notranslate"><span class="pre">data</span></code> variable in the code below) as input,
+while the real-time endpoint will use directly the CSV text (the <code class="docutils literal notranslate"><span class="pre">request</span></code> variable in the code below).</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Load the sample data</span>
 </span><span data-line="2"><span class="n">dataset</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;sample_data/data.csv&quot;</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">])</span>
 </span><span data-line="3">
