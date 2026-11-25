@@ -175,7 +175,9 @@ these are used for illustration only, to show the format of the model inputs and
 
 The notebook uses version 3.30.0 of the SageMaker Python SDK.
 As a first step, it sets up the SageMaker environment, as shown below.
+
 ``<ecr-uri>`` is the URI of the inference image pushed to ECR, and ``<s3-uri>`` is the S3 URI of the ``model.tar.gz`` file with the model artifacts.
+
 ``<s3-bucket>`` is the S3 bucket where the data and the reconstructions are stored, and can alternatively be set to the SageMaker default bucket with ``session.default_bucket()``.
 
 .. code:: python
