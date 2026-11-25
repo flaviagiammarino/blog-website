@@ -84,7 +84,6 @@ html_theme = "shibuya"
 html_theme_options = {
     "globaltoc_expand_depth": 1,
     "github_url": "https://github.com/flaviagiammarino",
-    "youtube_url": "https://youtube.com/@FlaviaGiammarino",
     "linkedin_url": "https://www.linkedin.com/in/flaviagiammarino"
 }
 
