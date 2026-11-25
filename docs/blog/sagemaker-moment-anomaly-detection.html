@@ -154,7 +154,16 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
-<li><a class="reference internal" href="#model-usage">4 Model usage</a></li>
+<li><a class="reference internal" href="#model-usage">4 Model usage</a><ul>
+<li><a class="reference internal" href="#environment-set-up">4.1 Environment set-up</a></li>
+<li><a class="reference internal" href="#inference-inputs">4.2 Inference inputs</a></li>
+<li><a class="reference internal" href="#model-creation">4.3 Model creation</a></li>
+<li><a class="reference internal" href="#batch-transform">4.3 Batch transform</a></li>
+<li><a class="reference internal" href="#real-time-inference">4.4 Real-time inference</a></li>
+<li><a class="reference internal" href="#asynchronous-inference">4.5 Asynchronous inference</a></li>
+<li><a class="reference internal" href="#inference-outputs">4.6 Inference outputs</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#conclusion">5. Conclusion</a></li>
 <li><a class="reference internal" href="#references">References</a></li>
 </ul>
@@ -287,6 +296,8 @@ and the largest absolute difference was found to be less than <span class="math 
 walks through the usage of the model for batch transform, real-time and asynchronous inference.
 Inference is performed on a sample dataset of three synthetic time series of 1,000 half-hourly observations each;
 these are used for illustration only, to show the format of the model inputs and outputs.</p>
+<section id="environment-set-up">
+<h3>4.1 Environment set-up<a class="headerlink" href="#environment-set-up" title="Link to this heading">¶</a></h3>
 <p>The notebook uses version 3.30.0 of the SageMaker Python SDK.
 As a first step, it sets up the SageMaker environment, as shown below.
 <code class="docutils literal notranslate"><span class="pre">&lt;ecr-uri&gt;</span></code> is the URI of the inference image pushed to ECR, and <code class="docutils literal notranslate"><span class="pre">&lt;s3-uri&gt;</span></code> is the S3 URI of the <code class="docutils literal notranslate"><span class="pre">model.tar.gz</span></code> file with the model artifacts.
@@ -331,6 +342,9 @@ As a first step, it sets up the SageMaker environment, as shown below.
 </span><span data-line="38"><span class="n">suffix</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">-%H-%M-%S&quot;</span><span class="p">)</span>
 </span></pre></div>
 </div>
+</section>
+<section id="inference-inputs">
+<h3>4.2 Inference inputs<a class="headerlink" href="#inference-inputs" title="Link to this heading">¶</a></h3>
 <p>As a next step, it loads the sample data provided in this post’s <a class="reference external" href="https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/tree/main/sample_data/data.csv">GitHub repository</a>,
 converts it to CSV text, and uploads it to S3.</p>
 <p>The batch transform job and asynchronous endpoint will use the S3 URI (the <cite>data</cite> variable in the code below) as input,
@@ -361,6 +375,9 @@ while the real-time endpoint will use directly the CSV text (the <cite>request</
 </span><span data-line="10">...
 </span></pre></div>
 </div>
+</section>
+<section id="model-creation">
+<h3>4.3 Model creation<a class="headerlink" href="#model-creation" title="Link to this heading">¶</a></h3>
 <p>After that, the notebook creates the model, which combines the inference image with the model artifacts.
 As the container loads the model weights from S3 as opposed to downloading them from Hugging Face, the model can run with network isolation enabled.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
@@ -375,6 +392,9 @@ As the container loads the model weights from S3 as opposed to downloading them 
 </span><span data-line="10"><span class="p">)</span>
 </span></pre></div>
 </div>
+</section>
+<section id="batch-transform">
+<h3>4.3 Batch transform<a class="headerlink" href="#batch-transform" title="Link to this heading">¶</a></h3>
 <p>A batch transform job starts a temporary instance, sends the content of the file to the container as one request,
 and writes the response to S3, in a file with the same name as the input file and the <code class="docutils literal notranslate"><span class="pre">.out</span></code> extension.
 The input file is not split into smaller requests, as each request must contain complete time series.
@@ -417,6 +437,9 @@ This option fits periodic processing, for instance a daily or weekly scan of the
 </span><span data-line="35"><span class="p">)</span>
 </span></pre></div>
 </div>
+</section>
+<section id="real-time-inference">
+<h3>4.4 Real-time inference<a class="headerlink" href="#real-time-inference" title="Link to this heading">¶</a></h3>
 <p>A real-time endpoint keeps the model running on a persistent instance.
 This option fits applications that need the result immediately, with payloads of up to 25 MB and processing times of up to 60 seconds.</p>
 <p>The real-time endpoint is invoked with the same CSV text that was uploaded to S3, and returns CSV text in the response.</p>
@@ -462,6 +485,9 @@ This option fits applications that need the result immediately, with payloads of
 </span><span data-line="40"><span class="n">endpoint_config</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
 </span></pre></div>
 </div>
+</section>
+<section id="asynchronous-inference">
+<h3>4.5 Asynchronous inference<a class="headerlink" href="#asynchronous-inference" title="Link to this heading">¶</a></h3>
 <p>An asynchronous endpoint queues the request, passes its contents to the container, and writes the response to S3.
 The invocation returns immediately, with the S3 location where the response will be written.
 This option fits larger payloads (up to 1GB) and longer processing times (up to one hour),
@@ -531,6 +557,9 @@ The S3 location of the response is specified in the endpoint configuration.</p>
 </span><span data-line="61"><span class="n">async_endpoint_config</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
 </span></pre></div>
 </div>
+</section>
+<section id="inference-outputs">
+<h3>4.6 Inference outputs<a class="headerlink" href="#inference-outputs" title="Link to this heading">¶</a></h3>
 <p>All three inference options return the input data, sorted by <code class="docutils literal notranslate"><span class="pre">id</span></code> and <code class="docutils literal notranslate"><span class="pre">timestamp</span></code>, with an additional <code class="docutils literal notranslate"><span class="pre">reconstruction</span></code> column containing the model output.</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span data-line="1">id,timestamp,value,reconstruction
 </span><span data-line="2">A,2026-01-01 00:00:00,26,21.56
@@ -570,6 +599,7 @@ The reconstruction follows the daily cycle, while the observed values fluctuate 
 
 </div><p>This example is not an evaluation of the model’s accuracy,
 which is assessed on benchmark datasets in the original paper <a class="reference external" href="#references">[1]</a>.</p>
+</section>
 </section>
 <section id="conclusion">
 <h2>5. Conclusion<a class="headerlink" href="#conclusion" title="Link to this heading">¶</a></h2>

@@ -165,7 +165,7 @@ Inference is performed on a sample dataset of three synthetic time series of 1,0
 these are used for illustration only, to show the format of the model inputs and outputs.
 
 4.1 Environment set-up
----------------------------------------------------------------------------------------------------------------
+==============================================================================================================
 
 The notebook uses version 3.30.0 of the SageMaker Python SDK.
 As a first step, it sets up the SageMaker environment, as shown below.
@@ -214,7 +214,7 @@ As a first step, it sets up the SageMaker environment, as shown below.
     suffix = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
 
 4.2 Inference inputs
----------------------------------------------------------------------------------------------------------------
+==============================================================================================================
 
 As a next step, it loads the sample data provided in this post's `GitHub repository <https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/tree/main/sample_data/data.csv>`__,
 converts it to CSV text, and uploads it to S3.
@@ -251,7 +251,7 @@ while the real-time endpoint will use directly the CSV text (the `request` varia
     ...
 
 4.3 Model creation
----------------------------------------------------------------------------------------------------------------
+==============================================================================================================
 
 After that, the notebook creates the model, which combines the inference image with the model artifacts.
 As the container loads the model weights from S3 as opposed to downloading them from Hugging Face, the model can run with network isolation enabled.
@@ -270,7 +270,7 @@ As the container loads the model weights from S3 as opposed to downloading them 
     )
 
 4.3 Batch transform
----------------------------------------------------------------------------------------------------------------
+==============================================================================================================
 
 A batch transform job starts a temporary instance, sends the content of the file to the container as one request,
 and writes the response to S3, in a file with the same name as the input file and the ``.out`` extension.
@@ -318,7 +318,7 @@ The batch transform job reads the input data from S3 and writes the reconstructi
     )
 
 4.4 Real-time inference
----------------------------------------------------------------------------------------------------------------
+==============================================================================================================
 
 A real-time endpoint keeps the model running on a persistent instance.
 This option fits applications that need the result immediately, with payloads of up to 25 MB and processing times of up to 60 seconds.
@@ -369,7 +369,7 @@ The real-time endpoint is invoked with the same CSV text that was uploaded to S3
     endpoint_config.delete()
 
 4.5 Asynchronous inference
----------------------------------------------------------------------------------------------------------------
+==============================================================================================================
 
 An asynchronous endpoint queues the request, passes its contents to the container, and writes the response to S3.
 The invocation returns immediately, with the S3 location where the response will be written.
@@ -444,7 +444,7 @@ The S3 location of the response is specified in the endpoint configuration.
     async_endpoint_config.delete()
 
 4.6 Inference outputs
----------------------------------------------------------------------------------------------------------------
+==============================================================================================================
 
 All three inference options return the input data, sorted by ``id`` and ``timestamp``, with an additional ``reconstruction`` column containing the model output.
 
