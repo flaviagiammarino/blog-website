@@ -39,6 +39,12 @@ MOMENT generates the reconstruction zero-shot, that is, without further training
 Since no training is involved, the Amazon SageMaker deployment includes only an inference image, and no training image.
 The inference image supports batch, real-time and asynchronous inference on single-GPU and multi-GPU instances.
 
+The rest of this post is organized as follows.
+`Section 2 <#model-description>`_ describes the architecture of the MOMENT models.
+`Section 3 <#model-deployment>`_ provides the deployment code.
+`Section 4 <#model-usage>`_ walks through the creation of the model and its use for batch transform, real-time and asynchronous inference.
+`Section 5 <#conclusion>`_ summarizes the approach and its limitations.
+
 2. Model description
 **************************************************************************************************************
 
