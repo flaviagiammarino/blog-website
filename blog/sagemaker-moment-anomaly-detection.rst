@@ -42,7 +42,7 @@ The inference image supports batch, real-time and asynchronous inference on sing
 The rest of this post is organized as follows.
 `Section 2 <#model-description>`_ describes the architecture of the MOMENT models.
 `Section 3 <#model-deployment>`_ explains how to prepare the model artifacts and create the inference image.
-`Section 4 <#model-usage>`_ walks through the use of the model for batch transform, real-time and asynchronous inference.
+`Section 4 <#model-usage>`_ demonstrates the use of the model on sample time series.
 `Section 5 <#conclusion>`_ summarizes the approach and its limitations.
 
 2. Model description
