@@ -8826,12 +8826,10 @@ forecasts in a single chart.
 
 The assistant followed the instructions and called the correct tools in the right order,
 but its responses show several shortcomings.
-First, rather than joining the ``sales`` and ``products`` tables to resolve product names, the assistant
+For instance, rather than joining the ``sales`` and ``products`` tables to resolve product names, the assistant
 memorized the product IDs from the ``products`` table and used them directly in subsequent queries.
 While this approach worked correctly in this case, it is not robust, as the ``products`` table may change over time.
-Second, in the last turn the assistant omitted the predicted median when passing the forecasts to the ``visualize_data`` tool,
-which caused the tool to fall back to the predicted mean.
-Third, in the same turn, the assistant stated that Product C sells 2× more than Product B at peak,
+In addition, in the last turn the assistant stated that Product C sells 2× more than Product B at peak,
 while the data show a ratio of approximately 1.5×.
 Finally, the model's thinking is occasionally too verbose and shows domain slips in the last turn,
 though these did not carry over into its responses.
