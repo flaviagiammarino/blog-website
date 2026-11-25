@@ -463,7 +463,7 @@ All three inference options return the input data, sorted by ``id`` and ``timest
 
 The reconstructions are the same across the three options, up to a largest absolute difference of :math:`1.5 \times 10^{-5}`.
 
-As shown in `Figure 2 <#figure-2>`_, reconstructions follow the daily and weekly cycles of the time series and do not reproduce the noise,
+As shown in `Figure 2 <#figure-2>`_, the reconstructions follow the daily and weekly cycles of the time series and do not reproduce the noise,
 so the largest reconstruction error occurs at the anomaly in each time series.
 
 - Time series A contains a global point anomaly, a single value far above the range of the rest of the time series.
