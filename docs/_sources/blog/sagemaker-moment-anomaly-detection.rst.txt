@@ -153,8 +153,7 @@ As the windows overlap, most time steps are reconstructed several times, at diff
 This makes the final reconstruction less dependent on the position of the time step in the window,
 especially for time steps near the edges of the window, where there is context on one side only.
 
-The reconstructions generated with this implementation were compared with those of the original code on the sample data in Section 4,
-and the largest absolute difference was found to be less than :math:`10^{-5}`.
+The reconstructions generated with this implementation were compared with those of the original code on the sample data in `Section 4 <#model-usage>`_, and the largest absolute difference was found to be less than :math:`10^{-5}`.
 
 4 Model usage
 **************************************************************************************************************
@@ -464,7 +463,7 @@ All three inference options return the input data, sorted by ``id`` and ``timest
 
 The reconstructions are the same across the three options, up to a largest absolute difference of :math:`1.5 \times 10^{-5}`.
 
-As shown in Figure 2, reconstructions follow the daily and weekly cycles of the time series and do not reproduce the noise,
+As shown in `Figure 2 <#figure-2>`_, reconstructions follow the daily and weekly cycles of the time series and do not reproduce the noise,
 so the largest reconstruction error occurs at the anomaly in each time series.
 
 - Time series A contains a global point anomaly, a single value far above the range of the rest of the time series.
@@ -476,7 +475,7 @@ so the largest reconstruction error occurs at the anomaly in each time series.
 
 .. raw:: html
 
-    <div style="margin: 2em 0em 2em 0em">
+    <div id="figure-2" style="margin: 2em 0em 2em 0em">
 
     <img
         src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/sagemaker-moment-anomaly-detection/model-results.png"
@@ -497,7 +496,7 @@ which is assessed on benchmark datasets in the original paper `[1] <#references>
 4.8 Cleanup
 ===============================================================================================================
 
-The endpoints and their configurations are deleted at the end of each inference option, so only the model remains.
+The endpoints and their configurations are deleted at the end of each inference option.
 The model does not incur charges, but it can be deleted when it is no longer needed.
 
 .. code:: python

@@ -286,8 +286,7 @@ For each window, the model returns a reconstruction of the same length.</p>
 <code class="docutils literal notranslate"><span class="pre">predict_fn</span></code> averages the reconstructions of each time step across all the windows that contain it.
 This makes the final reconstruction less dependent on the position of the time step in the window,
 especially for time steps near the edges of the window, where there is context on one side only.</p>
-<p>The reconstructions generated with this implementation were compared with those of the original code on the sample data in Section 4,
-and the largest absolute difference was found to be less than <span class="math notranslate nohighlight">\(10^{-5}\)</span>.</p>
+<p>The reconstructions generated with this implementation were compared with those of the original code on the sample data in <a class="reference external" href="#model-usage">Section 4</a>, and the largest absolute difference was found to be less than <span class="math notranslate nohighlight">\(10^{-5}\)</span>.</p>
 </section>
 </section>
 </section>
@@ -576,7 +575,7 @@ The S3 location of the response is specified in the endpoint configuration.</p>
 </span></pre></div>
 </div>
 <p>The reconstructions are the same across the three options, up to a largest absolute difference of <span class="math notranslate nohighlight">\(1.5 \times 10^{-5}\)</span>.</p>
-<p>As shown in Figure 2, reconstructions follow the daily and weekly cycles of the time series and do not reproduce the noise,
+<p>As shown in <a class="reference external" href="#figure-2">Figure 2</a>, reconstructions follow the daily and weekly cycles of the time series and do not reproduce the noise,
 so the largest reconstruction error occurs at the anomaly in each time series.</p>
 <ul class="simple">
 <li><p>Time series A contains a global point anomaly, a single value far above the range of the rest of the time series.
@@ -586,7 +585,7 @@ The reconstruction is at the bottom of the daily cycle, while the observed value
 <li><p>Time series C contains a subsequence anomaly, an interval in which the fluctuations around the daily cycle are much larger than in the rest of the time series.
 The reconstruction follows the daily cycle, while the observed values fluctuate widely around it.</p></li>
 </ul>
-<div style="margin: 2em 0em 2em 0em">
+<div id="figure-2" style="margin: 2em 0em 2em 0em">
 
 <img
     src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/sagemaker-moment-anomaly-detection/model-results.png"
@@ -604,7 +603,7 @@ which is assessed on benchmark datasets in the original paper <a class="referenc
 </section>
 <section id="cleanup">
 <h3>4.8 Cleanup<a class="headerlink" href="#cleanup" title="Link to this heading">¶</a></h3>
-<p>The endpoints and their configurations are deleted at the end of each inference option, so only the model remains.
+<p>The endpoints and their configurations are deleted at the end of each inference option.
 The model does not incur charges, but it can be deleted when it is no longer needed.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Delete the model</span>
 </span><span data-line="2"><span class="n">model</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span>
