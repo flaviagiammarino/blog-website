@@ -159,7 +159,7 @@ and the largest absolute difference was found to be less than :math:`10^{-5}`.
 **************************************************************************************************************
 
 The notebook provided in this post's
-`GitHub repository <https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/tree/main/sample_notebook.ipynb>`__
+`GitHub repository <https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/blob/main/sample_notebook.ipynb>`__
 walks through the usage of the model for batch transform, real-time and asynchronous inference.
 Inference is performed on a sample dataset of three synthetic time series of 1,000 half-hourly observations each;
 these are used for illustration only, to show the format of the model inputs and outputs.
@@ -216,7 +216,7 @@ As a first step, it sets up the SageMaker environment, as shown below.
 4.2 Inference inputs
 ==============================================================================================================
 
-As a next step, it loads the sample data provided in this post's `GitHub repository <https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/tree/main/sample_data/data.csv>`__,
+As a next step, it loads the sample data provided in this post's `GitHub repository <https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/blob/main/sample_data/data.csv>`__,
 converts it to CSV text, and uploads it to S3.
 
 The batch transform job and asynchronous endpoint will use the S3 URI (the ``data`` variable in the code below) as input,
