@@ -149,7 +149,6 @@ The inference handler (``inference.py``) replaces the default functions for load
 
 The inference handler expects requests with content type ``text/csv``, and returns responses in the same format.
 When the container starts, ``model_fn`` loads the model and moves it to the GPU.
-On instances with more than one GPU, the model is replicated on all the GPUs.
 When the container receives a request, ``predict_fn`` runs the model to generate the reconstructions of the input time series.
 
 ``predict_fn`` splits each time series into overlapping windows of 512 time steps,
