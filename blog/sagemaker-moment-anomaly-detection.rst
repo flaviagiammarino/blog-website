@@ -93,7 +93,8 @@ The forecasting and classification heads are not pre-trained.
 ***************************************************************************************************************
 
 The Amazon SageMaker model is built from two components: the model artifacts stored in Amazon S3 and an inference image stored in Amazon ECR.
-The S3 bucket with the model artifacts and the ECR repository with the inference image must be in the same AWS region. To follow along, you will need Docker and the AWS CLI installed on your machine, and an AWS account with permissions to create ECR repositories and S3 objects.
+The S3 bucket with the model artifacts and the ECR repository with the inference image must be in the same AWS region.
+To follow along, you will need Docker and the AWS CLI installed on your machine, and an IAM user or role with permissions to create ECR repositories, push images to ECR and upload objects to S3.
 
 3.1 Model artifacts
 ===============================================================================================================
