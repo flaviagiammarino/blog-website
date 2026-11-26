@@ -234,6 +234,8 @@ The variable ``role`` is the SageMaker execution role, which SageMaker uses to r
 It needs read and write access to the S3 bucket and permission to pull images from the ECR repository.
 When the notebook runs on a SageMaker notebook instance, ``get_execution_role()`` returns the IAM role attached to the notebook instance; elsewhere, ``role`` must be set to the ARN of the role.
 
+The variable ``suffix`` adds the current date and time to the names of the model, the batch transform job and the endpoints, as SageMaker requires these names to be unique within the account and the region.
+
 4.2 Inference inputs
 ==============================================================================================================
 
