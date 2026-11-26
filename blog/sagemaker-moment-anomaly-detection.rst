@@ -173,15 +173,10 @@ walks through the usage of the model for batch transform, real-time and asynchro
 Inference is performed on a sample dataset of three synthetic time series of 1,000 half-hourly observations each;
 these are used for illustration only, to show the format of the model inputs and outputs.
 
-To run the notebook, you need an IAM role or user with permissions to create SageMaker resources, and the AWS account needs sufficient quotas for the selected GPU instance type, for both endpoints and transform jobs.
-The SageMaker execution role, which SageMaker uses to run the model, needs read and write access to the S3 bucket and pull access to the ECR repository.
-The S3 bucket with the model artifacts and the data, the ECR repository with the inference image, and the SageMaker model, endpoints and batch transform job must all be created in the same AWS region.
-
 4.1 Setup
 ==============================================================================================================
-
 The notebook uses version 3.30.0 of the SageMaker Python SDK.
-As a first step, it sets up the SageMaker environment.
+At first, it sets up the session and the variables used in the rest of the code.
 
 .. code:: python
 
@@ -206,29 +201,39 @@ As a first step, it sets up the SageMaker environment.
     # SageMaker session
     session = Session()
 
-    # SageMaker role
+    # SageMaker execution role
     role = get_execution_role()
 
-    # S3 bucket
+    # S3 bucket for the input data and the reconstructions
     bucket = "<s3-bucket>"
 
-    # EC2 instance
-    instance_type = "<ec2-instance-type>"
+    # Instance type for the batch transform job and the endpoints
+    instance_type = "<instance-type>"
 
-    # Model ECR image
+    # URI of the inference image in ECR
     ecr_uri = "<ecr-uri>"
 
-    # Model S3 URI
+    # S3 URI of the model artifacts
     s3_uri = "<s3-uri>"
 
     # Suffix for the names of the model, the batch transform job and the endpoints
     suffix = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
 
-``<ecr-uri>`` is the URI of the inference image pushed to ECR, and ``<s3-uri>`` is the S3 URI of the ``model.tar.gz`` file with the model artifacts.
+The placeholders are set as follows:
 
-``<s3-bucket>`` is the S3 bucket where the data and the reconstructions are stored, and can alternatively be set to the SageMaker default bucket with ``session.default_bucket()``.
+- ``<s3-bucket>`` is the S3 bucket where the input data and the reconstructions are stored.
+  It can alternatively be set to the SageMaker default bucket with ``session.default_bucket()``.
+- ``<instance-type>`` is the instance type of the batch transform job and the endpoints, for instance ``ml.g4dn.xlarge``.
+  The AWS account needs sufficient quotas for this instance type, for both endpoints and transform jobs.
+- ``<ecr-uri>`` is the URI of the inference image pushed to ECR in `Section 3.2 <#inference-image>`_.
+- ``<s3-uri>`` is the S3 URI of the ``model.tar.gz`` file uploaded in `Section 3.1 <#model-artifacts>`_.
 
-``<ec2-instance-type>`` is the instance type used by the batch transform job and the endpoints, for instance a single-GPU instance such as ``ml.g4dn.xlarge``, or a multi-GPU instance such as ``ml.g4dn.12xlarge``.
+``role`` is the SageMaker execution role, which SageMaker uses to run the model.
+It needs read and write access to the S3 bucket and pull access to the ECR repository.
+``get_execution_role()`` returns the role of the notebook when it runs on SageMaker. Elsewhere, ``role`` must be set to the ARN of the role.
+Running the notebook itself requires an IAM role or user with permissions to create SageMaker resources.
+
+The S3 buckets, the ECR repository and the SageMaker resources must all be in the same AWS region.
 
 4.2 Inference inputs
 ==============================================================================================================

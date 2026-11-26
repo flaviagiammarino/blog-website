@@ -305,13 +305,10 @@ especially for time steps near the edges of the window, where there is context o
 walks through the usage of the model for batch transform, real-time and asynchronous inference.
 Inference is performed on a sample dataset of three synthetic time series of 1,000 half-hourly observations each;
 these are used for illustration only, to show the format of the model inputs and outputs.</p>
-<p>To run the notebook, you need an IAM role or user with permissions to create SageMaker resources, and the AWS account needs sufficient quotas for the selected GPU instance type, for both endpoints and transform jobs.
-The SageMaker execution role, which SageMaker uses to run the model, needs read and write access to the S3 bucket and pull access to the ECR repository.
-The S3 bucket with the model artifacts and the data, the ECR repository with the inference image, and the SageMaker model, endpoints and batch transform job must all be created in the same AWS region.</p>
 <section id="setup">
 <h3>4.1 Setup<a class="headerlink" href="#setup" title="Link to this heading">¶</a></h3>
 <p>The notebook uses version 3.30.0 of the SageMaker Python SDK.
-As a first step, it sets up the SageMaker environment.</p>
+At first, it sets up the session and the variables used in the rest of the code.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 </span><span data-line="2"><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 </span><span data-line="3"><span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
@@ -333,28 +330,39 @@ As a first step, it sets up the SageMaker environment.</p>
 </span><span data-line="19"><span class="c1"># SageMaker session</span>
 </span><span data-line="20"><span class="n">session</span> <span class="o">=</span> <span class="n">Session</span><span class="p">()</span>
 </span><span data-line="21">
-</span><span data-line="22"><span class="c1"># SageMaker role</span>
+</span><span data-line="22"><span class="c1"># SageMaker execution role</span>
 </span><span data-line="23"><span class="n">role</span> <span class="o">=</span> <span class="n">get_execution_role</span><span class="p">()</span>
 </span><span data-line="24">
-</span><span data-line="25"><span class="c1"># S3 bucket</span>
+</span><span data-line="25"><span class="c1"># S3 bucket for the input data and the reconstructions</span>
 </span><span data-line="26"><span class="n">bucket</span> <span class="o">=</span> <span class="s2">&quot;&lt;s3-bucket&gt;&quot;</span>
 </span><span data-line="27">
-</span><span data-line="28"><span class="c1"># EC2 instance</span>
-</span><span data-line="29"><span class="n">instance_type</span> <span class="o">=</span> <span class="s2">&quot;&lt;ec2-instance-type&gt;&quot;</span>
+</span><span data-line="28"><span class="c1"># Instance type for the batch transform job and the endpoints</span>
+</span><span data-line="29"><span class="n">instance_type</span> <span class="o">=</span> <span class="s2">&quot;&lt;instance-type&gt;&quot;</span>
 </span><span data-line="30">
-</span><span data-line="31"><span class="c1"># Model ECR image</span>
+</span><span data-line="31"><span class="c1"># URI of the inference image in ECR</span>
 </span><span data-line="32"><span class="n">ecr_uri</span> <span class="o">=</span> <span class="s2">&quot;&lt;ecr-uri&gt;&quot;</span>
 </span><span data-line="33">
-</span><span data-line="34"><span class="c1"># Model S3 URI</span>
+</span><span data-line="34"><span class="c1"># S3 URI of the model artifacts</span>
 </span><span data-line="35"><span class="n">s3_uri</span> <span class="o">=</span> <span class="s2">&quot;&lt;s3-uri&gt;&quot;</span>
 </span><span data-line="36">
 </span><span data-line="37"><span class="c1"># Suffix for the names of the model, the batch transform job and the endpoints</span>
 </span><span data-line="38"><span class="n">suffix</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">-%H-%M-%S&quot;</span><span class="p">)</span>
 </span></pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">&lt;ecr-uri&gt;</span></code> is the URI of the inference image pushed to ECR, and <code class="docutils literal notranslate"><span class="pre">&lt;s3-uri&gt;</span></code> is the S3 URI of the <code class="docutils literal notranslate"><span class="pre">model.tar.gz</span></code> file with the model artifacts.</p>
-<p><code class="docutils literal notranslate"><span class="pre">&lt;s3-bucket&gt;</span></code> is the S3 bucket where the data and the reconstructions are stored, and can alternatively be set to the SageMaker default bucket with <code class="docutils literal notranslate"><span class="pre">session.default_bucket()</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">&lt;ec2-instance-type&gt;</span></code> is the instance type used by the batch transform job and the endpoints, for instance a single-GPU instance such as <code class="docutils literal notranslate"><span class="pre">ml.g4dn.xlarge</span></code>, or a multi-GPU instance such as <code class="docutils literal notranslate"><span class="pre">ml.g4dn.12xlarge</span></code>.</p>
+<p>The placeholders are set as follows:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;s3-bucket&gt;</span></code> is the S3 bucket where the input data and the reconstructions are stored.
+It can alternatively be set to the SageMaker default bucket with <code class="docutils literal notranslate"><span class="pre">session.default_bucket()</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;instance-type&gt;</span></code> is the instance type of the batch transform job and the endpoints, for instance <code class="docutils literal notranslate"><span class="pre">ml.g4dn.xlarge</span></code>.
+The AWS account needs sufficient quotas for this instance type, for both endpoints and transform jobs.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;ecr-uri&gt;</span></code> is the URI of the inference image pushed to ECR in <a class="reference external" href="#inference-image">Section 3.2</a>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;s3-uri&gt;</span></code> is the S3 URI of the <code class="docutils literal notranslate"><span class="pre">model.tar.gz</span></code> file uploaded in <a class="reference external" href="#model-artifacts">Section 3.1</a>.</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">role</span></code> is the SageMaker execution role, which SageMaker uses to run the model.
+It needs read and write access to the S3 bucket and pull access to the ECR repository.
+<code class="docutils literal notranslate"><span class="pre">get_execution_role()</span></code> returns the role of the notebook when it runs on SageMaker. Elsewhere, <code class="docutils literal notranslate"><span class="pre">role</span></code> must be set to the ARN of the role.
+Running the notebook itself requires an IAM role or user with permissions to create SageMaker resources.</p>
+<p>The S3 buckets, the ECR repository and the SageMaker resources must all be in the same AWS region.</p>
 </section>
 <section id="inference-inputs">
 <h3>4.2 Inference inputs<a class="headerlink" href="#inference-inputs" title="Link to this heading">¶</a></h3>
