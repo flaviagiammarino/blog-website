@@ -54,7 +54,7 @@
                 <ul>
                 {% for post in collection %}
                     <li>
-                    <a class="reference internal" href="#{{ post.docname.split('/')[-1] }}">{{ post.title }}</a>
+                    <a class="reference internal" href="{{ postlink(post)|trim }}" data-section="{{ post.docname.split('/')[-1] }}">{{ post.title }}</a>
                     </li>
                 {% endfor %}
                 </ul>

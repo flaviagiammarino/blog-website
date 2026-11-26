@@ -29,7 +29,9 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 });
 
-// Right sidebar on post listing pages and post pages. Shibuya highlights the
+// Right sidebar on post listing pages and post pages. On listing pages each
+// link opens its post and names the post's section on the page in
+// data-section; on post pages links are #anchors. Shibuya highlights the
 // first section that contains the top of the viewport, which is always the
 // outer section when sections are nested (so subsections never light up), and
 // nothing at all while the page is above the first section. Instead, highlight
@@ -40,8 +42,12 @@ document.addEventListener('DOMContentLoaded', function () {
   if (!items.length) return;
 
   const toc = document.querySelector('.post-toc');
+  function linkFor(section) {
+    const id = CSS.escape(section.id);
+    return toc.querySelector('a[data-section="' + id + '"], a[href="#' + id + '"]');
+  }
   const sections = Array.from(document.querySelectorAll('.yue > section section[id]')).filter(function (section) {
-    return toc.querySelector('a[href="#' + CSS.escape(section.id) + '"]');
+    return linkFor(section);
   });
   if (!sections.length) return;
 
@@ -58,15 +64,16 @@ document.addEventListener('DOMContentLoaded', function () {
       });
     }
     items.forEach(function (li) { li.classList.remove('active'); });
-    toc.querySelector('a[href="#' + CSS.escape(current.id) + '"]').parentNode.classList.add('active');
+    linkFor(current).parentNode.classList.add('active');
   }
 
   highlight();
   window.addEventListener('scroll', highlight);
 
-  // Jump straight to the clicked post. Smooth scrolling would pass through the
-  // posts in between, briefly highlighting each of them on the way.
-  document.querySelectorAll('.post-toc li a').forEach(function (link) {
+  // Jump straight to the clicked section. Smooth scrolling would pass through
+  // the sections in between, briefly highlighting each of them on the way.
+  // Links that open a post (listing pages) navigate normally.
+  document.querySelectorAll('.post-toc li a[href^="#"]').forEach(function (link) {
     link.addEventListener('click', function (event) {
       const target = document.getElementById(link.getAttribute('href').slice(1));
       if (!target) return;
