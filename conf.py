@@ -38,7 +38,7 @@ extensions = [
 
 templates_path = ['templates']
 
-exclude_patterns = ['docs', 'Thumbs.db', '.DS_Store']
+exclude_patterns = ['docs', '.claude', 'Thumbs.db', '.DS_Store']
 
 master_doc = "index"
 highlight_language = 'python3'
