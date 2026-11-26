@@ -239,11 +239,10 @@ The forecasting and classification heads are not pre-trained.</p>
 </div></section>
 <section id="model-deployment">
 <h2>3. Model deployment<a class="headerlink" href="#model-deployment" title="Link to this heading">¶</a></h2>
-<p>The Amazon SageMaker model is built from two components: the model artifacts stored in Amazon S3 and an inference image stored in Amazon ECR.
-To follow along, you will need an AWS account with permissions to create ECR repositories, S3 objects and SageMaker models, transform jobs and endpoints, and a SageMaker execution role with read and write access to the S3 bucket and pull access to the ECR repository.
-The S3 bucket, the ECR repository and the SageMaker resources must be in the same AWS region.
-The account must also have a sufficient quota for the selected GPU instance type, for both endpoint usage and transform job usage.
-Building the inference image requires Docker and the AWS CLI.</p>
+<p>The Amazon SageMaker model is built from two components: the model artifacts stored in Amazon S3 and an inference image stored in Amazon ECR.</p>
+<p>To follow along, you will need Docker and the AWS CLI installed on your machine, and an AWS account with permissions to create ECR repositories, S3 objects and SageMaker resources, as well as sufficient quotas for the selected GPU instance type.
+The SageMaker execution role, which SageMaker uses to run the model, needs read and write access to the S3 bucket and pull access to the ECR repository.
+All the resources must be in the same AWS region.</p>
 <section id="model-artifacts">
 <h3>3.1 Model artifacts<a class="headerlink" href="#model-artifacts" title="Link to this heading">¶</a></h3>
 <p>The model artifacts are the configuration (<code class="docutils literal notranslate"><span class="pre">config.json</span></code>) and the weights (<code class="docutils literal notranslate"><span class="pre">model.safetensors</span></code>) of the pre-trained MOMENT-1-large checkpoint,

@@ -93,10 +93,10 @@ The forecasting and classification heads are not pre-trained.
 ***************************************************************************************************************
 
 The Amazon SageMaker model is built from two components: the model artifacts stored in Amazon S3 and an inference image stored in Amazon ECR.
-To follow along, you will need an AWS account with permissions to create ECR repositories, S3 objects and SageMaker models, transform jobs and endpoints, and a SageMaker execution role with read and write access to the S3 bucket and pull access to the ECR repository.
-The S3 bucket, the ECR repository and the SageMaker resources must be in the same AWS region.
-The account must also have a sufficient quota for the selected GPU instance type, for both endpoint usage and transform job usage.
-Building the inference image requires Docker and the AWS CLI.
+
+To follow along, you will need Docker and the AWS CLI installed on your machine, and an AWS account with permissions to create ECR repositories, S3 objects and SageMaker resources, as well as sufficient quotas for the selected GPU instance type.
+The SageMaker execution role, which SageMaker uses to run the model, needs read and write access to the S3 bucket and pull access to the ECR repository.
+All the resources must be in the same AWS region.
 
 3.1 Model artifacts
 ===============================================================================================================
