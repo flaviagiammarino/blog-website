@@ -469,7 +469,7 @@ The S3 location of the response is specified in the endpoint configuration.
 ==============================================================================================================
 
 All three inference options return the input data, sorted by ``id`` and ``timestamp``, with an additional ``reconstruction`` column containing the model output. The reconstructions are provided in this post's
-`GitHub repository <https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/blob/main/sample_output/data.csv.out>`__. They are the same across the three options, up to a largest absolute difference of :math:`1.5 \times 10^{-5}`, and
+`GitHub repository <https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/blob/main/sample_output/data.csv.out>`__. They are the same across the three options, up to a largest absolute difference of :math:`1.5 \times 10^{-5}`.
 
 .. code:: text
 
