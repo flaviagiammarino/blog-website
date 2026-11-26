@@ -96,9 +96,7 @@ The Amazon SageMaker model is built from two components: the model artifacts sto
 `Section 3.1 <#model-artifacts>`_ describes how the model artifacts are prepared,
 and `Section 3.2 <#inference-image>`_ describes the inference image, including the model code and the inference handler.
 
-To follow along, you will need Docker and the AWS CLI installed on your machine, and an AWS account with permissions to create ECR repositories, S3 objects and SageMaker resources, as well as sufficient quotas for the selected GPU instance type.
-The SageMaker execution role, which SageMaker uses to run the model, needs read and write access to the S3 bucket and pull access to the ECR repository.
-All the resources must be in the same AWS region.
+To follow along, you will need Docker and the AWS CLI installed on your machine, and an AWS account with permissions to create ECR repositories and S3 objects.
 
 3.1 Model artifacts
 ===============================================================================================================
@@ -175,6 +173,10 @@ The notebook provided in this post's
 walks through the usage of the model for batch transform, real-time and asynchronous inference.
 Inference is performed on a sample dataset of three synthetic time series of 1,000 half-hourly observations each;
 these are used for illustration only, to show the format of the model inputs and outputs.
+
+To run the notebook, you need an IAM role or user with permissions to create SageMaker resources, and the AWS account needs sufficient quotas for the selected GPU instance type, for both endpoints and transform jobs.
+The SageMaker execution role, which SageMaker uses to run the model, needs read and write access to the S3 bucket and pull access to the ECR repository.
+The S3 bucket with the model artifacts and the data, the ECR repository with the inference image, and the SageMaker model, endpoints and batch transform job must all be in the same AWS region.
 
 4.1 Setup
 ==============================================================================================================

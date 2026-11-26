@@ -242,9 +242,7 @@ The forecasting and classification heads are not pre-trained.</p>
 <p>The Amazon SageMaker model is built from two components: the model artifacts stored in Amazon S3 and an inference image stored in Amazon ECR.
 <a class="reference external" href="#model-artifacts">Section 3.1</a> describes how the model artifacts are prepared,
 and <a class="reference external" href="#inference-image">Section 3.2</a> describes the inference image, including the model code and the inference handler.</p>
-<p>To follow along, you will need Docker and the AWS CLI installed on your machine, and an AWS account with permissions to create ECR repositories, S3 objects and SageMaker resources, as well as sufficient quotas for the selected GPU instance type.
-The SageMaker execution role, which SageMaker uses to run the model, needs read and write access to the S3 bucket and pull access to the ECR repository.
-All the resources must be in the same AWS region.</p>
+<p>To follow along, you will need Docker and the AWS CLI installed on your machine, and an AWS account with permissions to create ECR repositories and S3 objects.</p>
 <section id="model-artifacts">
 <h3>3.1 Model artifacts<a class="headerlink" href="#model-artifacts" title="Link to this heading">¶</a></h3>
 <p>The model artifacts are the configuration (<code class="docutils literal notranslate"><span class="pre">config.json</span></code>) and the weights (<code class="docutils literal notranslate"><span class="pre">model.safetensors</span></code>) of the pre-trained MOMENT-1-large checkpoint,
@@ -307,6 +305,9 @@ especially for time steps near the edges of the window, where there is context o
 walks through the usage of the model for batch transform, real-time and asynchronous inference.
 Inference is performed on a sample dataset of three synthetic time series of 1,000 half-hourly observations each;
 these are used for illustration only, to show the format of the model inputs and outputs.</p>
+<p>To run the notebook, you need an IAM role or user with permissions to create SageMaker resources, and the AWS account needs sufficient quotas for the selected GPU instance type, for both endpoints and transform jobs.
+The SageMaker execution role, which SageMaker uses to run the model, needs read and write access to the S3 bucket and pull access to the ECR repository.
+The S3 bucket with the model artifacts and the data, the ECR repository with the inference image, and the SageMaker model, endpoints and batch transform job must all be in the same AWS region.</p>
 <section id="setup">
 <h3>4.1 Setup<a class="headerlink" href="#setup" title="Link to this heading">¶</a></h3>
 <p>The notebook uses version 3.30.0 of the SageMaker Python SDK.
