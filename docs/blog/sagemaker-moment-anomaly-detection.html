@@ -154,7 +154,7 @@ data-aria-dark="Switch to auto color mode">
 </li>
 </ul>
 </li>
-<li><a class="reference internal" href="#model-usage">4 Model usage</a><ul>
+<li><a class="reference internal" href="#model-usage">4. Model usage</a><ul>
 <li><a class="reference internal" href="#setup">4.1 Setup</a></li>
 <li><a class="reference internal" href="#inference-inputs">4.2 Inference inputs</a></li>
 <li><a class="reference internal" href="#model-creation">4.3 Model creation</a></li>
@@ -261,9 +261,9 @@ This step does not require internet access, so the model can be deployed with ne
 </span></pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> extends the AWS Deep Learning Container for PyTorch 2.5.1 GPU inference (Python 3.11, CUDA 12.4)
-with the model code (<code class="docutils literal notranslate"><span class="pre">modules.py</span></code>) and the inference handler (<code class="docutils literal notranslate"><span class="pre">inference.py</span></code>).</p>
-<p><code class="docutils literal notranslate"><span class="pre">build_and_push.sh</span></code> builds the image and pushes it to ECR.
-The only dependencies added to the base container are <code class="docutils literal notranslate"><span class="pre">transformers</span></code> 4.54.1 and <code class="docutils literal notranslate"><span class="pre">safetensors</span></code>.</p>
+with the model code (<code class="docutils literal notranslate"><span class="pre">modules.py</span></code>) and the inference handler (<code class="docutils literal notranslate"><span class="pre">inference.py</span></code>).
+The only dependencies added to the base container are <code class="docutils literal notranslate"><span class="pre">transformers</span></code> 4.54.1 and <code class="docutils literal notranslate"><span class="pre">safetensors</span></code>.
+<code class="docutils literal notranslate"><span class="pre">build_and_push.sh</span></code> builds the image and pushes it to ECR.</p>
 <section id="model-code">
 <h4>3.2.1 Model code<a class="headerlink" href="#model-code" title="Link to this heading">¶</a></h4>
 <p>The model code (<code class="docutils literal notranslate"><span class="pre">modules.py</span></code>) is a reduced version of the <a class="reference external" href="https://github.com/moment-timeseries-foundation-model/moment">original source code</a> and is provided in this post’s <a class="reference external" href="https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/blob/main/container/modules.py">GitHub repository</a>.</p>
@@ -296,7 +296,7 @@ especially for time steps near the edges of the window, where there is context o
 </section>
 </section>
 <section id="model-usage">
-<h2>4 Model usage<a class="headerlink" href="#model-usage" title="Link to this heading">¶</a></h2>
+<h2>4. Model usage<a class="headerlink" href="#model-usage" title="Link to this heading">¶</a></h2>
 <p>The notebook provided in this post’s
 <a class="reference external" href="https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/blob/main/sample_notebook.ipynb">GitHub repository</a>
 walks through the usage of the model for batch transform, real-time and asynchronous inference.
