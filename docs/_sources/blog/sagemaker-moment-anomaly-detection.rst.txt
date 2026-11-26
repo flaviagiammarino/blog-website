@@ -226,8 +226,8 @@ The placeholders are set as follows:
 - ``<s3-bucket>`` is the S3 bucket where the input data and the reconstructions are stored.
   It can alternatively be set to the SageMaker default bucket with ``session.default_bucket()``.
 - ``<instance-type>`` is the instance type of the batch transform job and the endpoints, for instance ``ml.g4dn.xlarge``; the AWS account needs sufficient quotas for the selected instance type, for both endpoints and transform jobs.
-- ``<ecr-uri>`` is the URI of the inference image pushed to ECR in `Section 3.2 <#inference-image>`_.
-- ``<s3-uri>`` is the S3 URI of the ``model.tar.gz`` file uploaded in `Section 3.1 <#model-artifacts>`_.
+- ``<ecr-uri>`` is the URI of the inference image pushed to ECR.
+- ``<s3-uri>`` is the S3 URI of the ``model.tar.gz`` file.
 
 ``role`` is the SageMaker execution role, which SageMaker uses to run the model.
 It needs read and write access to the S3 bucket and pull access to the ECR repository.
