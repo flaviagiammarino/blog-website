@@ -4,8 +4,4 @@
 Page not found
 ==============
 
-.. raw:: html
-
-    <meta http-equiv="refresh" content="0; url=/blog.html">
-    <script>window.location.replace("/blog.html");</script>
-    <p>Redirecting to <a href="/blog.html">all posts</a>…</p>
+The page you're looking for doesn't exist.

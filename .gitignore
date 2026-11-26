@@ -137,7 +137,8 @@ __pycache__/
 .Rproj.user
 
 # Claude
-**/.claude/
+.claude
+docs/.claude
 
 # MacOS
 .DS_Store

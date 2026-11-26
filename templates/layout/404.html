@@ -1,0 +1,31 @@
+{%- extends "layout.html" -%}
+
+{%- block htmltitle -%}
+  <base href="/">
+  {{ super() }}
+{%- endblock -%}
+
+{% block extrahead %}
+<meta name="robots" content="noindex">
+<style>
+  .not-found {
+    padding-top: calc(30vh - var(--sy-s-offset-top));
+    text-align: center;
+  }
+  .yue a.headerlink {
+    display: none;
+  }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="not-found">
+  {{ body }}
+  <div class="not-found-back">
+    <a href="{{ pathto('blog') }}">
+      <i class="i-lucide chevron-left"></i>
+      <span>All posts</span>
+    </a>
+  </div>
+</div>
+{% endblock %}
