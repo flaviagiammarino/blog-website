@@ -247,9 +247,8 @@ To follow along, you will need Docker and the AWS CLI installed on your machine,
 <section id="model-artifacts">
 <h3>3.1 Model artifacts<a class="headerlink" href="#model-artifacts" title="Link to this heading">¶</a></h3>
 <p>The model artifacts are the configuration (<code class="docutils literal notranslate"><span class="pre">config.json</span></code>) and the weights (<code class="docutils literal notranslate"><span class="pre">model.safetensors</span></code>) of the pre-trained MOMENT-1-large checkpoint,
-which are downloaded from <a class="reference external" href="https://huggingface.co/AutonLab/MOMENT-1-large">Hugging Face</a>,
+which are downloaded from <a class="reference external" href="https://huggingface.co/AutonLab/MOMENT-1-large">Hugging Face</a> (commit <code class="docutils literal notranslate"><span class="pre">ca58581bc7bea2ebed4e80dc0a3e4b8b609c6ecc</span></code>),
 packaged into a <code class="docutils literal notranslate"><span class="pre">model.tar.gz</span></code> file and stored in an S3 bucket.
-This post uses commit <code class="docutils literal notranslate"><span class="pre">ca58581bc7bea2ebed4e80dc0a3e4b8b609c6ecc</span></code>.
 SageMaker downloads the model artifacts from S3 and extracts them in the container when the model starts.
 This step does not require internet access, so the model can be deployed with network isolation enabled.</p>
 </section>
@@ -306,6 +305,10 @@ especially for time steps near the edges of the window, where there is context o
 walks through the usage of the model for batch transform, real-time and asynchronous inference.
 Inference is performed on a sample dataset of three synthetic time series of 1,000 half-hourly observations each;
 these are used for illustration only, to show the format of the model inputs and outputs.</p>
+<p><a class="reference external" href="#setup">Section 4.1</a> sets up the environment, and <a class="reference external" href="#inference-inputs">Section 4.2</a> prepares the input data and uploads it to S3.
+<a class="reference external" href="#model-creation">Section 4.3</a> creates the SageMaker model from the inference image and the model artifacts.
+Sections <a class="reference external" href="#batch-transform">4.4</a>, <a class="reference external" href="#real-time-inference">4.5</a> and <a class="reference external" href="#asynchronous-inference">4.6</a> use the model with each of the three inference options.
+<a class="reference external" href="#inference-outputs">Section 4.7</a> describes the reconstructions, and <a class="reference external" href="#cleanup">Section 4.8</a> deletes the resources.</p>
 <section id="setup">
 <h3>4.1 Setup<a class="headerlink" href="#setup" title="Link to this heading">¶</a></h3>
 <p>The notebook uses version 3.30.0 of the SageMaker Python SDK.
