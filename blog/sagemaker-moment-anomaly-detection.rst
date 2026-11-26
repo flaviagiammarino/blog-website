@@ -110,7 +110,7 @@ This step does not require internet access, so the model can be deployed with ne
 3.2 Inference image
 ===============================================================================================================
 
-The inference image is built from four files, which are provided in this post's `GitHub repository <https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/container>`__.
+The inference image is built from four files, which are provided in this post's `GitHub repository <https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/tree/main/container>`__.
 
 .. code:: text
 
