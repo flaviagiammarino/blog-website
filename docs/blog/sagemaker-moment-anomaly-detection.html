@@ -208,11 +208,9 @@ pre-trained on a large collection of public time series datasets.
 MOMENT models support multiple time series analysis tasks, such as reconstruction, forecasting and classification.
 Both the source code and the weights of the MOMENT models were released by the authors under the MIT License.</p>
 <p>The models process the time series in windows of 512 time steps.
-Each window is normalized by subtracting the mean and dividing by the standard deviation.
 After that, it is split into 64 non-overlapping subsequences of 8 time steps, called patches.
 A linear layer maps each patch to an embedding, and the 64 embeddings are processed by a T5 encoder <a class="reference external" href="#references">[2]</a>.
-A task-specific head then maps the encoder output to the final prediction.
-For reconstruction and forecasting tasks, the prediction is transformed back to the original scale by multiplying by the standard deviation and adding the mean.</p>
+A task-specific head then maps the encoder output to the final prediction.</p>
 <p>MOMENT models are released in three sizes, small, base and large, which differ in the size of the encoder.
 This post uses MOMENT-1-large, whose encoder has the Flan-T5-large architecture <a class="reference external" href="#references">[3]</a>,
 with 1024-dimensional embeddings and a stack of 24 blocks, each made of a self-attention layer followed by a feed-forward network.
@@ -273,7 +271,6 @@ The original source code does not support missing values in the <code class="doc
 time series shorter than 512 time steps, but the paper <a class="reference external" href="#references">[1]</a> does not explicitly discuss the quality of the model’s reconstructions
 on shorter time series, where less context is available.
 This implementation therefore requires each time series to have at least 512 time steps and no missing values.</p>
-<p>Unlike the original source code, normalization is implemented as a function that returns the mean and standard deviation of each window, instead of a class that stores them as attributes, to make sure they are never overwritten by a concurrent request.</p>
 </section>
 <section id="inference-handler">
 <h4>3.2.2 Inference handler<a class="headerlink" href="#inference-handler" title="Link to this heading">¶</a></h4>
