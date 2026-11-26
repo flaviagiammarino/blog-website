@@ -238,7 +238,7 @@ The S3 buckets, the ECR repository and the SageMaker resources must all be in th
 4.2 Inference inputs
 ==============================================================================================================
 
-As a next step, it loads the sample data provided in this post's `GitHub repository <https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/blob/main/sample_data/data.csv>`__,
+As a next step, the notebook loads the sample data provided in this post's `GitHub repository <https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/blob/main/sample_data/data.csv>`__,
 converts it to CSV text, and uploads it to S3.
 The batch transform job and asynchronous endpoint use the S3 URI (the ``data`` variable in the code below) as input,
 while the real-time endpoint uses the CSV text (the ``request`` variable in the code below) directly.
