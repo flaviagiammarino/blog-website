@@ -48,8 +48,8 @@ a:hover, .nav-link:hover, #sun-icon:hover, #moon-icon:hover {
 }
 
 .card {
-    background:var(--sy-c-surface);
-    border-color:var(--sy-c-border);
+    background:var(--gray-a1);
+    border-color:var(--gray-a3);
     box-shadow: 0 2px 8px var(--sy-c-border);
 }
 
