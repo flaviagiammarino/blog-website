@@ -302,7 +302,8 @@ especially for time steps near the edges of the window, where there is context o
 <a class="reference external" href="https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/blob/main/sample_notebook.ipynb">GitHub repository</a>
 walks through the usage of the model for batch transform, real-time and asynchronous inference.
 Inference is performed on a sample dataset of three synthetic time series of 1,000 half-hourly observations each;
-these are used for illustration only, to show the format of the model inputs and outputs.</p>
+these are used for illustration only, to show the format of the model inputs and outputs.
+Running the notebook requires an IAM role or user with permissions to create and invoke SageMaker resources and to read, write, list and delete objects in the S3 bucket.</p>
 <section id="setup">
 <h3>4.1 Setup<a class="headerlink" href="#setup" title="Link to this heading">¶</a></h3>
 <p>The notebook uses version 3.30.0 of the SageMaker Python SDK.
@@ -359,7 +360,6 @@ It can alternatively be set to the SageMaker default bucket with <code class="do
 <p><code class="docutils literal notranslate"><span class="pre">role</span></code> is the SageMaker execution role, which SageMaker uses to run the model.
 It needs read and write access to the S3 bucket, and permission to pull images from the ECR repository.
 <code class="docutils literal notranslate"><span class="pre">get_execution_role()</span></code> returns the role of the notebook when it runs on SageMaker. Elsewhere, <code class="docutils literal notranslate"><span class="pre">role</span></code> must be set to the ARN of the role.</p>
-<p>Running the notebook itself requires an IAM role or user with permissions to create and invoke SageMaker resources and to read, write, list and delete objects in the S3 bucket.</p>
 </section>
 <section id="inference-inputs">
 <h3>4.2 Inference inputs<a class="headerlink" href="#inference-inputs" title="Link to this heading">¶</a></h3>

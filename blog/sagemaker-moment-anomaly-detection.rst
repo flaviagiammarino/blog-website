@@ -170,6 +170,7 @@ The notebook provided in this post's
 walks through the usage of the model for batch transform, real-time and asynchronous inference.
 Inference is performed on a sample dataset of three synthetic time series of 1,000 half-hourly observations each;
 these are used for illustration only, to show the format of the model inputs and outputs.
+Running the notebook requires an IAM role or user with permissions to create and invoke SageMaker resources and to read, write, list and delete objects in the S3 bucket.
 
 4.1 Setup
 ==============================================================================================================
@@ -229,8 +230,6 @@ The placeholders are set as follows:
 ``role`` is the SageMaker execution role, which SageMaker uses to run the model.
 It needs read and write access to the S3 bucket, and permission to pull images from the ECR repository.
 ``get_execution_role()`` returns the role of the notebook when it runs on SageMaker. Elsewhere, ``role`` must be set to the ARN of the role.
-
-Running the notebook itself requires an IAM role or user with permissions to create and invoke SageMaker resources and to read, write, list and delete objects in the S3 bucket.
 
 4.2 Inference inputs
 ==============================================================================================================
