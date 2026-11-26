@@ -53,6 +53,25 @@ a:hover, .nav-link:hover, #sun-icon:hover, #moon-icon:hover {
     box-shadow: 0 2px 8px var(--sy-c-border);
 }
 
+/* Home page post cards. The whole card is a link: keep its text in the normal
+   color on hover and lift the card with a neutral border and shadow instead of
+   the purple link highlight. */
+a.post-card-link,
+a.post-card-link:hover {
+    color: inherit;
+    border-bottom: none;
+    text-decoration: none;
+}
+
+a.post-card-link .card {
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+a.post-card-link:hover .card {
+    border-color: var(--gray-a6);
+    box-shadow: 0 4px 16px var(--gray-a4);
+}
+
 .sd-card {
     height: 100%;
 }

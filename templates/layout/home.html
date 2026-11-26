@@ -78,7 +78,7 @@
         <div class="sd-row sd-row-cols-1 sd-row-cols-md-3 sd-g-3 sd-g-md-3 docutils">
         {% for post in ablog.recent(3, pagename) %}
             <div class="sd-col sd-d-flex-row docutils">
-                <a href="{{ pathto(post.docname) }}">
+                <a href="{{ pathto(post.docname) }}" class="post-card-link">
                 <div class="sd-card sd-sphinx-override sd-w-100 card docutils">
                     <div class="sd-card-body docutils">
 
