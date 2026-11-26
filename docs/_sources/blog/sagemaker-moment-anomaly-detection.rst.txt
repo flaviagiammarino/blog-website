@@ -229,7 +229,7 @@ The placeholders are set as follows:
 
 ``role`` is the SageMaker execution role, which SageMaker uses to run the model.
 It needs read and write access to the S3 bucket, and permission to pull images from the ECR repository.
-``get_execution_role()`` returns the role of the notebook when it runs on SageMaker. Elsewhere, ``role`` must be set to the ARN of the role.
+``get_execution_role()`` returns the role of the notebook when it runs on SageMaker; elsewhere, ``role`` must be set to the ARN of the role.
 
 4.2 Inference inputs
 ==============================================================================================================
