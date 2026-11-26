@@ -241,8 +241,8 @@ The forecasting and classification heads are not pre-trained.</p>
 <h2>3. Model deployment<a class="headerlink" href="#model-deployment" title="Link to this heading">¶</a></h2>
 <p>The Amazon SageMaker model is built from two components: the model artifacts stored in Amazon S3 and an inference image stored in Amazon ECR.
 <a class="reference external" href="#model-artifacts">Section 3.1</a> describes how the model artifacts are prepared,
-and <a class="reference external" href="#inference-image">Section 3.2</a> describes the inference image, including the model code and the inference handler.</p>
-<p>To follow along, you will need Docker and the AWS CLI installed on your machine, and an AWS account with permissions to create ECR repositories and S3 objects.</p>
+and <a class="reference external" href="#inference-image">Section 3.2</a> describes the inference image, including the model code and the inference handler.
+To follow along, you will need Docker and the AWS CLI installed on your machine, and an AWS account with permissions to create ECR repositories and S3 objects.</p>
 <section id="model-artifacts">
 <h3>3.1 Model artifacts<a class="headerlink" href="#model-artifacts" title="Link to this heading">¶</a></h3>
 <p>The model artifacts are the configuration (<code class="docutils literal notranslate"><span class="pre">config.json</span></code>) and the weights (<code class="docutils literal notranslate"><span class="pre">model.safetensors</span></code>) of the pre-trained MOMENT-1-large checkpoint,
