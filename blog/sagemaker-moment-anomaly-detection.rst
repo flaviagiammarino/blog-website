@@ -103,6 +103,7 @@ To follow along, you will need Docker and the AWS CLI installed on your machine,
 The model artifacts are the configuration (``config.json``) and the weights (``model.safetensors``) of the pre-trained MOMENT-1-large checkpoint,
 which are downloaded from `Hugging Face <https://huggingface.co/AutonLab/MOMENT-1-large>`__ (commit ``ca58581bc7bea2ebed4e80dc0a3e4b8b609c6ecc``),
 packaged into a ``model.tar.gz`` file and stored in an S3 bucket.
+
 SageMaker downloads the model artifacts from S3 and extracts them in the container when the model starts.
 This step does not require internet access, so the model can be deployed with network isolation enabled.
 

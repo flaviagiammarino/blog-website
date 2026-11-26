@@ -246,8 +246,8 @@ The S3 bucket with the model artifacts and the ECR repository with the inference
 <h3>3.1 Model artifacts<a class="headerlink" href="#model-artifacts" title="Link to this heading">¶</a></h3>
 <p>The model artifacts are the configuration (<code class="docutils literal notranslate"><span class="pre">config.json</span></code>) and the weights (<code class="docutils literal notranslate"><span class="pre">model.safetensors</span></code>) of the pre-trained MOMENT-1-large checkpoint,
 which are downloaded from <a class="reference external" href="https://huggingface.co/AutonLab/MOMENT-1-large">Hugging Face</a> (commit <code class="docutils literal notranslate"><span class="pre">ca58581bc7bea2ebed4e80dc0a3e4b8b609c6ecc</span></code>),
-packaged into a <code class="docutils literal notranslate"><span class="pre">model.tar.gz</span></code> file and stored in an S3 bucket.
-SageMaker downloads the model artifacts from S3 and extracts them in the container when the model starts.
+packaged into a <code class="docutils literal notranslate"><span class="pre">model.tar.gz</span></code> file and stored in an S3 bucket.</p>
+<p>SageMaker downloads the model artifacts from S3 and extracts them in the container when the model starts.
 This step does not require internet access, so the model can be deployed with network isolation enabled.</p>
 </section>
 <section id="inference-image">
