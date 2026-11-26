@@ -549,8 +549,8 @@ and the same model serves batch transform jobs, real-time endpoints and asynchro
 As the model artifacts are stored in Amazon S3, and nothing is downloaded from the internet at runtime, the model can run with network isolation.
 
 The model returns the reconstructions and does not flag the anomalies.
-The time steps to flag are selected by comparing the reconstruction errors with an anomaly threshold,
-which still needs to be calibrated on a period of the time series that is considered normal,
+The time steps to flag are identified by comparing the reconstruction errors with an anomaly threshold,
+which needs to be calibrated on a period in which the time series is considered normal,
 for instance as a high percentile of the reconstruction errors in that period.
 
 The approach has three main practical limitations.
