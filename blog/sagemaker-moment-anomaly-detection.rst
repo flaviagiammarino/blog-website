@@ -170,6 +170,7 @@ The reconstructions generated with this implementation were compared with those 
 The notebook provided in this post's
 `GitHub repository <https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/blob/main/sample_notebook.ipynb>`__
 walks through the usage of the model for batch transform, real-time and asynchronous inference.
+
 Inference is performed on a sample dataset of three synthetic time series of 1,000 half-hourly observations each;
 these are used for illustration only, to show the format of the model inputs and outputs.
 
