@@ -54,9 +54,11 @@ MOMENT models support multiple time series analysis tasks, such as reconstructio
 Both the source code and the weights of the MOMENT models were released by the authors under the MIT License.
 
 The models process the time series in windows of 512 time steps.
+Each window is normalized by subtracting the mean and dividing by the standard deviation.
 After that, it is split into 64 non-overlapping subsequences of 8 time steps, called patches.
 A linear layer maps each patch to an embedding, and the 64 embeddings are processed by a T5 encoder `[2] <#references>`_.
 A task-specific head then maps the encoder output to the final prediction.
+For reconstruction and forecasting tasks, the prediction is transformed back to the original scale by multiplying by the standard deviation and adding the mean.
 
 MOMENT models are released in three sizes, small, base and large, which differ in the size of the encoder.
 This post uses MOMENT-1-large, whose encoder has the Flan-T5-large architecture `[3] <#references>`_,
