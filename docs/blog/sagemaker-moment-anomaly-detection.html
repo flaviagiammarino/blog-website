@@ -509,7 +509,7 @@ This option fits applications that need the result immediately, with payloads of
 <h3>4.6 Asynchronous inference<a class="headerlink" href="#asynchronous-inference" title="Link to this heading">¶</a></h3>
 <p>An asynchronous endpoint queues the request, passes its contents to the container, and writes the response to S3.
 The invocation returns immediately, with the S3 location where the response will be written.
-This option supports payloads of up to 1 GB and processing times up to one hour,
+This option supports payloads of up to 1 GB and processing times of up to one hour,
 and the endpoint can be scaled down to zero instances when there are no requests.</p>
 <p>The endpoint is invoked with the S3 URI of the same file used by the batch transform job.
 The S3 location of the response is specified in the endpoint configuration.</p>

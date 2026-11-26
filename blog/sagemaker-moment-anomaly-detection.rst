@@ -394,7 +394,7 @@ The real-time endpoint is invoked with the same CSV text that was uploaded to S3
 
 An asynchronous endpoint queues the request, passes its contents to the container, and writes the response to S3.
 The invocation returns immediately, with the S3 location where the response will be written.
-This option supports payloads of up to 1 GB and processing times up to one hour,
+This option supports payloads of up to 1 GB and processing times of up to one hour,
 and the endpoint can be scaled down to zero instances when there are no requests.
 
 The endpoint is invoked with the S3 URI of the same file used by the batch transform job.
