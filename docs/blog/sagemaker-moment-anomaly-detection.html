@@ -252,7 +252,7 @@ This step does not require internet access, so the model can be deployed with ne
 </section>
 <section id="inference-image">
 <h3>3.2 Inference image<a class="headerlink" href="#inference-image" title="Link to this heading">¶</a></h3>
-<p>The inference image is built from four files:</p>
+<p>The inference image is built from four files, which are provided in this post’s <a class="reference external" href="https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/container">GitHub repository</a>.</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span data-line="1">container/
 </span><span data-line="2">├── Dockerfile
 </span><span data-line="3">├── build_and_push.sh
@@ -262,12 +262,11 @@ This step does not require internet access, so the model can be deployed with ne
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> extends the AWS Deep Learning Container for PyTorch 2.5.1 GPU inference (Python 3.11, CUDA 12.4)
 with the model code (<code class="docutils literal notranslate"><span class="pre">modules.py</span></code>) and the inference handler (<code class="docutils literal notranslate"><span class="pre">inference.py</span></code>).
-The only dependencies added to the base container are <code class="docutils literal notranslate"><span class="pre">transformers</span></code> 4.54.1 and <code class="docutils literal notranslate"><span class="pre">safetensors</span></code>.
 <code class="docutils literal notranslate"><span class="pre">build_and_push.sh</span></code> builds the image and pushes it to ECR.</p>
 <section id="model-code">
 <h4>3.2.1 Model code<a class="headerlink" href="#model-code" title="Link to this heading">¶</a></h4>
-<p>The model code (<code class="docutils literal notranslate"><span class="pre">modules.py</span></code>) is a reduced version of the <a class="reference external" href="https://github.com/moment-timeseries-foundation-model/moment">original source code</a> and is provided in this post’s <a class="reference external" href="https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/blob/main/container/modules.py">GitHub repository</a>.</p>
-<p>The forecasting and classification tasks are dropped, together with their heads, as the model is used for reconstruction only.
+<p>The model code (<code class="docutils literal notranslate"><span class="pre">modules.py</span></code>) is a reduced version of the <a class="reference external" href="https://github.com/moment-timeseries-foundation-model/moment">original source code</a>.
+The forecasting and classification tasks are dropped, together with their heads, as the model is used for reconstruction only.
 The code for pre-training and fine-tuning, including the mask that hides patches during pre-training, is removed, as the model is loaded with frozen weights and is used for inference only.</p>
 <p>The mask that marks missing and padded values is also removed.
 The original source code does not support missing values in the <code class="docutils literal notranslate"><span class="pre">detect_anomalies</span></code> method. It does support padding for
@@ -278,8 +277,8 @@ This implementation therefore requires each time series to have at least 512 tim
 </section>
 <section id="inference-handler">
 <h4>3.2.2 Inference handler<a class="headerlink" href="#inference-handler" title="Link to this heading">¶</a></h4>
-<p>The inference handler (<code class="docutils literal notranslate"><span class="pre">inference.py</span></code>) replaces the default functions for loading the model (<code class="docutils literal notranslate"><span class="pre">model_fn</span></code>), decoding the request (<code class="docutils literal notranslate"><span class="pre">input_fn</span></code>), running the model (<code class="docutils literal notranslate"><span class="pre">predict_fn</span></code>) and encoding the response (<code class="docutils literal notranslate"><span class="pre">output_fn</span></code>), and is provided in this post’s <a class="reference external" href="https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/blob/main/container/inference.py">GitHub repository</a>.</p>
-<p>The inference handler expects requests with content type <code class="docutils literal notranslate"><span class="pre">text/csv</span></code>, and returns responses in the same format.
+<p>The inference handler (<code class="docutils literal notranslate"><span class="pre">inference.py</span></code>) replaces the default functions for loading the model (<code class="docutils literal notranslate"><span class="pre">model_fn</span></code>), decoding the request (<code class="docutils literal notranslate"><span class="pre">input_fn</span></code>), running the model (<code class="docutils literal notranslate"><span class="pre">predict_fn</span></code>) and encoding the response (<code class="docutils literal notranslate"><span class="pre">output_fn</span></code>).
+The inference handler expects requests with content type <code class="docutils literal notranslate"><span class="pre">text/csv</span></code>, and returns responses in the same format.
 When the container starts, <code class="docutils literal notranslate"><span class="pre">model_fn</span></code> loads the model and moves it to the GPU.
 When the container receives a request, <code class="docutils literal notranslate"><span class="pre">predict_fn</span></code> runs the model to generate the reconstructions of the input time series.</p>
 <p><code class="docutils literal notranslate"><span class="pre">predict_fn</span></code> splits each time series into overlapping windows of 512 time steps,
@@ -382,6 +381,7 @@ while the real-time endpoint uses the CSV text (the <code class="docutils litera
 </span></pre></div>
 </div>
 <p>The input CSV contains one row per observation, with three columns: <code class="docutils literal notranslate"><span class="pre">id</span></code>, the string identifier of the time series, <code class="docutils literal notranslate"><span class="pre">timestamp</span></code>, the time of the observation, and <code class="docutils literal notranslate"><span class="pre">value</span></code>, the observed value.
+The timestamps are used only to sort the observations; the time series are assumed to be regularly sampled.
 Multiple time series can be included in the same file, as rows with different <code class="docutils literal notranslate"><span class="pre">id</span></code> values.</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span data-line="1">id,timestamp,value
 </span><span data-line="2">A,2026-01-01 00:00:00,26
@@ -417,6 +417,7 @@ Multiple time series can be included in the same file, as rows with different <c
 <p>A batch transform job starts a temporary instance, sends the content of the file to the container as one request,
 and writes the response to S3, in a file with the same name as the input file and the <code class="docutils literal notranslate"><span class="pre">.out</span></code> extension.
 The input file is not split into smaller requests, as each request must contain complete time series.
+Batch transform jobs accept payloads of up to 100 MB.
 This option fits periodic processing, for instance a daily or weekly scan of the time series.</p>
 <p>The batch transform job reads the input data from S3 and writes the reconstructions to S3.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="c1"># Create the batch transform job</span>

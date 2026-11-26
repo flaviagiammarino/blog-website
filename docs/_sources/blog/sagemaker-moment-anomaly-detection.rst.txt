@@ -110,7 +110,7 @@ This step does not require internet access, so the model can be deployed with ne
 3.2 Inference image
 ===============================================================================================================
 
-The inference image is built from four files:
+The inference image is built from four files, which are provided in this post's `GitHub repository <https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/container>`__.
 
 .. code:: text
 
@@ -122,14 +122,12 @@ The inference image is built from four files:
 
 ``Dockerfile`` extends the AWS Deep Learning Container for PyTorch 2.5.1 GPU inference (Python 3.11, CUDA 12.4)
 with the model code (``modules.py``) and the inference handler (``inference.py``).
-The only dependencies added to the base container are ``transformers`` 4.54.1 and ``safetensors``.
 ``build_and_push.sh`` builds the image and pushes it to ECR.
 
 3.2.1 Model code
 ---------------------------------------------------------------------------------------------------------------
 
-The model code (``modules.py``) is a reduced version of the `original source code <https://github.com/moment-timeseries-foundation-model/moment>`__ and is provided in this post's `GitHub repository <https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/blob/main/container/modules.py>`__.
-
+The model code (``modules.py``) is a reduced version of the `original source code <https://github.com/moment-timeseries-foundation-model/moment>`__.
 The forecasting and classification tasks are dropped, together with their heads, as the model is used for reconstruction only.
 The code for pre-training and fine-tuning, including the mask that hides patches during pre-training, is removed, as the model is loaded with frozen weights and is used for inference only.
 
@@ -144,8 +142,7 @@ Unlike the original source code, normalization is implemented as a function that
 3.2.2 Inference handler
 ---------------------------------------------------------------------------------------------------------------
 
-The inference handler (``inference.py``) replaces the default functions for loading the model (``model_fn``), decoding the request (``input_fn``), running the model (``predict_fn``) and encoding the response (``output_fn``), and is provided in this post's `GitHub repository <https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/blob/main/container/inference.py>`__.
-
+The inference handler (``inference.py``) replaces the default functions for loading the model (``model_fn``), decoding the request (``input_fn``), running the model (``predict_fn``) and encoding the response (``output_fn``).
 The inference handler expects requests with content type ``text/csv``, and returns responses in the same format.
 When the container starts, ``model_fn`` loads the model and moves it to the GPU.
 When the container receives a request, ``predict_fn`` runs the model to generate the reconstructions of the input time series.
@@ -259,6 +256,7 @@ while the real-time endpoint uses the CSV text (the ``request`` variable in the 
     )
 
 The input CSV contains one row per observation, with three columns: ``id``, the string identifier of the time series, ``timestamp``, the time of the observation, and ``value``, the observed value.
+The timestamps are used only to sort the observations; the time series are assumed to be regularly sampled.
 Multiple time series can be included in the same file, as rows with different ``id`` values.
 
 .. code:: text
@@ -298,6 +296,7 @@ After that, the notebook creates the model, which combines the inference image i
 A batch transform job starts a temporary instance, sends the content of the file to the container as one request,
 and writes the response to S3, in a file with the same name as the input file and the ``.out`` extension.
 The input file is not split into smaller requests, as each request must contain complete time series.
+Batch transform jobs accept payloads of up to 100 MB.
 This option fits periodic processing, for instance a daily or weekly scan of the time series.
 
 The batch transform job reads the input data from S3 and writes the reconstructions to S3.
