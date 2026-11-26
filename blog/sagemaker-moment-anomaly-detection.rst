@@ -468,8 +468,7 @@ The S3 location of the response is specified in the endpoint configuration.
 4.7 Inference outputs
 ==============================================================================================================
 
-All three inference options return the input data, sorted by ``id`` and ``timestamp``, with an additional ``reconstruction`` column containing the model output. The reconstructions are provided in this post's
-`GitHub repository <https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/blob/main/sample_output/data.csv.out>`__. They are the same across the three options, up to a largest absolute difference of :math:`1.5 \times 10^{-5}`.
+All three inference options return the input data, sorted by ``id`` and ``timestamp``, with an additional ``reconstruction`` column containing the model output. The reconstructions are the same across the three options, up to a largest absolute difference of :math:`1.5 \times 10^{-5}`.
 
 .. code:: text
 
@@ -484,7 +483,9 @@ All three inference options return the input data, sorted by ``id`` and ``timest
     C,2026-01-01 00:30:00,61,62.42
     ...
 
-As shown in `Figure 2 <#figure-2>`_, the reconstructions follow the daily and weekly cycles of the time series and do not reproduce the noise,
+The reconstructions are provided in this post's
+`GitHub repository <https://github.com/flaviagiammarino/sagemaker-moment-anomaly-detection/blob/main/sample_output/data.csv.out>`__.
+As shown in `Figure 2 <#figure-2>`_, they follow the daily and weekly cycles of the time series and do not reproduce the noise,
 so the largest reconstruction error occurs at the anomaly in each time series.
 
 - Time series A contains a global point anomaly, a single value far above the range of the rest of the time series.
