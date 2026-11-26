@@ -359,7 +359,7 @@ It can alternatively be set to the SageMaker default bucket with <code class="do
 <p>The variable <code class="docutils literal notranslate"><span class="pre">role</span></code> is the SageMaker execution role, which SageMaker uses to run the model.
 It needs read and write access to the S3 bucket and permission to pull images from the ECR repository.
 When the notebook runs on a SageMaker notebook instance, <code class="docutils literal notranslate"><span class="pre">get_execution_role()</span></code> returns the IAM role attached to the notebook instance; elsewhere, <code class="docutils literal notranslate"><span class="pre">role</span></code> must be set to the ARN of the role.</p>
-<p>The variable <code class="docutils literal notranslate"><span class="pre">suffix</span></code> adds the current date and time to the names of the model, the batch transform job and the endpoints, as SageMaker requires these names to be unique within the account and the region.</p>
+<p>The variable <code class="docutils literal notranslate"><span class="pre">suffix</span></code> adds the current date and time to the names of the model, the batch transform job and the endpoints, as SageMaker requires these names to be unique within the AWS account and the region.</p>
 </section>
 <section id="inference-inputs">
 <h3>4.2 Inference inputs<a class="headerlink" href="#inference-inputs" title="Link to this heading">¶</a></h3>
