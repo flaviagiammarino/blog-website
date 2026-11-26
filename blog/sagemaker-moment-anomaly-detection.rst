@@ -170,7 +170,7 @@ The notebook provided in this post's
 walks through the usage of the model for batch transform, real-time and asynchronous inference.
 Inference is performed on a sample dataset of three synthetic time series of 1,000 half-hourly observations each;
 these are used for illustration only, to show the format of the model inputs and outputs.
-Running the notebook requires an IAM role or user with permissions to create and invoke SageMaker resources, and to read, write, list and delete objects in S3.
+Running the notebook requires an IAM role or user with permissions to create and invoke SageMaker resources, and to read, write, list and delete objects in the relevant S3 buckets.
 
 4.1 Setup
 ==============================================================================================================
