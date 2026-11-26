@@ -351,7 +351,7 @@ The SageMaker resources are created in the AWS region of the session, which must
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">&lt;s3-bucket&gt;</span></code> is the S3 bucket where the input data and the reconstructions are stored.
 It can alternatively be set to the SageMaker default bucket with <code class="docutils literal notranslate"><span class="pre">session.default_bucket()</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">&lt;instance-type&gt;</span></code> is the instance type of the batch transform job and the endpoints, for instance <code class="docutils literal notranslate"><span class="pre">ml.g4dn.xlarge</span></code>; the AWS account needs sufficient quotas for the selected instance type, for both endpoints and transform jobs.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;instance-type&gt;</span></code> is the instance type of the batch transform job and the endpoints, for instance <code class="docutils literal notranslate"><span class="pre">ml.g4dn.xlarge</span></code>. The AWS account needs sufficient quotas for the selected instance type, for both endpoints and transform jobs.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&lt;ecr-uri&gt;</span></code> is the ECR URI of the inference image.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&lt;s3-uri&gt;</span></code> is the S3 URI of the <code class="docutils literal notranslate"><span class="pre">model.tar.gz</span></code> file.</p></li>
 </ul>
