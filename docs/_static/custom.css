@@ -53,9 +53,9 @@ a:hover, .nav-link:hover, #sun-icon:hover, #moon-icon:hover {
     box-shadow: 0 2px 8px var(--sy-c-border);
 }
 
-.card:hover {
-    border-color:var(--accent-a6);
-}
+/*.card:hover {*/
+/*    border-color:var(--accent-a6);*/
+/*}*/
 
 .sd-card {
     height: 100%;
