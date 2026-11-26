@@ -307,14 +307,11 @@ Inference is performed on a sample dataset of three synthetic time series of 1,0
 these are used for illustration only, to show the format of the model inputs and outputs.</p>
 <p>To run the notebook, you need an IAM role or user with permissions to create SageMaker resources, and the AWS account needs sufficient quotas for the selected GPU instance type, for both endpoints and transform jobs.
 The SageMaker execution role, which SageMaker uses to run the model, needs read and write access to the S3 bucket and pull access to the ECR repository.
-The S3 bucket with the model artifacts and the data, the ECR repository with the inference image, and the SageMaker model, endpoints and batch transform job must all be in the same AWS region.</p>
+The S3 bucket with the model artifacts and the data, the ECR repository with the inference image, and the SageMaker model, endpoints and batch transform job must all be created in the same AWS region.</p>
 <section id="setup">
 <h3>4.1 Setup<a class="headerlink" href="#setup" title="Link to this heading">¶</a></h3>
 <p>The notebook uses version 3.30.0 of the SageMaker Python SDK.
 As a first step, it sets up the SageMaker environment, as shown below.</p>
-<p><code class="docutils literal notranslate"><span class="pre">&lt;ecr-uri&gt;</span></code> is the URI of the inference image pushed to ECR, and <code class="docutils literal notranslate"><span class="pre">&lt;s3-uri&gt;</span></code> is the S3 URI of the <code class="docutils literal notranslate"><span class="pre">model.tar.gz</span></code> file with the model artifacts.
-<code class="docutils literal notranslate"><span class="pre">&lt;s3-bucket&gt;</span></code> is the S3 bucket where the data and the reconstructions are stored, and can alternatively be set to the SageMaker default bucket with <code class="docutils literal notranslate"><span class="pre">session.default_bucket()</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">&lt;ec2-instance-type&gt;</span></code> is the instance type used by the batch transform job and the endpoints, for instance a single-GPU instance such as <code class="docutils literal notranslate"><span class="pre">ml.g4dn.xlarge</span></code>, or a multi-GPU instance such as <code class="docutils literal notranslate"><span class="pre">ml.g4dn.12xlarge</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 </span><span data-line="2"><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 </span><span data-line="3"><span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
@@ -355,6 +352,9 @@ As a first step, it sets up the SageMaker environment, as shown below.</p>
 </span><span data-line="38"><span class="n">suffix</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">-%H-%M-%S&quot;</span><span class="p">)</span>
 </span></pre></div>
 </div>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;ecr-uri&gt;</span></code> is the URI of the inference image pushed to ECR, and <code class="docutils literal notranslate"><span class="pre">&lt;s3-uri&gt;</span></code> is the S3 URI of the <code class="docutils literal notranslate"><span class="pre">model.tar.gz</span></code> file with the model artifacts.</p>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;s3-bucket&gt;</span></code> is the S3 bucket where the data and the reconstructions are stored, and can alternatively be set to the SageMaker default bucket with <code class="docutils literal notranslate"><span class="pre">session.default_bucket()</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;ec2-instance-type&gt;</span></code> is the instance type used by the batch transform job and the endpoints, for instance a single-GPU instance such as <code class="docutils literal notranslate"><span class="pre">ml.g4dn.xlarge</span></code>, or a multi-GPU instance such as <code class="docutils literal notranslate"><span class="pre">ml.g4dn.12xlarge</span></code>.</p>
 </section>
 <section id="inference-inputs">
 <h3>4.2 Inference inputs<a class="headerlink" href="#inference-inputs" title="Link to this heading">¶</a></h3>

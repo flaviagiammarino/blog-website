@@ -175,18 +175,13 @@ these are used for illustration only, to show the format of the model inputs and
 
 To run the notebook, you need an IAM role or user with permissions to create SageMaker resources, and the AWS account needs sufficient quotas for the selected GPU instance type, for both endpoints and transform jobs.
 The SageMaker execution role, which SageMaker uses to run the model, needs read and write access to the S3 bucket and pull access to the ECR repository.
-The S3 bucket with the model artifacts and the data, the ECR repository with the inference image, and the SageMaker model, endpoints and batch transform job must all be in the same AWS region.
+The S3 bucket with the model artifacts and the data, the ECR repository with the inference image, and the SageMaker model, endpoints and batch transform job must all be created in the same AWS region.
 
 4.1 Setup
 ==============================================================================================================
 
 The notebook uses version 3.30.0 of the SageMaker Python SDK.
 As a first step, it sets up the SageMaker environment, as shown below.
-
-``<ecr-uri>`` is the URI of the inference image pushed to ECR, and ``<s3-uri>`` is the S3 URI of the ``model.tar.gz`` file with the model artifacts.
-``<s3-bucket>`` is the S3 bucket where the data and the reconstructions are stored, and can alternatively be set to the SageMaker default bucket with ``session.default_bucket()``.
-
-``<ec2-instance-type>`` is the instance type used by the batch transform job and the endpoints, for instance a single-GPU instance such as ``ml.g4dn.xlarge``, or a multi-GPU instance such as ``ml.g4dn.12xlarge``.
 
 .. code:: python
 
@@ -228,6 +223,12 @@ As a first step, it sets up the SageMaker environment, as shown below.
 
     # Suffix for the names of the model, the batch transform job and the endpoints
     suffix = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+
+``<ecr-uri>`` is the URI of the inference image pushed to ECR, and ``<s3-uri>`` is the S3 URI of the ``model.tar.gz`` file with the model artifacts.
+
+``<s3-bucket>`` is the S3 bucket where the data and the reconstructions are stored, and can alternatively be set to the SageMaker default bucket with ``session.default_bucket()``.
+
+``<ec2-instance-type>`` is the instance type used by the batch transform job and the endpoints, for instance a single-GPU instance such as ``ml.g4dn.xlarge``, or a multi-GPU instance such as ``ml.g4dn.12xlarge``.
 
 4.2 Inference inputs
 ==============================================================================================================
