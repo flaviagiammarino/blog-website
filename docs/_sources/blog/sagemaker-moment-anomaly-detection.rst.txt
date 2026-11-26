@@ -122,6 +122,7 @@ The inference image is built from four files:
 
 ``Dockerfile`` extends the AWS Deep Learning Container for PyTorch 2.5.1 GPU inference (Python 3.11, CUDA 12.4)
 with the model code (``modules.py``) and the inference handler (``inference.py``).
+
 ``build_and_push.sh`` builds the image and pushes it to ECR.
 The only dependencies added to the base container are ``transformers`` 4.54.1 and ``safetensors``.
 

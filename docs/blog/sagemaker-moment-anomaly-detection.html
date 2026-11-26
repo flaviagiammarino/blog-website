@@ -261,8 +261,8 @@ This step does not require internet access, so the model can be deployed with ne
 </span></pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">Dockerfile</span></code> extends the AWS Deep Learning Container for PyTorch 2.5.1 GPU inference (Python 3.11, CUDA 12.4)
-with the model code (<code class="docutils literal notranslate"><span class="pre">modules.py</span></code>) and the inference handler (<code class="docutils literal notranslate"><span class="pre">inference.py</span></code>).
-<code class="docutils literal notranslate"><span class="pre">build_and_push.sh</span></code> builds the image and pushes it to ECR.
+with the model code (<code class="docutils literal notranslate"><span class="pre">modules.py</span></code>) and the inference handler (<code class="docutils literal notranslate"><span class="pre">inference.py</span></code>).</p>
+<p><code class="docutils literal notranslate"><span class="pre">build_and_push.sh</span></code> builds the image and pushes it to ECR.
 The only dependencies added to the base container are <code class="docutils literal notranslate"><span class="pre">transformers</span></code> 4.54.1 and <code class="docutils literal notranslate"><span class="pre">safetensors</span></code>.</p>
 <section id="model-code">
 <h4>3.2.1 Model code<a class="headerlink" href="#model-code" title="Link to this heading">¶</a></h4>
