@@ -546,7 +546,7 @@ This post showed how to deploy the pre-trained MOMENT-1-large model on Amazon Sa
 and how to use it for zero-shot time series anomaly detection.
 The model weights are used as released, with no training or fine-tuning,
 and the same model serves batch transform jobs, real-time endpoints and asynchronous endpoints.
-As the model artifacts are stored in Amazon S3 and nothing is downloaded at runtime, the model runs with network isolation.
+As the model artifacts are stored in Amazon S3, and nothing is downloaded from the internet at runtime, the model can run with network isolation.
 
 The model returns the reconstructions and does not flag the anomalies.
 The time steps to flag are selected by comparing the reconstruction errors with an anomaly threshold,
