@@ -303,10 +303,6 @@ especially for time steps near the edges of the window, where there is context o
 walks through the usage of the model for batch transform, real-time and asynchronous inference.
 Inference is performed on a sample dataset of three synthetic time series of 1,000 half-hourly observations each;
 these are used for illustration only, to show the format of the model inputs and outputs.</p>
-<p><a class="reference external" href="#setup">Section 4.1</a> sets up the environment, and <a class="reference external" href="#inference-inputs">Section 4.2</a> prepares the input data and uploads it to S3.
-<a class="reference external" href="#model-creation">Section 4.3</a> creates the SageMaker model from the inference image and the model artifacts.
-Sections <a class="reference external" href="#batch-transform">4.4</a>, <a class="reference external" href="#real-time-inference">4.5</a> and <a class="reference external" href="#asynchronous-inference">4.6</a> use the model with each of the three inference options.
-<a class="reference external" href="#inference-outputs">Section 4.7</a> describes the reconstructions, and <a class="reference external" href="#cleanup">Section 4.8</a> deletes the resources.</p>
 <section id="setup">
 <h3>4.1 Setup<a class="headerlink" href="#setup" title="Link to this heading">¶</a></h3>
 <p>The notebook uses version 3.30.0 of the SageMaker Python SDK.
