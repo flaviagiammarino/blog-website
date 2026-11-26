@@ -43,6 +43,7 @@ exclude_patterns = ['docs', 'Thumbs.db', '.DS_Store']
 master_doc = "index"
 highlight_language = 'python3'
 sitemap_url_scheme = "{link}"
+sitemap_excludes = ['404.html']
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
