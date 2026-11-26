@@ -141,6 +141,7 @@ This implementation therefore requires each time series to have at least 512 tim
 ---------------------------------------------------------------------------------------------------------------
 
 The inference handler (``inference.py``) replaces the default functions for loading the model (``model_fn``), decoding the request (``input_fn``), running the model (``predict_fn``) and encoding the response (``output_fn``).
+
 The inference handler expects requests with content type ``text/csv``, and returns responses in the same format.
 When the container starts, ``model_fn`` loads the model and moves it to the GPU.
 When the container receives a request, ``predict_fn`` runs the model to generate the reconstructions of the input time series.
