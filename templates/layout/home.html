@@ -78,11 +78,12 @@
         <div class="sd-row sd-row-cols-1 sd-row-cols-md-3 sd-g-3 sd-g-md-3 docutils">
         {% for post in ablog.recent(3, pagename) %}
             <div class="sd-col sd-d-flex-row docutils">
+                <a href="{{ pathto(post.docname) }}">
                 <div class="sd-card sd-sphinx-override sd-w-100 card docutils">
                     <div class="sd-card-body docutils">
 
                         <p style="font-size: 1.1em; font-weight: 500; margin-left: 3px; margin-bottom: 1em;">
-                            <a href="{{ pathto(post.docname) }}">{{ post.title }}</a>
+                            {{ post.title }}
                         </p>
 
                         <div style="display:flex;margin-bottom:1em;">
@@ -103,6 +104,7 @@
 
                     </div>
                 </div>
+                </a>
             </div>
         {% endfor %}
         </div>
