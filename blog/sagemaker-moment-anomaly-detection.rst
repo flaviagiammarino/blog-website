@@ -93,6 +93,7 @@ The forecasting and classification heads are not pre-trained.
 ***************************************************************************************************************
 
 The Amazon SageMaker model is built from two components: the model artifacts stored in Amazon S3 and an inference image stored in Amazon ECR.
+The S3 bucket with the model artifacts and the ECR repository with the inference image must be in the same AWS region.
 `Section 3.1 <#model-artifacts>`_ describes how the model artifacts are prepared,
 and `Section 3.2 <#inference-image>`_ describes the inference image, including the model code and the inference handler.
 To follow along, you will need Docker and the AWS CLI installed on your machine, and an AWS account with permissions to create ECR repositories and S3 objects.
@@ -176,7 +177,8 @@ these are used for illustration only, to show the format of the model inputs and
 4.1 Setup
 ==============================================================================================================
 The notebook uses version 3.30.0 of the SageMaker Python SDK.
-At first, it sets up the session and the variables used in the rest of the code.
+At first, it sets up the SageMaker session and the variables used in the rest of the code.
+The SageMaker resources are created in the AWS region of the session, which must be the same as the region of the S3 bucket and the ECR repository.
 
 .. code:: python
 
@@ -223,7 +225,7 @@ The placeholders are set as follows:
 
 - ``<s3-bucket>`` is the S3 bucket where the input data and the reconstructions are stored.
   It can alternatively be set to the SageMaker default bucket with ``session.default_bucket()``.
-- ``<instance-type>`` is the instance type of the batch transform job and the endpoints, for instance ``ml.g4dn.xlarge``.
+- ``<instance-type>`` is the instance type of the batch transform job and the endpoints, for instance ``ml.g4dn.xlarge``; the AWS account needs sufficient quotas for the selected instance type, for both endpoints and transform jobs.
 - ``<ecr-uri>`` is the URI of the inference image pushed to ECR in `Section 3.2 <#inference-image>`_.
 - ``<s3-uri>`` is the S3 URI of the ``model.tar.gz`` file uploaded in `Section 3.1 <#model-artifacts>`_.
 
@@ -231,8 +233,6 @@ The placeholders are set as follows:
 It needs read and write access to the S3 bucket and pull access to the ECR repository.
 ``get_execution_role()`` returns the role of the notebook when it runs on SageMaker. Elsewhere, ``role`` must be set to the ARN of the role.
 Running the notebook itself requires an IAM role or user with permissions to create SageMaker resources.
-
-The S3 buckets, the ECR repository and the SageMaker resources must all be in the same AWS region, and the AWS account needs sufficient quotas for the selected instance type, for both endpoints and transform jobs.
 
 4.2 Inference inputs
 ==============================================================================================================

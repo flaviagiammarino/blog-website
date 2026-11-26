@@ -240,6 +240,7 @@ The forecasting and classification heads are not pre-trained.</p>
 <section id="model-deployment">
 <h2>3. Model deployment<a class="headerlink" href="#model-deployment" title="Link to this heading">¶</a></h2>
 <p>The Amazon SageMaker model is built from two components: the model artifacts stored in Amazon S3 and an inference image stored in Amazon ECR.
+The S3 bucket with the model artifacts and the ECR repository with the inference image must be in the same AWS region.
 <a class="reference external" href="#model-artifacts">Section 3.1</a> describes how the model artifacts are prepared,
 and <a class="reference external" href="#inference-image">Section 3.2</a> describes the inference image, including the model code and the inference handler.
 To follow along, you will need Docker and the AWS CLI installed on your machine, and an AWS account with permissions to create ECR repositories and S3 objects.</p>
@@ -308,7 +309,8 @@ these are used for illustration only, to show the format of the model inputs and
 <section id="setup">
 <h3>4.1 Setup<a class="headerlink" href="#setup" title="Link to this heading">¶</a></h3>
 <p>The notebook uses version 3.30.0 of the SageMaker Python SDK.
-At first, it sets up the session and the variables used in the rest of the code.</p>
+At first, it sets up the SageMaker session and the variables used in the rest of the code.
+The SageMaker resources are created in the AWS region of the session, which must be the same as the region of the S3 bucket and the ECR repository.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 </span><span data-line="2"><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 </span><span data-line="3"><span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
@@ -353,7 +355,7 @@ At first, it sets up the session and the variables used in the rest of the code.
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">&lt;s3-bucket&gt;</span></code> is the S3 bucket where the input data and the reconstructions are stored.
 It can alternatively be set to the SageMaker default bucket with <code class="docutils literal notranslate"><span class="pre">session.default_bucket()</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">&lt;instance-type&gt;</span></code> is the instance type of the batch transform job and the endpoints, for instance <code class="docutils literal notranslate"><span class="pre">ml.g4dn.xlarge</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;instance-type&gt;</span></code> is the instance type of the batch transform job and the endpoints, for instance <code class="docutils literal notranslate"><span class="pre">ml.g4dn.xlarge</span></code>; the AWS account needs sufficient quotas for the selected instance type, for both endpoints and transform jobs.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&lt;ecr-uri&gt;</span></code> is the URI of the inference image pushed to ECR in <a class="reference external" href="#inference-image">Section 3.2</a>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">&lt;s3-uri&gt;</span></code> is the S3 URI of the <code class="docutils literal notranslate"><span class="pre">model.tar.gz</span></code> file uploaded in <a class="reference external" href="#model-artifacts">Section 3.1</a>.</p></li>
 </ul>
@@ -361,7 +363,6 @@ It can alternatively be set to the SageMaker default bucket with <code class="do
 It needs read and write access to the S3 bucket and pull access to the ECR repository.
 <code class="docutils literal notranslate"><span class="pre">get_execution_role()</span></code> returns the role of the notebook when it runs on SageMaker. Elsewhere, <code class="docutils literal notranslate"><span class="pre">role</span></code> must be set to the ARN of the role.
 Running the notebook itself requires an IAM role or user with permissions to create SageMaker resources.</p>
-<p>The S3 buckets, the ECR repository and the SageMaker resources must all be in the same AWS region, and the AWS account needs sufficient quotas for the selected instance type, for both endpoints and transform jobs.</p>
 </section>
 <section id="inference-inputs">
 <h3>4.2 Inference inputs<a class="headerlink" href="#inference-inputs" title="Link to this heading">¶</a></h3>
