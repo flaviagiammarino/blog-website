@@ -239,7 +239,11 @@ The forecasting and classification heads are not pre-trained.</p>
 </div></section>
 <section id="model-deployment">
 <h2>3. Model deployment<a class="headerlink" href="#model-deployment" title="Link to this heading">¶</a></h2>
-<p>The Amazon SageMaker model is built from two components: the model artifacts stored in Amazon S3 and an inference image stored in Amazon ECR.</p>
+<p>The Amazon SageMaker model is built from two components: the model artifacts stored in Amazon S3 and an inference image stored in Amazon ECR.
+To follow along, you will need an AWS account with permissions to create ECR repositories, S3 objects and SageMaker models, transform jobs and endpoints, and a SageMaker execution role with read and write access to the S3 bucket and pull access to the ECR repository.
+The S3 bucket, the ECR repository and the SageMaker resources must be in the same AWS region.
+The account must also have a sufficient quota for the selected GPU instance type, for both endpoint usage and transform job usage.
+Building the inference image requires Docker and the AWS CLI.</p>
 <section id="model-artifacts">
 <h3>3.1 Model artifacts<a class="headerlink" href="#model-artifacts" title="Link to this heading">¶</a></h3>
 <p>The model artifacts are the configuration (<code class="docutils literal notranslate"><span class="pre">config.json</span></code>) and the weights (<code class="docutils literal notranslate"><span class="pre">model.safetensors</span></code>) of the pre-trained MOMENT-1-large checkpoint,
@@ -305,9 +309,10 @@ these are used for illustration only, to show the format of the model inputs and
 <section id="setup">
 <h3>4.1 Setup<a class="headerlink" href="#setup" title="Link to this heading">¶</a></h3>
 <p>The notebook uses version 3.30.0 of the SageMaker Python SDK.
-As a first step, it sets up the SageMaker environment, as shown below.
-<code class="docutils literal notranslate"><span class="pre">&lt;ecr-uri&gt;</span></code> is the URI of the inference image pushed to ECR, and <code class="docutils literal notranslate"><span class="pre">&lt;s3-uri&gt;</span></code> is the S3 URI of the <code class="docutils literal notranslate"><span class="pre">model.tar.gz</span></code> file with the model artifacts.
+As a first step, it sets up the SageMaker environment, as shown below.</p>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;ecr-uri&gt;</span></code> is the URI of the inference image pushed to ECR, and <code class="docutils literal notranslate"><span class="pre">&lt;s3-uri&gt;</span></code> is the S3 URI of the <code class="docutils literal notranslate"><span class="pre">model.tar.gz</span></code> file with the model artifacts.
 <code class="docutils literal notranslate"><span class="pre">&lt;s3-bucket&gt;</span></code> is the S3 bucket where the data and the reconstructions are stored, and can alternatively be set to the SageMaker default bucket with <code class="docutils literal notranslate"><span class="pre">session.default_bucket()</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;ec2-instance-type&gt;</span></code> is the instance type used by the batch transform job and the endpoints, for instance a single-GPU instance such as <code class="docutils literal notranslate"><span class="pre">ml.g4dn.xlarge</span></code>, or a multi-GPU instance such as <code class="docutils literal notranslate"><span class="pre">ml.g4dn.12xlarge</span></code>.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span data-line="1"><span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
 </span><span data-line="2"><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 </span><span data-line="3"><span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
@@ -336,7 +341,7 @@ As a first step, it sets up the SageMaker environment, as shown below.
 </span><span data-line="26"><span class="n">bucket</span> <span class="o">=</span> <span class="s2">&quot;&lt;s3-bucket&gt;&quot;</span>
 </span><span data-line="27">
 </span><span data-line="28"><span class="c1"># EC2 instance</span>
-</span><span data-line="29"><span class="n">instance_type</span> <span class="o">=</span> <span class="s2">&quot;ml.g4dn.12xlarge&quot;</span>
+</span><span data-line="29"><span class="n">instance_type</span> <span class="o">=</span> <span class="s2">&quot;&lt;ec2-instance-type&gt;&quot;</span>
 </span><span data-line="30">
 </span><span data-line="31"><span class="c1"># Model ECR image</span>
 </span><span data-line="32"><span class="n">ecr_uri</span> <span class="o">=</span> <span class="s2">&quot;&lt;ecr-uri&gt;&quot;</span>

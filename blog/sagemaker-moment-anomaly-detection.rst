@@ -93,6 +93,10 @@ The forecasting and classification heads are not pre-trained.
 ***************************************************************************************************************
 
 The Amazon SageMaker model is built from two components: the model artifacts stored in Amazon S3 and an inference image stored in Amazon ECR.
+To follow along, you will need an AWS account with permissions to create ECR repositories, S3 objects and SageMaker models, transform jobs and endpoints, and a SageMaker execution role with read and write access to the S3 bucket and pull access to the ECR repository.
+The S3 bucket, the ECR repository and the SageMaker resources must be in the same AWS region.
+The account must also have a sufficient quota for the selected GPU instance type, for both endpoint usage and transform job usage.
+Building the inference image requires Docker and the AWS CLI.
 
 3.1 Model artifacts
 ===============================================================================================================
@@ -175,8 +179,11 @@ these are used for illustration only, to show the format of the model inputs and
 
 The notebook uses version 3.30.0 of the SageMaker Python SDK.
 As a first step, it sets up the SageMaker environment, as shown below.
+
 ``<ecr-uri>`` is the URI of the inference image pushed to ECR, and ``<s3-uri>`` is the S3 URI of the ``model.tar.gz`` file with the model artifacts.
 ``<s3-bucket>`` is the S3 bucket where the data and the reconstructions are stored, and can alternatively be set to the SageMaker default bucket with ``session.default_bucket()``.
+
+``<ec2-instance-type>`` is the instance type used by the batch transform job and the endpoints, for instance a single-GPU instance such as ``ml.g4dn.xlarge``, or a multi-GPU instance such as ``ml.g4dn.12xlarge``.
 
 .. code:: python
 
@@ -208,7 +215,7 @@ As a first step, it sets up the SageMaker environment, as shown below.
     bucket = "<s3-bucket>"
 
     # EC2 instance
-    instance_type = "ml.g4dn.12xlarge"
+    instance_type = "<ec2-instance-type>"
 
     # Model ECR image
     ecr_uri = "<ecr-uri>"
