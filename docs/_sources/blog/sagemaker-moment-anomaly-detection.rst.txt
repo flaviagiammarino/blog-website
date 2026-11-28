@@ -499,7 +499,7 @@ so the largest reconstruction error occurs at the anomaly in each time series.
     <div id="figure-2" style="margin: 2em 0em 2em 0em">
 
     <img
-        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/sagemaker-moment-anomaly-detection/model-results.png"
+        src="https://machine-learning-blog.s3.eu-west-2.amazonaws.com/sagemaker-moment-anomaly-detection/model-outputs.png"
         style="width:100%;"
         alt="Three synthetic time series and their MOMENT reconstructions. The shaded area marks the 24 hours around the largest squared reconstruction error of each time series."
     >
